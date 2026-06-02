@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "@angular/cli": "^21.2.13",
+    "tailwindcss": "^4.3.0"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "dayjs": "^1.11.21",
+    "jwt-decode": "^4.0.0",
+    "ngx-infinite-scroll": "^21.0.0",
+    "ngx-toastr": "^20.0.5"
+  }
+}
