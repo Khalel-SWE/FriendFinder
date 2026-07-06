@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/friend-finder/posts")
@@ -24,5 +25,11 @@ public class PostController {
             @RequestParam(required = false) MultipartFile file) throws IOException {
 
         return ResponseEntity.ok(postService.createPost(authentication.getName(), content, file));
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostResponse>> getFeed(Authentication authentication) {
+        // بنرجع كل البوستات (الـ Timeline)
+        return ResponseEntity.ok(postService.getAllPosts());
     }
 }

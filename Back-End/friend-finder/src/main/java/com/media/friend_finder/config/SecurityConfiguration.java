@@ -25,7 +25,11 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // المسارات دي أي حد يقدر يدخل عليها (عشان يعرف يعمل حساب أو يسجل دخول)
-                        .requestMatchers("/friend-finder/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/friend-finder/auth/**",
+                                "/uploads/**",
+                                "/error",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll()
                         // أي مسار تاني في المشروع لازم يكون معاه توكن (JWT)
                         .anyRequest().authenticated()
                 )

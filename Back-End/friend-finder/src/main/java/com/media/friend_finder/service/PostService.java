@@ -8,6 +8,7 @@ import com.media.friend_finder.repository.PostRepository;
 import com.media.friend_finder.repository.ProfileRepository;
 import com.media.friend_finder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +82,28 @@ public class PostService {
                 .mediaType(post.getMediaType())
                 .createdAt(post.getCreatedAt())
                 .build();
+    }
+
+    public List<PostResponse> getAllPosts() {
+        // بنجيب كل البوستات من الداتا بيز مترتبة من الأحدث للأقدم
+        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .stream()
+                .map(post -> {
+                    // بنجيب بروفايل صاحب البوست عشان نعرض اسمه
+                    Profile profile = profileRepository.findByUserEmail(post.getUser().getEmail())
+                            .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+                    return PostResponse.builder()
+                            .id(post.getId())
+                            .userEmail(post.getUser().getEmail())
+                            .userFirstName(profile.getFirstName())
+                            .userLastName(profile.getLastName())
+                            .content(post.getContent())
+                            .mediaUrl(post.getMediaUrl())
+                            .mediaType(post.getMediaType())
+                            .createdAt(post.getCreatedAt())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }
