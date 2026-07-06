@@ -29,7 +29,7 @@ public class PostController {
 
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getFeed(Authentication authentication) {
-        // بنرجع كل البوستات (الـ Timeline)
-        return ResponseEntity.ok(postService.getAllPosts());
+        // اتأكد إنك بتنادي getFeed مش getAllPosts
+        return ResponseEntity.ok(postService.getFeed(authentication.getName()));
     }
 }

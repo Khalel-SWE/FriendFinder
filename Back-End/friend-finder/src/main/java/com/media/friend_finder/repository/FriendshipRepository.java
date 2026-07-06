@@ -17,4 +17,8 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
     // الدالة دي بتجيب كل طلبات الصداقة (المعلقة) اللي مبعوتة لليوزر ده
     List<Friendship> findByAddresseeAndStatus(User addressee, String status);
+
+    // بتجيب كل علاقات الصداقة المقبولة لليوزر ده (سواء هو اللي باعت أو مستقبل)
+    @Query("SELECT f FROM Friendship f WHERE (f.requester = :user OR f.addressee = :user) AND f.status = 'ACCEPTED'")
+    List<Friendship> findAcceptedFriendships(@Param("user") User user);
 }
