@@ -2,42 +2,35 @@
 //
 //import jakarta.persistence.*;
 //import lombok.Data;
-//import org.hibernate.annotations.CreationTimestamp;
-//
-//import java.time.LocalDateTime;
 //
 //@Entity
-//@Table(name = "reactions")
+//@Table(name = "post_reactions")
 //@Data
 //public class Reaction {
-//
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 //
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
-//
-//    @ManyToOne
+//    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "post_id", nullable = false)
 //    private Post post;
 //
-//    @Column(name = "reaction_type", nullable = false)
-//    private String reactionType;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 //
-//    @CreationTimestamp
-//    @Column(name = "created_at", updatable = false)
-//    private LocalDateTime createdAt;
+//    @Enumerated(EnumType.STRING)
+//    private ReactionType type;
 //}
-
 package com.media.friend_finder.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "post_reactions")
+@Table(name = "post_reactions", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"post_id", "user_id"}) // منع تكرار الرياكشن لنفس البوست
+})
 @Data
 public class Reaction {
     @Id
