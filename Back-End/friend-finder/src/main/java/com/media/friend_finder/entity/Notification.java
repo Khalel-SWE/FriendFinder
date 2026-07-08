@@ -2,8 +2,6 @@ package com.media.friend_finder.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,27 +13,30 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    // الشخص اللي هيستقبل الإشعار
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User sender;
+    @Column(nullable = false)
+    private String message;
 
+    // نوع الإشعار (ممكن يكون: LIKE, COMMENT, FRIEND_REQUEST)
     @Column(nullable = false)
     private String type;
 
-    @Column(length = 500)
-    private String message;
+    // الـ ID بتاع الحاجة اللي الإشعار عنها (مثلاً ID البوست أو ID طلب الصداقة) عشان الفرونت إند يعرف يوجه اليوزر لما يدوس عليه
+    @Column(name = "related_id")
+    private Long relatedId;
 
-    @Column(name = "reference_id")
-    private Long referenceId;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead = false;
 
-    @Column(name = "is_read")
-    private Boolean isRead = false;
-
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
