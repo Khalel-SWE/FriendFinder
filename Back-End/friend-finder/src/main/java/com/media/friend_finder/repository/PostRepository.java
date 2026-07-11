@@ -12,4 +12,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // بتجيب بوستات مجموعة من اليوزرز (أنا وأصدقائي) مترتبة بالأحدث
     List<Post> findByUserInOrderByCreatedAtDesc(List<User> users);
+
+    long count();
 }

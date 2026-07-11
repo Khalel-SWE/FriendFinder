@@ -1,8 +1,12 @@
 package com.media.friend_finder.service;
 
 import com.media.friend_finder.dto.AdminUserResponse;
+import com.media.friend_finder.dto.DashboardStatsResponse;
 import com.media.friend_finder.entity.Profile;
 import com.media.friend_finder.entity.User;
+import com.media.friend_finder.repository.CommentRepository;
+import com.media.friend_finder.repository.FriendshipRepository;
+import com.media.friend_finder.repository.PostRepository;
 import com.media.friend_finder.repository.ProfileRepository;
 import com.media.friend_finder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +19,16 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     private final ProfileRepository profileRepository;
-    private final UserRepository userRepository; // ضفنا ده
+    private final UserRepository userRepository;
+
+    // ضفنا التلاتة دول عشان نستخدمهم في الإحصائيات
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final FriendshipRepository friendshipRepository;
 
     public Page<AdminUserResponse> getAllUsers(int page, int size) {
-        // بنجيب الداتا بالصفحات وبدون N+1
         Page<Profile> profilesPage = profileRepository.findAllProfilesWithUsers(PageRequest.of(page, size));
 
-        // بنحول الـ Entity لـ DTO
         return profilesPage.map(profile -> AdminUserResponse.builder()
                 .userId(profile.getUser().getId())
                 .email(profile.getUser().getEmail())
@@ -36,15 +43,22 @@ public class AdminService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // بنمنع الأدمن إنه يحظر نفسه أو يحظر أدمن تاني بالغلط
         if (user.getRole().equals("ADMIN")) {
             throw new RuntimeException("Cannot ban an Admin account");
         }
 
-        // بنعكس الحالة: لو شغال نقفله، ولو مقفول نشغله
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
 
         return user.isEnabled() ? "User Unbanned Successfully" : "User Banned Successfully";
+    }
+
+    public DashboardStatsResponse getSystemStats() {
+        return DashboardStatsResponse.builder()
+                .totalUsers(userRepository.count())
+                .totalPosts(postRepository.count())
+                .totalComments(commentRepository.count())
+                .activeFriendships(friendshipRepository.countByStatus("ACCEPTED"))
+                .build();
     }
 }

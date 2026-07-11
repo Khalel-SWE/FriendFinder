@@ -1,6 +1,7 @@
 package com.media.friend_finder.controller;
 
 import com.media.friend_finder.dto.AdminUserResponse;
+import com.media.friend_finder.dto.DashboardStatsResponse;
 import com.media.friend_finder.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,5 +26,10 @@ public class AdminController {
     @PatchMapping("/users/{userId}/status")
     public ResponseEntity<String> toggleUserStatus(@PathVariable Long userId) {
         return ResponseEntity.ok(adminService.toggleUserStatus(userId));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<DashboardStatsResponse> getSystemStats() {
+        return ResponseEntity.ok(adminService.getSystemStats());
     }
 }
