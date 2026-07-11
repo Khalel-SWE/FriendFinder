@@ -1,10 +1,7 @@
 package com.media.friend_finder.service;
 
 import com.media.friend_finder.dto.FriendRequestResponse;
-import com.media.friend_finder.entity.Friendship;
-import com.media.friend_finder.entity.FriendshipStatus;
-import com.media.friend_finder.entity.Profile;
-import com.media.friend_finder.entity.User;
+import com.media.friend_finder.entity.*;
 import com.media.friend_finder.repository.FriendshipRepository;
 import com.media.friend_finder.repository.ProfileRepository;
 import com.media.friend_finder.repository.UserRepository;
@@ -21,6 +18,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final NotificationService notificationService;
 
     // 1. إرسال طلب صداقة
     public String sendFriendRequest(String requesterEmail, String addresseeEmail) {
@@ -45,6 +43,15 @@ public class FriendshipService {
         friendship.setStatus(FriendshipStatus.PENDING.name()); // استخدام الـ Enum
 
         friendshipRepository.save(friendship);
+
+        // إرسال إشعار للمستقبل
+        notificationService.createNotification(
+                addressee,
+                "You have a new friend request from " + requester.getEmail(), // ممكن تستبدل Email بالاسم لو متاح في الـ User Entity
+                Notification.NotificationType.FRIEND_REQUEST,
+                friendship.getId()
+        );
+
         return "Friend request sent successfully to " + addresseeEmail;
     }
 
@@ -94,6 +101,16 @@ public class FriendshipService {
 
         friendship.setStatus(status.toUpperCase());
         friendshipRepository.save(friendship);
+
+        // إرسال إشعار مرتد في حالة القبول فقط
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            notificationService.createNotification(
+                    friendship.getRequester(),
+                    friendship.getAddressee().getEmail() + " accepted your friend request",
+                    Notification.NotificationType.ACCEPT_FRIEND_REQUEST,
+                    friendship.getId()
+            );
+        }
 
         return "Friend request has been " + status.toLowerCase();
     }

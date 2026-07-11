@@ -20,10 +20,13 @@ public class InteractionService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
-    private final ProfileRepository profileRepository; // ضفناه عشان نجيب أسامي أصحاب الكومنتات
+    private final ProfileRepository profileRepository;
+
+    // ضفنا الـ NotificationService هنا
+    private final NotificationService notificationService;
 
     public CommentResponse addComment(String email, Long postId, String content) {
-        validateContent(content); // Validation (Point 2)
+        validateContent(content);
 
         User user = userRepository.findByEmail(email).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
@@ -36,6 +39,17 @@ public class InteractionService {
         comment = commentRepository.save(comment);
 
         Profile profile = profileRepository.findByUserEmail(email).orElseThrow();
+
+        // إرسال الإشعار لصاحب البوست (لو مش هو اللي كاتب الكومنت)
+        if (!user.equals(post.getUser())) {
+            notificationService.createNotification(
+                    post.getUser(),
+                    profile.getFirstName() + " commented on your post",
+                    Notification.NotificationType.COMMENT,
+                    post.getId()
+            );
+        }
+
         return mapToCommentResponse(comment, profile);
     }
 
@@ -51,7 +65,7 @@ public class InteractionService {
     }
 
     public CommentResponse updateComment(String email, Long commentId, String newContent) {
-        validateContent(newContent); // Validation (Point 5)
+        validateContent(newContent);
 
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         if (!comment.getUser().getEmail().equals(email)) throw new RuntimeException("Unauthorized");
@@ -74,32 +88,36 @@ public class InteractionService {
         Optional<Reaction> existingReaction = reactionRepository.findByPostAndUser(post, user);
 
         if (existingReaction.isPresent()) {
-            // (Point 7) لو ضغط على نفس الرياكشن تاني، نمسحه (Toggle)
             if (existingReaction.get().getType() == type) {
                 reactionRepository.delete(existingReaction.get());
             } else {
-                // لو غير الرياكشن (مثلا من Like لـ Haha)، نحدثه
                 existingReaction.get().setType(type);
                 reactionRepository.save(existingReaction.get());
             }
         } else {
-            // رياكشن جديد
             Reaction newReaction = new Reaction();
             newReaction.setPost(post);
             newReaction.setUser(user);
             newReaction.setType(type);
             reactionRepository.save(newReaction);
+
+            // إرسال الإشعار لصاحب البوست للرياكت الجديد فقط
+            if (!user.equals(post.getUser())) {
+                notificationService.createNotification(
+                        post.getUser(),
+                        user.getEmail() + " reacted to your post",
+                        Notification.NotificationType.LIKE,
+                        post.getId()
+                );
+            }
         }
     }
 
-    // عرض الكومنتات وحل مشكلة N+1 بالكامل (Points 9 & 10)
     public List<CommentResponse> getComments(Long postId) {
         List<Comment> comments = commentRepository.findByPostIdWithUser(postId);
 
-        // جلب كل المستخدمين اللي علقوا
         List<User> users = comments.stream().map(Comment::getUser).distinct().collect(Collectors.toList());
 
-        // جلب بروفايلاتهم في Query واحدة بس
         List<Profile> profiles = profileRepository.findByUserIn(users);
         Map<String, Profile> profileMap = profiles.stream()
                 .collect(Collectors.toMap(p -> p.getUser().getEmail(), p -> p));
@@ -116,7 +134,6 @@ public class InteractionService {
         }
     }
 
-    // دالة تحقق من النص
     private void validateContent(String content) {
         if (content == null || content.trim().isEmpty()) {
             throw new RuntimeException("Comment content cannot be empty");
