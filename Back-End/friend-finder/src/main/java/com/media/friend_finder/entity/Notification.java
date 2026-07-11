@@ -13,7 +13,6 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // الشخص اللي هيستقبل الإشعار
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -21,11 +20,11 @@ public class Notification {
     @Column(nullable = false)
     private String message;
 
-    // نوع الإشعار (ممكن يكون: LIKE, COMMENT, FRIEND_REQUEST)
+    // التعديل هنا: غيرنا النوع واستخدمنا الـ Annotation دي عشان الـ DB
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;
+    private NotificationType type;
 
-    // الـ ID بتاع الحاجة اللي الإشعار عنها (مثلاً ID البوست أو ID طلب الصداقة) عشان الفرونت إند يعرف يوجه اليوزر لما يدوس عليه
     @Column(name = "related_id")
     private Long relatedId;
 
@@ -38,5 +37,9 @@ public class Notification {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public enum NotificationType {
+        LIKE, COMMENT, FRIEND_REQUEST, ACCEPT_FRIEND_REQUEST
     }
 }
