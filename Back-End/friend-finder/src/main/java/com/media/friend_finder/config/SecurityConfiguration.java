@@ -24,19 +24,21 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // المسارات دي أي حد يقدر يدخل عليها (عشان يعرف يعمل حساب أو يسجل دخول)
+                        // المسارات المفتوحة للكل
                         .requestMatchers("/friend-finder/auth/**",
                                 "/uploads/**",
                                 "/error",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**").permitAll()
-                        // أي مسار تاني في المشروع لازم يكون معاه توكن (JWT)
+
+                        // بوابات الأدمن مقفولة ومحدش يدخلها غير الـ ADMIN
+                        .requestMatchers("/friend-finder/admin/**").hasRole("ADMIN")
+
+                        // أي مسار تاني محتاج يوزر عادي مسجل دخول
                         .anyRequest().authenticated()
                 )
-                // بنقول لسبيرنج متعملش Session لأننا شغالين بـ Token
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                // بنحط الفلتر بتاعنا قبل الفلتر الأساسي بتاع اليوزر والباسورد
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
