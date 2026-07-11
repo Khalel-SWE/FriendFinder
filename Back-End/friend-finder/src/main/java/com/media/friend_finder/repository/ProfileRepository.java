@@ -1,8 +1,11 @@
 package com.media.friend_finder.repository;
 
 import com.media.friend_finder.entity.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.media.friend_finder.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,15 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     // عشان نجيب بروفايلات مجموعة يوزرز في Query واحدة (لحل الـ N+1)
     List<Profile> findByUserIn(List<User> users);
+
+    // حط الـ Imports دي فوق لو مش موجودة
+    // import org.springframework.data.domain.Page;
+    // import org.springframework.data.domain.Pageable;
+    // import org.springframework.data.jpa.repository.Query;
+
+    @Query(value = "SELECT p FROM Profile p JOIN FETCH p.user",
+            countQuery = "SELECT count(p) FROM Profile p")
+    Page<Profile> findAllProfilesWithUsers(Pageable pageable);
 
 
 }

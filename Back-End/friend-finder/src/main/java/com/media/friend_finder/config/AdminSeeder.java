@@ -20,7 +20,7 @@ public class AdminSeeder implements CommandLineRunner {
         if (userRepository.findByEmail("admin@friendfinder.com").isEmpty()) {
             User admin = new User();
             admin.setEmail("admin@friendfinder.com");
-            admin.setPasswordHash(passwordEncoder.encode("admin@123")); // الباسوورد الافتراضي
+            admin.setPasswordHash(passwordEncoder.encode("Admin@123")); // الباسوورد الافتراضي
             admin.setRole("ADMIN"); // الصلاحية اللي بتفرق الأدمن عن اليوزر العادي
             userRepository.save(admin);
             System.out.println("====== Super Admin created successfully! ======");

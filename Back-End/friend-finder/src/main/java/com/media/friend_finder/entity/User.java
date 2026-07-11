@@ -40,6 +40,9 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
+    @Column(name = "is_enabled", nullable = false)
+    private boolean isEnabled = true; // الديفولت إن أي يوزر جديد حسابه شغال
+
     @Override
     public String getPassword() {
         return passwordHash;
@@ -67,6 +70,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }
