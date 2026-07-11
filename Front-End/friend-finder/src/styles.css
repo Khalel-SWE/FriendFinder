@@ -1,3 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
 
-@import 'tailwindcss';
+/* استدعاء الخطوط الفخمة اللي إنت طلبتها */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap');
+
+/* تعريف ألوانك في Tailwind v4 */
+@theme {
+  --color-ink: #141014;
+  --color-ink2: #1D171B;
+  --color-gold: #C9A24B;
+  --color-goldSoft: #E4D4A6;
+  --color-burgundy: #5C1A2B;
+  --color-ivory: #F8F4EA;
+  --color-ivory2: #F1EADA;
+  --color-text: #211C1F;
+  --color-muted: #8E8175;
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-arDisplay: 'Amiri', serif;
+  --font-arBody: 'Cairo', sans-serif;
+}
+
+/* الإعدادات الأساسية للـ Body */
+html, body {
+  font-family: var(--font-body);
+  background-color: #0c0a09;
+  color: white;
+}
+
+body.font-ar {
+  font-family: var(--font-arBody);
+}
+
+body.font-ar .font-display {
+  font-family: var(--font-arDisplay) !important;
+}
+
+body.font-ar .font-body {
+  font-family: var(--font-arBody) !important;
+}
+
+/* زرار الجولد بتاعك */
+.gold-btn {
+  background: linear-gradient(135deg, #d9b769, #b4893a);
+  color: #17130e;
+  transition: filter 0.2s ease, transform 0.15s ease;
+}
+.gold-btn:hover { filter: brightness(1.08); }
+.gold-btn:active { transform: scale(0.98); }
+
+/* ================= Auth Theme Classes ================= */
+.hero-bg {
+  background:
+    radial-gradient(circle at 18% 30%, rgba(233, 196, 106, 0.3) 0%, rgba(233, 196, 106, 0) 9%),
+    radial-gradient(circle at 78% 18%, rgba(201, 162, 75, 0.22) 0%, rgba(201, 162, 75, 0) 11%),
+    radial-gradient(circle at 62% 55%, rgba(233, 196, 106, 0.16) 0%, rgba(233, 196, 106, 0) 12%),
+    radial-gradient(circle at 88% 70%, rgba(201, 162, 75, 0.2) 0%, rgba(201, 162, 75, 0) 9%),
+    radial-gradient(circle at 30% 82%, rgba(233, 196, 106, 0.14) 0%, rgba(233, 196, 106, 0) 10%),
+    radial-gradient(circle at 8% 68%, rgba(201, 162, 75, 0.12) 0%, rgba(201, 162, 75, 0) 8%),
+    linear-gradient(155deg, #211a14 0%, #161110 45%, #0d0b0a 100%);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(0, 0, 0, 0) 40%, rgba(233, 196, 106, 0.06) 50%, rgba(0, 0, 0, 0) 60%);
+}
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0, 0, 0, 0.55), transparent 60%);
+  pointer-events: none;
+}
+@keyframes slowSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+@keyframes slowSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0); } }
+.orbit { animation: slowSpin 110s linear infinite; transform-origin: 200px 200px; }
+.orbit-rev { animation: slowSpinRev 85s linear infinite; transform-origin: 200px 200px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { animation: fadeUp 0.7s ease-out forwards; }
+.underline-field {
+  border: none; border-bottom: 1.5px solid rgba(228, 212, 166, 0.35); background: transparent; color: #f8f4ea; transition: border-color 0.25s ease;
+}
+.underline-field::placeholder { color: rgba(248, 244, 234, 0.35); }
+.underline-field:focus { border-bottom-color: #e4d4a6; outline: none; }
+.pennant-wrap { filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.5)); }
+.pennant {
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 50% 100%, 0 84%);
+  background: linear-gradient(180deg, rgba(20, 16, 20, 0.82) 0%, rgba(20, 16, 20, 0.94) 100%);
+  backdrop-filter: blur(6px); border-top: 1px solid rgba(201, 162, 75, 0.5); padding-bottom: 5.5rem;
+}
+.pennant-jewel {
+  position: absolute; left: 50%; bottom: 0.9rem; transform: translateX(-50%); width: 8px; height: 8px; border-radius: 9999px;
+  background: #e4d4a6; box-shadow: 0 0 10px rgba(228, 212, 166, 0.8);
+}
+.tab-pill { transition: all 0.2s ease; color: rgba(248, 244, 234, 0.5); }
+.tab-pill.active-tab { background: rgba(201, 162, 75, 0.15); color: #e4d4a6; }

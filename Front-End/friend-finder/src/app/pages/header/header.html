@@ -1,0 +1,97 @@
+<nav
+  class="relative z-50 flex items-center justify-between px-6 sm:px-10 py-5 bg-[#0D0B0A] border-b border-white/5"
+>
+  <a routerLink="/" class="flex items-center gap-2.5">
+    <svg width="26" height="26" viewBox="0 0 400 400">
+      <g stroke="#C9A24B" stroke-width="7" fill="none">
+        <circle cx="200" cy="200" r="150" />
+        <path d="M200 60 L200 340 M60 200 L340 200 M97 97 L303 303 M303 97 L97 303" />
+      </g>
+    </svg>
+    <span class="font-display font-semibold text-xl text-white tracking-wide">Friend Finder</span>
+  </a>
+
+  <div class="hidden md:flex items-center gap-8">
+    <a
+      *ngIf="router.url !== '/'"
+      routerLink="/"
+      class="text-sm text-white/70 hover:text-gold transition"
+    >
+      {{ dict.nav_home[currentLang] }}
+    </a>
+  </div>
+
+  <div class="flex items-center gap-3 sm:gap-5">
+    <div class="relative lang-dropdown">
+      <button
+        (click)="toggleDropdown()"
+        class="flex items-center gap-1.5 text-sm text-white/70 hover:text-gold transition px-2 py-1"
+      >
+        <span class="uppercase font-semibold tracking-wider">{{ currentLang }}</span>
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="opacity-70"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      <div
+        *ngIf="isDropdownOpen"
+        class="absolute ltr:right-0 rtl:left-0 mt-3 w-32 bg-[#12100f] border border-white/10 rounded-lg shadow-xl overflow-hidden py-1 z-50"
+      >
+        <button
+          (click)="applyLang('en')"
+          [ngClass]="{
+            'text-gold bg-white/5': currentLang === 'en',
+            'text-white/70': currentLang !== 'en',
+          }"
+          class="w-full text-start px-4 py-2.5 text-sm hover:bg-white/5 hover:text-gold transition"
+        >
+          English
+        </button>
+        <button
+          (click)="applyLang('ar')"
+          [ngClass]="{
+            'text-gold bg-white/5': currentLang === 'ar',
+            'text-white/70': currentLang !== 'ar',
+          }"
+          class="w-full text-start px-4 py-2.5 text-sm hover:bg-white/5 hover:text-gold transition"
+        >
+          العربية
+        </button>
+        <button
+          (click)="applyLang('de')"
+          [ngClass]="{
+            'text-gold bg-white/5': currentLang === 'de',
+            'text-white/70': currentLang !== 'de',
+          }"
+          class="w-full text-start px-4 py-2.5 text-sm hover:bg-white/5 hover:text-gold transition"
+        >
+          Deutsch
+        </button>
+      </div>
+    </div>
+
+    <a
+      *ngIf="router.url !== '/login'"
+      routerLink="/login"
+      class="text-xs sm:text-sm font-medium text-white/70 hover:text-gold transition"
+    >
+      {{ dict.login_btn[currentLang] }}
+    </a>
+
+    <a
+      *ngIf="router.url !== '/register'"
+      routerLink="/register"
+      class="text-xs sm:text-sm font-semibold text-[#17130E] gold-btn px-4 sm:px-5 py-2 rounded-full shadow-lg shadow-gold/20 whitespace-nowrap"
+    >
+      {{ dict.join_now[currentLang] }}
+    </a>
+  </div>
+</nav>
