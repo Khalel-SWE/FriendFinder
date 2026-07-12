@@ -26,7 +26,19 @@ html, body {
   font-family: var(--font-body);
   background-color: #0c0a09;
   color: white;
+  scrollbar-gutter: stable; /* بتحجز مكان للسكرول عشان الناف بار ميرقصش */
+  overflow-x: hidden;
 }
+
+/* ================== السر هنا ================== */
+/* السطور دي بتجبر الأنجولار إنه ياخد الحجم الكامل وميضغطش الناف بار */
+app-login, app-register, app-home {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+/* ============================================== */
 
 body.font-ar {
   font-family: var(--font-arBody);

@@ -1,1 +1,72 @@
-<p>home works!</p>
+<div class="relative w-full flex-1 flex flex-col hero-bg overflow-hidden">
+  <div class="hero-vignette z-0"></div>
+
+  <div
+    class="relative z-10 flex-1 flex flex-col lg:flex-row items-center justify-between px-6 sm:px-16 py-10 w-full max-w-[90rem] mx-auto gap-10"
+  >
+    <div
+      class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-start reveal lg:ltr:pl-10 lg:rtl:pr-10"
+    >
+      <p class="text-[12px] tracking-[0.3em] text-gold uppercase mb-4 font-semibold">
+        {{ dict.welcome[currentLang] }}
+      </p>
+      <h1
+        class="font-display italic text-white text-5xl md:text-7xl leading-tight mb-6 drop-shadow-lg"
+      >
+        {{ dict.title[currentLang] }}
+      </h1>
+      <p class="text-white/60 text-lg md:text-xl max-w-lg leading-relaxed font-light">
+        {{ dict.subtitle[currentLang] }}
+      </p>
+    </div>
+
+    <div class="w-full lg:w-1/2 flex justify-center lg:justify-end relative reveal delay-200">
+      <svg
+        viewBox="0 0 400 400"
+        class="w-[22rem] h-[22rem] sm:w-[28rem] sm:h-[28rem] lg:w-136 lg:h-136 opacity-[0.55] drop-shadow-2xl z-0 pointer-events-none"
+      >
+        <g class="orbit-rev">
+          <circle
+            cx="200"
+            cy="200"
+            r="188"
+            fill="none"
+            stroke="#E4D4A6"
+            stroke-opacity=".35"
+            stroke-width="1"
+            stroke-dasharray="2 7"
+          />
+        </g>
+        <g class="orbit">
+          <circle
+            cx="200"
+            cy="200"
+            r="150"
+            fill="none"
+            stroke="#C9A24B"
+            stroke-opacity=".45"
+            stroke-width="1"
+          />
+        </g>
+        <g stroke="#C9A24B" stroke-opacity=".6" stroke-width="1.2" fill="none">
+          <line x1="200" y1="30" x2="200" y2="370" />
+          <line x1="30" y1="200" x2="370" y2="200" />
+          <line x1="97" y1="97" x2="303" y2="303" />
+          <line x1="303" y1="97" x2="97" y2="303" />
+        </g>
+        <circle cx="200" cy="200" r="46" fill="none" stroke="#E4D4A6" stroke-width="1.5" />
+        <text
+          x="200"
+          y="207"
+          text-anchor="middle"
+          font-family="Cormorant Garamond"
+          font-style="italic"
+          font-size="26"
+          fill="#E4D4A6"
+        >
+          FF
+        </text>
+      </svg>
+    </div>
+  </div>
+</div>
