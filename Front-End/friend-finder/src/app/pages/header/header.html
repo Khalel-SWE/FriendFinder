@@ -1,6 +1,7 @@
 <nav
   class="relative z-50 flex items-center justify-between px-6 sm:px-10 py-5 bg-[#0D0B0A] border-b border-white/5 min-h-24"
 >
+  <!-- Logo -->
   <a routerLink="/" class="flex items-center gap-2.5">
     <svg width="26" height="26" viewBox="0 0 400 400">
       <g stroke="#C9A24B" stroke-width="7" fill="none">
@@ -8,26 +9,22 @@
         <path d="M200 60 L200 340 M60 200 L340 200 M97 97 L303 303 M303 97 L97 303" />
       </g>
     </svg>
-    <span class="font-display font-semibold text-xl text-white tracking-wide">Friend Finder</span>
+
+    <span class="font-display font-semibold text-xl text-white tracking-wide"> Friend Finder </span>
   </a>
 
-  <div class="hidden md:flex items-center gap-8">
-    <a
-      *ngIf="router.url !== '/'"
-      routerLink="/"
-      class="text-sm text-white/70 hover:text-gold transition"
-    >
-      {{ dict.nav_home[currentLang] }}
-    </a>
-  </div>
-
+  <!-- Right actions -->
   <div class="flex items-center gap-3 sm:gap-5">
+    <!-- Language -->
     <div class="relative lang-dropdown">
       <button
         (click)="toggleDropdown()"
-        class="flex items-center gap-1.5 text-sm text-white/70 hover:text-gold transition px-2 py-1"
+        class="h-10 flex items-center gap-1.5 text-sm text-white/70 hover:text-gold transition px-3"
       >
-        <span class="uppercase font-semibold tracking-wider">{{ currentLang }}</span>
+        <span class="uppercase font-semibold tracking-wider">
+          {{ currentLang }}
+        </span>
+
         <svg
           width="12"
           height="12"
@@ -55,6 +52,7 @@
         >
           English
         </button>
+
         <button
           (click)="applyLang('ar')"
           [ngClass]="{
@@ -65,6 +63,7 @@
         >
           العربية
         </button>
+
         <button
           (click)="applyLang('de')"
           [ngClass]="{
@@ -78,18 +77,20 @@
       </div>
     </div>
 
+    <!-- Sign In -->
     <a
       *ngIf="router.url !== '/login'"
       routerLink="/login"
-      class="text-xs sm:text-sm font-medium text-white/70 hover:text-gold transition"
+      class="h-10 px-5 inline-flex items-center justify-center text-xs sm:text-sm font-medium text-white/70 hover:text-gold transition whitespace-nowrap"
     >
       {{ dict.login_btn[currentLang] }}
     </a>
 
+    <!-- Register -->
     <a
       *ngIf="router.url !== '/register'"
       routerLink="/register"
-      class="text-xs sm:text-sm font-semibold text-[#17130E] gold-btn px-4 sm:px-5 py-2 rounded-full shadow-lg shadow-gold/20 whitespace-nowrap"
+      class="h-10 px-5 inline-flex items-center justify-center text-xs sm:text-sm font-semibold text-[#17130E] gold-btn rounded-full shadow-lg shadow-gold/20 whitespace-nowrap"
     >
       {{ dict.join_now[currentLang] }}
     </a>

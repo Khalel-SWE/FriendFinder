@@ -22,11 +22,12 @@
 }
 
 /* الإعدادات الأساسية للـ Body */
-html, body {
-  font-family: var(--font-body);
-  background-color: #0c0a09;
-  color: white;
-  scrollbar-gutter: stable; /* بتحجز مكان للسكرول عشان الناف بار ميرقصش */
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
