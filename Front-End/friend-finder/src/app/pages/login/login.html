@@ -1,4 +1,4 @@
-<div class="relative w-full flex-1 flex flex-col hero-bg justify-center">
+<!-- <div class="relative w-full flex-1 flex flex-col hero-bg justify-center">
   <div class="hero-vignette z-0"></div>
 
   <div class="relative flex-1 flex items-center px-6 sm:px-10 py-12 w-full max-w-360 mx-auto">
@@ -96,6 +96,130 @@
             class="gold-btn w-full py-3.5 mt-1 font-semibold tracking-wide rounded-sm text-sm"
           >
             {{ dict.signin_btn[currentLang] }}
+          </button>
+        </form>
+      </div>
+      <span class="pennant-jewel"></span>
+    </div>
+  </div>
+</div> -->
+
+<div class="relative w-full flex-1 flex flex-col hero-bg justify-center">
+  <div class="hero-vignette z-0"></div>
+
+  <div class="relative flex-1 flex items-center px-6 sm:px-10 py-12 w-full max-w-360 mx-auto">
+    <svg
+      viewBox="0 0 400 400"
+      class="hidden lg:block absolute ltr:right-[4%] rtl:left-[4%] top-1/2 -translate-y-1/2 w-136 h-136 opacity-[0.35] z-0 pointer-events-none"
+    >
+      <g class="orbit-rev">
+        <circle
+          cx="200"
+          cy="200"
+          r="188"
+          fill="none"
+          stroke="#E4D4A6"
+          stroke-opacity=".35"
+          stroke-width="1"
+          stroke-dasharray="2 7"
+        />
+      </g>
+      <g class="orbit">
+        <circle
+          cx="200"
+          cy="200"
+          r="150"
+          fill="none"
+          stroke="#C9A24B"
+          stroke-opacity=".45"
+          stroke-width="1"
+        />
+      </g>
+      <g stroke="#C9A24B" stroke-opacity=".6" stroke-width="1.2" fill="none">
+        <line x1="200" y1="30" x2="200" y2="370" />
+        <line x1="30" y1="200" x2="370" y2="200" />
+        <line x1="97" y1="97" x2="303" y2="303" />
+        <line x1="303" y1="97" x2="97" y2="303" />
+      </g>
+      <circle cx="200" cy="200" r="46" fill="none" stroke="#E4D4A6" stroke-width="1.5" />
+      <text
+        x="200"
+        y="207"
+        text-anchor="middle"
+        font-family="Cormorant Garamond"
+        font-style="italic"
+        font-size="26"
+        fill="#E4D4A6"
+      >
+        FF
+      </text>
+    </svg>
+
+    <div
+      class="relative z-10 pennant-wrap w-full max-w-sm reveal mx-auto lg:mx-0 lg:ltr:ml-[8%] lg:rtl:mr-[8%]"
+    >
+      <div class="pennant px-8 pt-12">
+        <p class="text-[11px] tracking-[0.3em] text-gold uppercase mb-2">
+          {{ dict.login_eyebrow[currentLang] }}
+        </p>
+        <h1 class="font-display italic text-white text-3xl leading-tight mb-2">
+          {{ dict.login_headline[currentLang] }}
+        </h1>
+        <p class="text-white/45 text-sm mb-7">{{ dict.login_welcome_sub[currentLang] }}</p>
+
+        <div
+          *ngIf="errorMessage"
+          class="mb-4 text-xs text-red-400 bg-red-900/20 border border-red-500/30 px-3 py-2 rounded-sm text-start rtl:text-end"
+        >
+          {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+          <div>
+            <label
+              class="block text-[11px] font-semibold tracking-widest uppercase text-white/50 mb-2"
+              >{{ dict.label_email[currentLang] }}</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              [placeholder]="dict.ph_email[currentLang]"
+              class="underline-field w-full py-2 text-sm text-start rtl:text-end"
+              [ngClass]="{
+                'border-red-500/50':
+                  loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
+              }"
+            />
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label
+                class="block text-[11px] font-semibold tracking-widest uppercase text-white/50"
+                >{{ dict.label_password[currentLang] }}</label
+              >
+              <a
+                href="#"
+                class="text-[11px] font-semibold text-gold hover:text-goldSoft transition"
+                >{{ dict.forgot[currentLang] }}</a
+              >
+            </div>
+            <input
+              type="password"
+              formControlName="password"
+              [placeholder]="dict.ph_password[currentLang]"
+              class="underline-field w-full py-2 text-sm text-start rtl:text-end"
+              [ngClass]="{
+                'border-red-500/50':
+                  loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+              }"
+            />
+          </div>
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="gold-btn w-full py-3.5 mt-1 font-semibold tracking-wide rounded-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ isLoading ? dict.loading_btn[currentLang] : dict.signin_btn[currentLang] }}
           </button>
         </form>
       </div>
