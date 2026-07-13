@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -35,40 +35,59 @@ export class Login {
     ph_password: { en: '••••••••', ar: '••••••••', de: '••••••••' },
     signin_btn: { en: 'Sign In', ar: 'تسجيل الدخول', de: 'Anmelden' },
     loading_btn: { en: 'Signing in...', ar: 'جاري الدخول...', de: 'Anmelden...' },
+    
+    // ================= رسائل الإيرور الاحترافية =================
+    err_req_email: { en: 'Email is required.', ar: 'البريد الإلكتروني مطلوب.', de: 'E-Mail ist erforderlich.' },
+    err_inv_email: { en: 'Invalid email format.', ar: 'صيغة البريد غير صحيحة.', de: 'Ungültiges E-Mail-Format.' },
+    err_req_pass: { en: 'Password is required.', ar: 'كلمة المرور مطلوبة.', de: 'Passwort ist erforderlich.' },
     err_bad_creds: { en: 'Invalid email or password.', ar: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.', de: 'Falsche E-Mail oder Passwort.' },
     err_server: { en: 'Cannot connect to server.', ar: 'لا يمكن الاتصال بالخادم.', de: 'Keine Verbindung zum Server.' }
   };
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth, private router: Router, private cdr: ChangeDetectorRef) {}
 
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
+      
+      // بنصطاد الحقل اللي فيه المشكلة ونعرض رسالته
+      if (this.loginForm.get('email')?.hasError('required')) {
+        this.errorMessage = this.dict.err_req_email[this.currentLang];
+      } else if (this.loginForm.get('email')?.hasError('email')) {
+        this.errorMessage = this.dict.err_inv_email[this.currentLang];
+      } else if (this.loginForm.get('password')?.hasError('required')) {
+        this.errorMessage = this.dict.err_req_pass[this.currentLang];
+      }
+      
+      this.cdr.detectChanges();
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = null;
+    this.cdr.detectChanges();
 
     this.auth.login(this.loginForm.value as any).subscribe({
       next: (response) => {
         this.isLoading = false;
-        console.log('✅ Token:', response.token);
+        
+        // ====== اللقطة السحرية: حفظ التوكن في المتصفح ======
+        localStorage.setItem('auth_token', response.token);
+        
         this.router.navigate(['/']);
       },
       error: (err) => {
-        console.error('🔴 Error caught in Angular:', err); // سطر المراقبة
         this.isLoading = false;
         
-        if (err.status === 401) {
-          this.errorMessage = this.dict.err_bad_creds[this.currentLang] || 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+        if (err.status === 401 || err.status === 403) {
+          this.errorMessage = this.dict.err_bad_creds[this.currentLang];
         } else if (err.status === 0) {
-          this.errorMessage = this.dict.err_server[this.currentLang] || 'لا يمكن الاتصال بالخادم.';
+          this.errorMessage = this.dict.err_server[this.currentLang];
         } else {
-          this.errorMessage = err.error?.message || 'حدث خطأ غير متوقع.';
+          this.errorMessage = err.error?.message || 'An unexpected error occurred.';
         }
 
-        console.log('🔴 Error Message set to:', this.errorMessage); // سطر المراقبة
+        this.cdr.detectChanges();
       }
     });
   }
