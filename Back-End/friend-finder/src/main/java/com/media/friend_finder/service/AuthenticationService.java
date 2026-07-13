@@ -5,6 +5,7 @@ import com.media.friend_finder.dto.LoginRequest;
 import com.media.friend_finder.dto.RegisterRequest;
 import com.media.friend_finder.entity.Profile;
 import com.media.friend_finder.entity.User;
+import com.media.friend_finder.exception.UserAlreadyExistsException;
 import com.media.friend_finder.repository.ProfileRepository;
 import com.media.friend_finder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,13 @@ public class AuthenticationService {
 
     @Transactional // عشان لو حصلت مشكلة في سيف البروفايل، اليوزر ميتسيفش لوحده
     public AuthResponse register(RegisterRequest request) {
+//        if(userRepository.existsByEmail(request.getEmail())) {
+//            throw new RuntimeException("Email already exists!");
+//        }
+
         if(userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists!");
+            // غيرنا دي للإكسبشن المخصص اللي عملناه
+            throw new UserAlreadyExistsException("البريد الإلكتروني مسجل مسبقاً");
         }
 
         // 1. كريت وحفظ اليوزر
