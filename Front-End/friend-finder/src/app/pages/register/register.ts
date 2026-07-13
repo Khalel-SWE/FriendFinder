@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core'; // استدعينا السلاح هنا
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -45,24 +45,41 @@ export class Register {
     ph_password_new: { en: 'At least 8 characters', ar: '8 حروف على الأقل', de: 'Mindestens 8 Zeichen' },
     create_btn: { en: 'Create my account', ar: 'إنشاء حسابي', de: 'Konto erstellen' },
     loading_btn: { en: 'Creating account...', ar: 'جاري الإنشاء...', de: 'Konto wird erstellt...' },
+    
+    // ================= رسائل الإيرور الاحترافية =================
     err_email_exists: { en: 'Email is already registered.', ar: 'البريد الإلكتروني مسجل مسبقاً.', de: 'E-Mail ist bereits registriert.' },
-    err_server: { en: 'Cannot connect to server.', ar: 'لا يمكن الاتصال بالخادم.', de: 'Keine Verbindung zum Server.' }
+    err_server: { en: 'Cannot connect to server.', ar: 'لا يمكن الاتصال بالخادم.', de: 'Keine Verbindung zum Server.' },
+    err_req_fname: { en: 'First name is required.', ar: 'الاسم الأول مطلوب.', de: 'Vorname ist erforderlich.' },
+    err_req_lname: { en: 'Last name is required.', ar: 'اسم العائلة مطلوب.', de: 'Nachname ist erforderlich.' },
+    err_req_email: { en: 'A valid email is required.', ar: 'بريد إلكتروني صحيح مطلوب.', de: 'Eine gültige E-Mail ist erforderlich.' },
+    err_bad_pass: { en: 'Password must be 7-12 chars with letters, numbers, and symbols.', ar: 'كلمة المرور يجب أن تكون 7-12 حرفاً وتحتوي على حروف وأرقام ورموز.', de: 'Das Passwort muss 7-12 Zeichen lang sein und Buchstaben, Zahlen und Symbole enthalten.' }
+    // ==========================================================
   };
 
-  // حقنّا الـ ChangeDetectorRef هنا
   constructor(private auth: Auth, private router: Router, private cdr: ChangeDetectorRef) {}
 
   onSubmit() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
-      this.errorMessage = this.currentLang === 'ar' ? 'الرجاء التأكد من صحة البيانات' : 'Please check your input.';
-      this.cdr.detectChanges(); // إجبار تحديث الشاشة
+      
+      // هنا بنحدد الحقل اللي فيه المشكلة بالظبط ونطلع رسالته
+      if (this.registerForm.get('firstName')?.invalid) {
+        this.errorMessage = this.dict.err_req_fname[this.currentLang];
+      } else if (this.registerForm.get('lastName')?.invalid) {
+        this.errorMessage = this.dict.err_req_lname[this.currentLang];
+      } else if (this.registerForm.get('email')?.invalid) {
+        this.errorMessage = this.dict.err_req_email[this.currentLang];
+      } else if (this.registerForm.get('password')?.invalid) {
+        this.errorMessage = this.dict.err_bad_pass[this.currentLang];
+      }
+      
+      this.cdr.detectChanges();
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = null;
-    this.cdr.detectChanges(); // إجبار تحديث الشاشة
+    this.cdr.detectChanges();
 
     this.auth.register(this.registerForm.value as any).subscribe({
       next: (response) => {
@@ -73,14 +90,16 @@ export class Register {
         this.isLoading = false;
         
         if (err.status === 409) {
-          this.errorMessage = this.dict.err_email_exists[this.currentLang] || 'البريد الإلكتروني مسجل مسبقاً.';
+          this.errorMessage = this.dict.err_email_exists[this.currentLang];
+        } else if (err.status === 400) {
+          // لو الباك إند هو اللي قفش الـ Validation ورجع 400 Bad Request
+          this.errorMessage = err.error?.message || 'Invalid input data.';
         } else if (err.status === 0) {
-          this.errorMessage = this.dict.err_server[this.currentLang] || 'لا يمكن الاتصال بالخادم.';
+          this.errorMessage = this.dict.err_server[this.currentLang];
         } else {
-          this.errorMessage = err.error?.message || 'حدث خطأ غير متوقع.';
+          this.errorMessage = err.error?.message || 'An unexpected error occurred.';
         }
         
-        // دي الضربة القاضية اللي بتصحي الـ HTML وتخليه يعرض المربع فوراً
         this.cdr.detectChanges(); 
       }
     });
