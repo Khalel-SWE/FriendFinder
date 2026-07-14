@@ -5,8 +5,8 @@ import { LanguageService } from '../../core/services/language';
   selector: 'app-notification-bell',
   standalone: true,
   imports: [],
-  templateUrl: './notification-bell.component.html',
-  styleUrl: './notification-bell.component.css'
+  templateUrl: './notification-bell.html', // شلنا .component
+  styleUrl: './notification-bell.css'      // شلنا .component
 })
 export class NotificationBellComponent {
   open = signal(false);

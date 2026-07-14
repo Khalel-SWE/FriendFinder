@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
 /* استدعاء الخطوط الفخمة اللي إنت طلبتها */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
 
 /* تعريف ألوانك في Tailwind v4 */
 @theme {
@@ -81,7 +81,6 @@ app-login, app-register, app-home, app-feed-layout {
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
-  min-height: 100vh;
 }
 
 /* ================= Auth Theme Classes ================= */

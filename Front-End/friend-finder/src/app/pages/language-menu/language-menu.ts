@@ -6,8 +6,8 @@ import { Lang } from '../../i18n';
   selector: 'app-language-menu',
   standalone: true,
   imports: [],
-  templateUrl: './language-menu.component.html',
-  styleUrl: './language-menu.component.css'
+  templateUrl: './language-menu.html', // شلنا .component
+  styleUrl: './language-menu.css'      // شلنا .component
 })
 export class LanguageMenuComponent {
   open = signal(false);

@@ -7,8 +7,8 @@ import { Auth } from '../../core/services/auth'; // استدعينا الاوث 
   selector: 'app-account-menu',
   standalone: true,
   imports: [],
-  templateUrl: './account-menu.component.html',
-  styleUrl: './account-menu.component.css'
+  templateUrl: './account-menu.html', // شلنا .component
+  styleUrl: './account-menu.css'      // شلنا .component
 })
 export class AccountMenuComponent {
   open = signal(false);
