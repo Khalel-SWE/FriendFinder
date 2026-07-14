@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <a routerLink="/home" class="navbar-brand">
+    <svg width="26" height="26" viewBox="0 0 400 400">
+      <g stroke="#C9A24B" stroke-width="8" fill="none">
+        <circle cx="200" cy="200" r="150" />
+
+        <path d="M200 60 L200 340 M60 200 L340 200 M97 97 L303 303 M303 97 L97 303" />
+      </g>
+
+      <text
+        x="200"
+        y="209"
+        text-anchor="middle"
+        font-family="Cormorant Garamond"
+        font-style="italic"
+        font-size="48"
+        fill="#C9A24B"
+      >
+        FF
+      </text>
+    </svg>
+
+    <span class="navbar-name">{{ lang.t('brand') }}</span>
+  </a>
+
+  <input type="text" class="navbar-search" [placeholder]="lang.t('search_ph')" />
+
+  <div class="navbar-actions">
+    <app-notification-bell></app-notification-bell>
+
+    <app-language-menu></app-language-menu>
+
+    <app-account-menu></app-account-menu>
+  </div>
+</nav>

@@ -1,0 +1,45 @@
+lang-wrap { position: relative; }
+
+.lang-btn {
+
+  display: flex; align-items: center; gap: 6px;
+
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12);
+
+  color: rgba(255,255,255,.8); font-size: .75rem; font-weight: 700;
+
+  padding: .4rem .7rem; border-radius: 9999px; cursor: pointer;
+
+}
+
+.lang-chev { transition: transform .2s ease; }
+
+.lang-chev.open { transform: rotate(180deg); }
+
+.lang-menu {
+
+  position: absolute; top: calc(100% + 8px); inset-inline-end: 0;
+
+  background: var(--ink-soft); border: 1px solid rgba(201,162,75,.3);
+
+  border-radius: 10px; overflow: hidden; min-width: 150px;
+
+  box-shadow: 0 15px 30px rgba(0,0,0,.45); z-index: 50;
+
+}
+
+.lang-item {
+
+  display: block; width: 100%; text-align: start;
+
+  background: none; border: none; color: rgba(255,255,255,.7);
+
+  font-size: .8rem; padding: .7rem 1rem; cursor: pointer;
+
+  transition: background .15s ease, color .15s ease;
+
+}
+
+.lang-item:hover { background: rgba(201,162,75,.12); color: #fff; }
+
+.lang-item.active { color: var(--gold); font-weight: 700; }

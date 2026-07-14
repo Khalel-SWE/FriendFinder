@@ -1,0 +1,33 @@
+<div class="lang-wrap" (mouseleave)="close()">
+  <button class="lang-btn" (click)="toggle()" type="button">
+    <span>{{ codes[lang.currentLang()] }}</span>
+
+    <svg
+      class="lang-chev"
+      [class.open]="open()"
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div class="lang-menu">
+      @for (l of langs; track l) {
+        <button
+          type="button"
+          class="lang-item"
+          [class.active]="lang.currentLang() === l"
+          (click)="choose(l)"
+        >
+          {{ labels[l] }}
+        </button>
+      }
+    </div>
+  }
+</div>

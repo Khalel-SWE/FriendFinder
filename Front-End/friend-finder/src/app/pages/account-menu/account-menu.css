@@ -1,0 +1,43 @@
+.acct-wrap { position: relative; }
+
+.acct-avatar {
+
+  width: 36px; height: 36px; border-radius: 9999px; border: none; cursor: pointer;
+
+  background: linear-gradient(135deg, #B4893A, #D9B769);
+
+  box-shadow: 0 0 0 2px var(--gold);
+
+  font-size: .7rem; font-weight: 700; color: #17130E;
+
+  display: flex; align-items: center; justify-content: center;
+
+}
+
+.acct-menu {
+
+  position: absolute; inset-inline-end: 0; margin-top: .5rem;
+
+  width: 210px; background: #fff; color: var(--text);
+
+  border: 1px solid var(--ivory-2); border-radius: 10px;
+
+  box-shadow: 0 15px 30px rgba(0,0,0,.2); overflow: hidden; z-index: 50;
+
+}
+
+.acct-item {
+
+  display: block; width: 100%; text-align: start;
+
+  background: none; border: none; cursor: pointer;
+
+  padding: .65rem 1rem; font-size: .85rem; color: var(--text);
+
+}
+
+.acct-item:hover { background: var(--ivory); }
+
+.acct-divider { border-top: 1px solid var(--ivory-2); }
+
+.acct-logout { color: var(--burgundy); font-weight: 600; }

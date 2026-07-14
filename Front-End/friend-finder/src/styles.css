@@ -21,46 +21,68 @@
   --font-arBody: 'Cairo', sans-serif;
 }
 
-/* الإعدادات الأساسية للـ Body */
-html,
-body {
+:root {
+  --ink: #141014;
+  --ink-soft: #1D171B;
+  --gold: #C9A24B;
+  --gold-soft: #E4D4A6;
+  --burgundy: #5C1A2B;
+  --ivory: #F8F4EA;
+  --ivory-2: #F1EADA;
+  --text: #211C1F;
+  --muted: #8E8175;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-arDisplay: 'Amiri', serif;
+  --font-arBody: 'Cairo', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
   width: 100%;
   min-height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: var(--font-body);
+  background: var(--ivory);
+  color: var(--text);
 }
 
-/* ================== السر هنا ================== */
-/* السطور دي بتجبر الأنجولار إنه ياخد الحجم الكامل وميضغطش الناف بار */
-app-login, app-register, app-home {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 100%;
-}
-/* ============================================== */
+body.font-ar { font-family: var(--font-arBody); }
+body.font-ar .font-display { font-family: var(--font-arDisplay) !important; }
+body.font-ar .font-body { font-family: var(--font-arBody) !important; }
 
-body.font-ar {
-  font-family: var(--font-arBody);
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #D9CFB8; border-radius: 8px; }
 
-body.font-ar .font-display {
-  font-family: var(--font-arDisplay) !important;
-}
-
-body.font-ar .font-body {
-  font-family: var(--font-arBody) !important;
-}
-
-/* زرار الجولد بتاعك */
+/* ================== Shared Primitives ================== */
 .gold-btn {
   background: linear-gradient(135deg, #d9b769, #b4893a);
-  color: #17130e;
+  color: #17130e; border: none; cursor: pointer;
+  font-weight: 600; letter-spacing: .02em;
   transition: filter 0.2s ease, transform 0.15s ease;
 }
 .gold-btn:hover { filter: brightness(1.08); }
 .gold-btn:active { transform: scale(0.98); }
+
+.ring-gold { box-shadow: 0 0 0 2px var(--gold); }
+
+.ff-card {
+  background: #fff;
+  border: 1px solid var(--ivory-2);
+  border-radius: 10px;
+}
+
+/* السطور دي بتجبر الأنجولار إنه ياخد الحجم الكامل */
+app-login, app-register, app-home, app-feed-layout {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  min-height: 100vh;
+}
 
 /* ================= Auth Theme Classes ================= */
 .hero-bg {
