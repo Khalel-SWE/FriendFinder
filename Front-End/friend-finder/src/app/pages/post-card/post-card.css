@@ -1,0 +1,85 @@
+.post-card { background: #fff; border: 1px solid var(--ivory-2); border-radius: 10px; padding: 1.25rem; }
+
+.post-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .9rem; }
+
+.post-avatar {
+
+  width: 40px; height: 40px; border-radius: 9999px; flex-shrink: 0;
+
+  background: linear-gradient(135deg, #5C1A2B, #8a3350); color: #fff;
+
+  box-shadow: 0 0 0 2px var(--gold);
+
+  display: flex; align-items: center; justify-content: center;
+
+  font-size: .7rem; font-weight: 700;
+
+}
+
+.post-author { font-family: var(--font-display); font-size: 1rem; color: var(--text); margin: 0; line-height: 1; }
+
+.post-time { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: .35rem 0 0; }
+
+.post-text { color: var(--text); line-height: 1.6; margin: 0 0 1rem; font-size: .95rem; }
+
+.post-media { border-radius: 8px; overflow: hidden; margin-bottom: 1rem; background: var(--ivory); }
+
+.post-media img, .post-media video { width: 100%; max-height: 420px; object-fit: cover; display: block; }
+
+.media-placeholder {
+
+  height: 220px; display: flex; align-items: center; justify-content: center;
+
+  color: var(--gold); background: linear-gradient(135deg, #F1EADA, #E7DCC0);
+
+}
+
+.media-placeholder.video { background: linear-gradient(135deg, #2a2320, #1a1512); color: var(--gold-soft); }
+
+.post-summary {
+
+  display: flex; align-items: center; justify-content: space-between;
+
+  font-size: .78rem; color: var(--muted);
+
+  padding-bottom: .8rem; border-bottom: 1px solid var(--ivory-2); margin-bottom: .5rem;
+
+}
+
+.reactions-summary { display: flex; align-items: center; gap: 3px; }
+
+.summary-count { margin-inline-start: 4px; }
+
+.post-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .35rem; padding-top: .3rem; }
+
+.reaction-btn {
+
+  display: flex; align-items: center; gap: 4px;
+
+  background: var(--ivory); border: 1px solid transparent;
+
+  border-radius: 9999px; padding: .35rem .7rem; cursor: pointer;
+
+  font-size: .8rem; color: var(--text);
+
+  transition: border-color .15s ease, background .15s ease;
+
+}
+
+.reaction-btn:hover { border-color: var(--gold); background: #fff; }
+
+.reaction-btn .count { font-size: .72rem; color: var(--muted); }
+
+.comment-btn {
+
+  display: flex; align-items: center; gap: 6px;
+
+  background: none; border: none; cursor: pointer;
+
+  font-size: .8rem; color: var(--muted); padding: .35rem .5rem;
+
+  margin-inline-start: auto; transition: color .15s ease;
+
+}
+
+.comment-btn:hover { color: var(--gold); }

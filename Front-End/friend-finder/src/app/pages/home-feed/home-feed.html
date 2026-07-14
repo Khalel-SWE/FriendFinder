@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+
+<div class="feed-shell">
+  <main class="feed-main">
+    <app-post-composer (postCreated)="onPostCreated($event)"></app-post-composer>
+
+    @for (post of posts(); track post.id) {
+      <app-post-card [post]="post" (reactionClicked)="onReaction(post, $event)"></app-post-card>
+    }
+  </main>
+
+  <aside class="feed-side">
+    <app-friend-suggestions></app-friend-suggestions>
+  </aside>
+</div>

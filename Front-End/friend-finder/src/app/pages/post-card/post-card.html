@@ -1,0 +1,94 @@
+<article class="post-card">
+  <div class="post-head">
+    <div class="post-avatar">{{ post().authorInitials }}</div>
+
+    <div>
+      <p class="post-author">{{ post().authorName }}</p>
+
+      <p class="post-time">{{ post().timeLabel }}</p>
+    </div>
+  </div>
+
+  @if (post().text) {
+    <p class="post-text">{{ post().text }}</p>
+  }
+
+  @if (post().mediaType) {
+    <div class="post-media">
+      @if (post().mediaUrl) {
+        @if (post().mediaType === 'image') {
+          <img [src]="post().mediaUrl" alt="" />
+        } @else {
+          <video [src]="post().mediaUrl" controls></video>
+        }
+      } @else {
+        <div class="media-placeholder" [class.video]="post().mediaType === 'video'">
+          @if (post().mediaType === 'image') {
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+          } @else {
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+            >
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="post-summary">
+    <span class="reactions-summary">
+      @for (k of reactionKeys; track k) {
+        @if (post().reactions[k] > 0) {
+          <span>{{ reactionIcons[k] }}</span>
+        }
+      }
+
+      <span class="summary-count">{{ totalReactions() }}</span>
+    </span>
+
+    <span>{{ post().commentsCount }} {{ lang.t('comments_label') }}</span>
+  </div>
+
+  <div class="post-actions">
+    @for (k of reactionKeys; track k) {
+      <button type="button" class="reaction-btn" (click)="reactionClicked.emit(k)" [title]="k">
+        <span>{{ reactionIcons[k] }}</span>
+
+        <span class="count">{{ post().reactions[k] }}</span>
+      </button>
+    }
+
+    <button type="button" class="comment-btn">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+
+      {{ post().commentsCount }}
+    </button>
+  </div>
+</article>

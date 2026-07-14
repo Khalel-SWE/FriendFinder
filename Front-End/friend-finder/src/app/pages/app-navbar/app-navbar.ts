@@ -12,6 +12,6 @@ import { LanguageService } from '../../core/services/language';
   templateUrl: './app-navbar.component.html',
   styleUrl: './app-navbar.component.css'
 })
-export class AppNavbarComponent {
+export class AppNavbar {
   constructor(public lang: LanguageService) {}
 }

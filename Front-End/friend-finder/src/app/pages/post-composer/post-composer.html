@@ -1,0 +1,49 @@
+<div class="composer">
+  <div class="composer-row">
+    <div class="composer-avatar">LH</div>
+
+    <textarea
+      rows="2"
+      [(ngModel)]="text"
+      [placeholder]="lang.t('composer_ph')"
+      class="composer-input"
+    ></textarea>
+  </div>
+
+  @if (attachedPreviewUrl()) {
+    <div class="composer-preview">
+      @if (attachedType() === 'image') {
+        <img [src]="attachedPreviewUrl()" alt="" />
+      } @else {
+        <video [src]="attachedPreviewUrl()" controls></video>
+      }
+
+      <button type="button" class="remove-attachment" (click)="removeAttachment()">✕</button>
+    </div>
+  }
+
+  <input #fileInput type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" />
+
+  <div class="composer-footer">
+    <button type="button" class="media-btn" (click)="openFilePicker()">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="M21 15l-5-5L5 21" />
+      </svg>
+
+      {{ lang.t('add_media') }}
+    </button>
+
+    <button type="button" class="gold-btn post-submit" (click)="submit()">
+      {{ lang.t('post_btn') }}
+    </button>
+  </div>
+</div>

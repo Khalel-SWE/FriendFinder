@@ -1,0 +1,19 @@
+.feed-shell {
+
+  max-width: 64rem; margin: 0 auto;
+
+  display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem;
+
+  padding: 1.5rem 1.25rem 3rem;
+
+}
+
+.feed-main { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
+
+@media (max-width: 1024px) {
+
+  .feed-shell { grid-template-columns: 1fr; }
+
+  .feed-side { display: none; }
+
+}

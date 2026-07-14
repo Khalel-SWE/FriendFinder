@@ -1,0 +1,17 @@
+<div class="suggestions-card">
+  <p class="suggestions-title">{{ lang.t('people_you_may_know') }}</p>
+
+  @for (s of suggestions(); track s.id) {
+    <div class="suggestion-row">
+      <div class="suggestion-avatar">{{ s.initials }}</div>
+
+      <div class="suggestion-info">
+        <p class="suggestion-name">{{ s.name }}</p>
+
+        <p class="suggestion-mutual">{{ s.mutualCount }} {{ lang.t('mutual_friends') }}</p>
+      </div>
+
+      <button type="button" class="add-btn" (click)="addFriend(s.id)">{{ lang.t('add') }}</button>
+    </div>
+  }
+</div>
