@@ -1,9 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AppNavbar } from '../app-navbar/app-navbar';
 import { PostComposer } from '../post-composer/post-composer';
 import { PostCard } from '../post-card/post-card';
 import { FriendSuggestions } from '../friend-suggestions/friend-suggestions';
-import { Post, ReactionType } from '../../core/models/post-model';
+import { Post, ReactionType, PostResponse } from '../../core/models/post-model';
+import { PostService } from '../../core/services/post';
+import { InteractionService } from '../../core/services/interaction';
 
 @Component({
   selector: 'app-home-feed',
@@ -12,28 +14,66 @@ import { Post, ReactionType } from '../../core/models/post-model';
   templateUrl: './home-feed.html',
   styleUrl: './home-feed.css'
 })
-export class HomeFeed {
-  posts = signal<Post[]>([
-    {
-      id: 1, authorName: 'Omar Mostafa', authorInitials: 'OM', timeLabel: '3 hours ago',
-      text: "Spent the evening on the Corniche with old friends — the best conversations happen when no one's checking the time.",
-      mediaType: 'image',
-      reactions: { like: 14, haha: 2, love: 6, sad: 0, angry: 0 }, commentsCount: 6
-    },
-    {
-      id: 2, authorName: 'Sara Adel', authorInitials: 'SA', timeLabel: 'Yesterday',
-      text: 'Finally organized the little reunion we kept postponing. Six years apart, zero minutes of awkward silence.',
-      mediaType: 'video',
-      reactions: { like: 30, haha: 5, love: 4, sad: 1, angry: 0 }, commentsCount: 12
-    },
-  ]);
+export class HomeFeed implements OnInit {
+  posts = signal<Post[]>([]);
 
-  onPostCreated(post: Post): void {
-    this.posts.update(list => [post, ...list]);
+  constructor(
+    private postService: PostService,
+    private interactionService: InteractionService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadFeed();
+  }
+
+  loadFeed(): void {
+    this.postService.getFeed().subscribe({
+      next: (responses: PostResponse[]) => {
+        // تحويل الداتا اللي جاية من السيرفر لشكل الـ UI بتاعنا
+        const mappedPosts: Post[] = responses.map(res => ({
+          id: res.id,
+          authorName: `${res.userFirstName} ${res.userLastName}`,
+          authorInitials: (res.userFirstName.charAt(0) + res.userLastName.charAt(0)).toUpperCase(),
+          timeLabel: new Date(res.createdAt).toLocaleDateString(), // مؤقتاً لحد ما نعمل بايب للوقت
+          text: res.content,
+          mediaUrl: res.mediaUrl,
+          mediaType: res.mediaType as 'image' | 'video' | undefined,
+          // الداتا دي مش جاية في الـ DTO حالياً، فهنديها صفر لحد ما تظبطها في الباك إند
+          reactions: { like: 0, haha: 0, love: 0, sad: 0, angry: 0 },
+          commentsCount: 0
+        }));
+        
+        // عكس الترتيب عشان الجديد يظهر فوق
+        this.posts.set(mappedPosts.reverse());
+      },
+      error: (err) => console.error('Error fetching feed', err)
+    });
+  }
+
+  onPostCreated(newPostData: any): void {
+    // لما اليوزر يدوس نشر في الكومبوزر، نبعت للسيرفر
+    this.postService.createPost(newPostData.text, newPostData.file).subscribe({
+      next: (res) => {
+        // نعيد تحميل الفيد بعد نجاح النشر
+        this.loadFeed();
+      },
+      error: (err) => console.error('Error creating post', err)
+    });
   }
 
   onReaction(post: Post, type: ReactionType): void {
+    // تحديث الواجهة فوراً (Optimistic UI Update)
     post.reactions[type]++;
     this.posts.update(list => [...list]);
+
+    // إرسال الريكويست للسيرفر
+    this.interactionService.reactToPost(post.id, type).subscribe({
+      error: (err) => {
+        console.error('Error reacting', err);
+        // لو حصل خطأ، نرجع الواجهة زي ما كانت
+        post.reactions[type]--;
+        this.posts.update(list => [...list]);
+      }
+    });
   }
 }
