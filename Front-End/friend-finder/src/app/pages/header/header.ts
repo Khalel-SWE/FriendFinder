@@ -21,7 +21,7 @@ export class Header implements OnInit {
   isDropdownOpen = false;
   public router = inject(Router);
 
-  dict: Record<string, Record<string, string>> = {
+  dict: any = {
     login_btn: { en: 'Sign In', ar: 'تسجيل الدخول', de: 'Anmelden' },
     join_now: { en: 'Register', ar: 'إنشاء حساب', de: 'Konto erstellen' }
   };
