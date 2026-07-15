@@ -28,58 +28,81 @@ export class HomeFeed implements OnInit {
   loadFeed(): void {
     this.postService.getFeed().subscribe({
       next: (responses: PostResponse[]) => {
+        
+        // 1. الترتيب: بنرتب البوستات من الأحدث للأقدم بناءً على الوقت الحقيقي
+        responses.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
         // تحويل الداتا اللي جاية من السيرفر لشكل الـ UI بتاعنا
         const mappedPosts: Post[] = responses.map(res => ({
           id: res.id,
           authorName: `${res.userFirstName} ${res.userLastName}`,
           authorInitials: (res.userFirstName.charAt(0) + res.userLastName.charAt(0)).toUpperCase(),
-          timeLabel: new Date(res.createdAt).toLocaleDateString(), // مؤقتاً لحد ما نعمل بايب للوقت
+          
+          // 2. الوقت: بنستخدم الدالة الذكية الجديدة
+          timeLabel: this.calculateTimeAgo(res.createdAt),
+          
           text: res.content,
           mediaUrl: res.mediaUrl ? `http://localhost:9090${res.mediaUrl}` : undefined,
-          mediaType: res.mediaType as 'image' | 'video' | undefined,
-          // الداتا دي مش جاية في الـ DTO حالياً، فهنديها صفر لحد ما تظبطها في الباك إند
+          
+          // 3. الميديا: بنستخدم دالة تفهم نوع الملف صح
+          mediaType: this.getMediaType(res.mediaType),
+          
           reactions: { like: 0, haha: 0, love: 0, sad: 0, angry: 0 },
           commentsCount: 0
         }));
         
-        // عكس الترتيب عشان الجديد يظهر فوق
-        this.posts.set(mappedPosts.reverse());
+        // بنحطهم في الـ Signal مباشرة بدون reverse لأننا رتبناهم فوق خلاص
+        this.posts.set(mappedPosts);
       },
       error: (err) => console.error('Error fetching feed', err)
     });
   }
 
-  // onPostCreated(newPostData: any): void {
-  //   // لما اليوزر يدوس نشر في الكومبوزر، نبعت للسيرفر
-  //   this.postService.createPost(newPostData.text, newPostData.file).subscribe({
-  //     next: (res) => {
-  //       // نعيد تحميل الفيد بعد نجاح النشر
-  //       this.loadFeed();
-  //     },
-  //     error: (err) => console.error('Error creating post', err)
-  //   });
-  // }
+  // --- دالة مساعدة: تحديد نوع الميديا ---
+  getMediaType(mimeType?: string): 'image' | 'video' | undefined {
+    if (!mimeType) return undefined;
+    // لو الباك إند بعت video/mp4 هنعتبره video، غير كده هنعتبره image
+    return mimeType.toLowerCase().includes('video') ? 'video' : 'image';
+  }
+
+  // --- دالة مساعدة: حساب الوقت زي الفيس بوك ---
+  calculateTimeAgo(dateString: string): string {
+    if (!dateString) return '';
+    const postDate = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return 'Just now';
+    
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes}m`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d`;
+
+    // لو أقدم من أسبوع يعرض التاريخ العادي
+    return postDate.toLocaleDateString();
+  }
 
   onPostCreated(newPostData: {text?: string, file?: File}): void {
-    // دلوقتي إحنا متأكدين إن newPostData.file شايل الصورة الحقيقية مش undefined
     this.postService.createPost(newPostData.text, newPostData.file).subscribe({
       next: (res) => {
-        this.loadFeed(); // بنعمل ريفريش للفيد عشان البوست الجديد يظهر
+        this.loadFeed(); 
       },
       error: (err) => console.error('Error creating post', err)
     });
   }
 
   onReaction(post: Post, type: ReactionType): void {
-    // تحديث الواجهة فوراً (Optimistic UI Update)
     post.reactions[type]++;
     this.posts.update(list => [...list]);
 
-    // إرسال الريكويست للسيرفر
     this.interactionService.reactToPost(post.id, type).subscribe({
       error: (err) => {
         console.error('Error reacting', err);
-        // لو حصل خطأ، نرجع الواجهة زي ما كانت
         post.reactions[type]--;
         this.posts.update(list => [...list]);
       }
