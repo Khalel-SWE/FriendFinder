@@ -2,7 +2,7 @@ import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { NgIf, NgClass } from '@angular/common';
 import { filter } from 'rxjs';
-
+import { SearchService } from '../../core/services/search';
 import { NotificationBell } from '../notification-bell/notification-bell';
 import { LanguageMenu } from '../language-menu/language-menu';
 import { AccountMenu } from '../account-menu/account-menu';
@@ -26,7 +26,10 @@ export class Header implements OnInit {
     join_now: { en: 'Register', ar: 'إنشاء حساب', de: 'Konto erstellen' }
   };
 
-  constructor(public lang: LanguageService) {}
+  constructor(
+    public lang: LanguageService,
+    private searchService: SearchService
+  ) {}
 
   get currentLang() { 
     return this.lang.currentLang(); 
@@ -61,4 +64,9 @@ export class Header implements OnInit {
       this.isDropdownOpen = false;
     }
   }
+
+  onSearchChange(event: Event) {
+  const text = (event.target as HTMLInputElement).value;
+  this.searchService.setQuery(text); // بنبعت النص للـ Service
+}
 }

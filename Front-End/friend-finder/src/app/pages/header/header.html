@@ -24,6 +24,7 @@
       type="text"
       class="w-full bg-[#1A1512] border border-gold/40 rounded-full px-4 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:border-gold transition-colors"
       [placeholder]="lang.t('search_ph')"
+      (input)="onSearchChange($event)"
     />
   </div>
 
