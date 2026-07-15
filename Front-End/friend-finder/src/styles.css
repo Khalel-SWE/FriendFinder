@@ -130,3 +130,37 @@ app-login, app-register, app-home, app-feed-layout {
 }
 .tab-pill { transition: all 0.2s ease; color: rgba(248, 244, 234, 0.5); }
 .tab-pill.active-tab { background: rgba(201, 162, 75, 0.15); color: #e4d4a6; }
+
+/* تكبير أحجام خطوط وأيقونات الناف بار */
+.navbar-brand svg { width: 32px; height: 32px; }
+.navbar-name { font-size: 1.25rem !important; }
+.navbar-search { font-size: 1rem !important; padding: 0.6rem 1.25rem !important; }
+
+/* تظبيط تموضع القوائم المنسدلة عشان تثبت تحت الأيقونات بالظبط */
+.lang-wrap, .bell-wrap, .acct-wrap {
+  position: relative;
+}
+
+.lang-menu, .bell-menu, .acct-menu {
+  position: absolute;
+  top: calc(100% + 12px) !important; /* بتنزل مسافة شياكة تحت الناف بار بالظبط */
+  inset-inline-end: 0;
+  background: #12100f !important;
+  border: 1px solid rgba(201, 162, 75, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+  z-index: 100;
+}
+
+/* تكبير كرت اقتراحات الأصدقاء عشان يملى المساحة */
+.suggestions-card {
+  padding: 1.5rem !important;
+}
+.suggestion-name {
+  font-size: 0.95rem !important;
+}
+.suggestion-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 0.85rem !important;
+}
