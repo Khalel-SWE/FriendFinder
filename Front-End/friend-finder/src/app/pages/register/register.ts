@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Auth } from '../../core/services/auth';
@@ -7,7 +7,7 @@ import { Auth } from '../../core/services/auth';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink, NgClass, NgIf, ReactiveFormsModule],
+  imports: [NgClass, NgIf, ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

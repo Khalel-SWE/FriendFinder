@@ -1,5 +1,4 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { AppNavbar } from '../app-navbar/app-navbar';
 import { PostComposer } from '../post-composer/post-composer';
 import { PostCard } from '../post-card/post-card';
 import { FriendSuggestions } from '../friend-suggestions/friend-suggestions';
@@ -10,7 +9,7 @@ import { InteractionService } from '../../core/services/interaction';
 @Component({
   selector: 'app-home-feed',
   standalone: true,
-  imports: [AppNavbar, PostComposer, PostCard, FriendSuggestions],
+  imports: [ PostComposer, PostCard, FriendSuggestions],
   templateUrl: './home-feed.html',
   styleUrl: './home-feed.css'
 })
@@ -50,12 +49,22 @@ export class HomeFeed implements OnInit {
     });
   }
 
-  onPostCreated(newPostData: any): void {
-    // لما اليوزر يدوس نشر في الكومبوزر، نبعت للسيرفر
+  // onPostCreated(newPostData: any): void {
+  //   // لما اليوزر يدوس نشر في الكومبوزر، نبعت للسيرفر
+  //   this.postService.createPost(newPostData.text, newPostData.file).subscribe({
+  //     next: (res) => {
+  //       // نعيد تحميل الفيد بعد نجاح النشر
+  //       this.loadFeed();
+  //     },
+  //     error: (err) => console.error('Error creating post', err)
+  //   });
+  // }
+
+  onPostCreated(newPostData: {text?: string, file?: File}): void {
+    // دلوقتي إحنا متأكدين إن newPostData.file شايل الصورة الحقيقية مش undefined
     this.postService.createPost(newPostData.text, newPostData.file).subscribe({
       next: (res) => {
-        // نعيد تحميل الفيد بعد نجاح النشر
-        this.loadFeed();
+        this.loadFeed(); // بنعمل ريفريش للفيد عشان البوست الجديد يظهر
       },
       error: (err) => console.error('Error creating post', err)
     });

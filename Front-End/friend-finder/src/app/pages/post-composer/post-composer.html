@@ -22,7 +22,15 @@
     </div>
   }
 
-  <input #fileInput type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" />
+  <!-- <input #fileInput type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" /> -->
+
+  <input
+    #fileInput
+    type="file"
+    accept="image/png, image/jpeg, image/jpg, video/mp4, video/quicktime"
+    hidden
+    (change)="onFileSelected($event)"
+  />
 
   <div class="composer-footer">
     <button type="button" class="media-btn" (click)="openFilePicker()">

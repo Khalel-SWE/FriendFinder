@@ -10,7 +10,7 @@ import { Auth } from '../../core/services/auth'; // استدعينا الاوث 
   templateUrl: './account-menu.html', // شلنا .component
   styleUrl: './account-menu.css'      // شلنا .component
 })
-export class AccountMenuComponent {
+export class AccountMenu {
   open = signal(false);
 
   constructor(public lang: LanguageService, private router: Router, private auth: Auth) {}

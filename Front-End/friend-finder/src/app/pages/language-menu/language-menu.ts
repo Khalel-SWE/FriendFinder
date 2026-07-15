@@ -9,7 +9,7 @@ import { Lang } from '../../i18n';
   templateUrl: './language-menu.html', // شلنا .component
   styleUrl: './language-menu.css'      // شلنا .component
 })
-export class LanguageMenuComponent {
+export class LanguageMenu {
   open = signal(false);
   langs: Lang[] = ['en', 'ar', 'de'];
   labels: Record<Lang, string> = { en: 'English', ar: 'العربية', de: 'Deutsch' };

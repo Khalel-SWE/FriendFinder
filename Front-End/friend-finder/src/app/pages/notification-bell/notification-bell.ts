@@ -8,7 +8,7 @@ import { LanguageService } from '../../core/services/language';
   templateUrl: './notification-bell.html', // شلنا .component
   styleUrl: './notification-bell.css'      // شلنا .component
 })
-export class NotificationBellComponent {
+export class NotificationBell{
   open = signal(false);
 
   constructor(public lang: LanguageService) {}
