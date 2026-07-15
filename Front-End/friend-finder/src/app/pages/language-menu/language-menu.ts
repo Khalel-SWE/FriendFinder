@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, HostListener, ElementRef } from '@angular/core';
 import { LanguageService } from '../../core/services/language';
 import { Lang } from '../../i18n';
 
@@ -15,9 +15,16 @@ export class LanguageMenu {
   labels: Record<Lang, string> = { en: 'English', ar: 'العربية', de: 'Deutsch' };
   codes: Record<Lang, string> = { en: 'EN', ar: 'AR', de: 'DE' };
 
-  constructor(public lang: LanguageService) {}
+  constructor(public lang: LanguageService, private eRef: ElementRef) {}
 
   toggle(): void { this.open.update(v => !v); }
   close(): void { this.open.set(false); }
   choose(l: Lang): void { this.lang.setLang(l); this.close(); }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if(!this.eRef.nativeElement.contains(event.target)) {
+      this.close();
+    }
+  }
 }

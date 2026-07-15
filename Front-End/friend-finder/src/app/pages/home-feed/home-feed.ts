@@ -35,7 +35,7 @@ export class HomeFeed implements OnInit {
           authorInitials: (res.userFirstName.charAt(0) + res.userLastName.charAt(0)).toUpperCase(),
           timeLabel: new Date(res.createdAt).toLocaleDateString(), // مؤقتاً لحد ما نعمل بايب للوقت
           text: res.content,
-          mediaUrl: res.mediaUrl,
+          mediaUrl: res.mediaUrl ? `http://localhost:9090${res.mediaUrl}` : undefined,
           mediaType: res.mediaType as 'image' | 'video' | undefined,
           // الداتا دي مش جاية في الـ DTO حالياً، فهنديها صفر لحد ما تظبطها في الباك إند
           reactions: { like: 0, haha: 0, love: 0, sad: 0, angry: 0 },

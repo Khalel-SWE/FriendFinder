@@ -1,26 +1,29 @@
-<div class="acct-wrap" (mouseleave)="close()">
-  <button class="acct-avatar" (click)="toggle()" type="button">LH</button>
+<div class="acct-wrap">
+  <!-- خلينا الزرار يشيل الاسم والصورة سوا -->
+  <button
+    class="flex items-center gap-2 hover:bg-white/5 p-1 pr-3 rounded-full transition"
+    (click)="toggle()"
+    type="button"
+  >
+    <div class="acct-avatar">{{ initials() }}</div>
+    <span class="text-white/90 text-sm font-medium tracking-wide">{{ fullName() }}</span>
+  </button>
 
   @if (open()) {
     <div class="acct-menu">
       <button type="button" class="acct-item" (click)="goTo('/profile')">
         {{ lang.t('my_profile') }}
       </button>
-
       <button type="button" class="acct-item" (click)="goTo('/profile/edit')">
         {{ lang.t('edit_profile_link') }}
       </button>
-
       <button type="button" class="acct-item" (click)="goTo('/contact')">
         {{ lang.t('contact_us') }}
       </button>
-
       <button type="button" class="acct-item" (click)="goTo('/complaints')">
         {{ lang.t('my_complaints') }}
       </button>
-
       <div class="acct-divider"></div>
-
       <button type="button" class="acct-item acct-logout" (click)="logout()">
         {{ lang.t('logout') }}
       </button>

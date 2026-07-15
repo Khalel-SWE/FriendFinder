@@ -1,5 +1,8 @@
-<nav
+<!-- <nav
   class="relative z-50 flex items-center justify-between px-6 sm:px-10 py-5 bg-[#0D0B0A] border-b border-white/5 min-h-24"
+> -->
+<nav
+  class="relative z-50 flex items-center justify-between px-6 sm:px-10 py-5 bg-[#0D0B0A] border-b-2 border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] min-h-24"
 >
   <a [routerLink]="isLoggedIn ? '/feed' : '/'" class="flex items-center gap-2.5">
     <svg width="26" height="26" viewBox="0 0 400 400">
@@ -12,9 +15,14 @@
   </a>
 
   <div *ngIf="isLoggedIn" class="hidden sm:block flex-1 max-w-sm mx-8">
-    <input
+    <!-- <input
       type="text"
       class="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-gold transition-colors"
+      [placeholder]="lang.t('search_ph')"
+    /> -->
+    <input
+      type="text"
+      class="w-full bg-[#1A1512] border border-gold/40 rounded-full px-4 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:border-gold transition-colors"
       [placeholder]="lang.t('search_ph')"
     />
   </div>
