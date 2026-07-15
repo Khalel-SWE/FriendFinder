@@ -55,3 +55,12 @@ export interface PostResponse {
   mediaType?: string;
   createdAt: string;
 }
+
+export interface FriendSuggestionResponse {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  initials: string;
+}

@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { ProfileService } from '../../core/services/profile';
+import { FriendSuggestionResponse } from '../../core/models/post-model';
 import { LanguageService } from '../../core/services/language';
-import { FriendSuggestion } from '../../core/models/post-model';
 
 @Component({
   selector: 'app-friend-suggestions',
@@ -9,16 +10,21 @@ import { FriendSuggestion } from '../../core/models/post-model';
   templateUrl: './friend-suggestions.html',
   styleUrl: './friend-suggestions.css'
 })
-export class FriendSuggestions {
-  suggestions = signal<FriendSuggestion[]>([
-    { id: 1, name: 'Karim Magdy', initials: 'KM', mutualCount: 5 },
-    { id: 2, name: 'Nour Farouk', initials: 'NF', mutualCount: 2 },
-    { id: 3, name: 'Yara Tarek', initials: 'YT', mutualCount: 9 },
-  ]);
+export class FriendSuggestions implements OnInit {
+  suggestions = signal<FriendSuggestionResponse[]>([]);
+  
+  private profileService = inject(ProfileService);
+  public lang = inject(LanguageService);
 
-  constructor(public lang: LanguageService) {}
+  ngOnInit() {
+    this.profileService.getFriendSuggestions().subscribe({
+      next: (res) => this.suggestions.set(res),
+      error: (err) => console.error('Error fetching suggestions', err)
+    });
+  }
 
-  addFriend(id: number): void {
-    this.suggestions.update(list => list.filter(s => s.id !== id));
+  addFriend(id: number) {
+    // هنربطها بالـ API بتاع إضافة الصديق بعدين
+    console.log('Add friend clicked for User ID:', id);
   }
 }

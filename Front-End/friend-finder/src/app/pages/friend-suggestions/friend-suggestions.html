@@ -1,17 +1,43 @@
-<div class="suggestions-card">
-  <p class="suggestions-title">{{ lang.t('people_you_may_know') }}</p>
+<div class="ff-card suggestions-card">
+  <h3 class="font-display text-lg font-bold mb-4">
+    {{ lang.t('suggestions_title') || 'Suggested Friends' }}
+  </h3>
 
-  @for (s of suggestions(); track s.id) {
-    <div class="suggestion-row">
-      <div class="suggestion-avatar">{{ s.initials }}</div>
+  <div class="flex flex-col gap-4">
+    @for (user of suggestions(); track user.id) {
+      <div class="flex items-center gap-3">
+        <div
+          class="suggestion-avatar bg-gold text-ink font-bold rounded-full flex items-center justify-center"
+        >
+          {{ user.initials }}
+        </div>
 
-      <div class="suggestion-info">
-        <p class="suggestion-name">{{ s.name }}</p>
+        <div class="flex-1">
+          <p class="suggestion-name font-bold">{{ user.firstName }} {{ user.lastName }}</p>
+        </div>
 
-        <p class="suggestion-mutual">{{ s.mutualCount }} {{ lang.t('mutual_friends') }}</p>
+        <button
+          (click)="addFriend(user.id)"
+          class="text-gold hover:bg-gold/10 p-2 rounded-full transition"
+          title="Add Friend"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+        </button>
       </div>
-
-      <button type="button" class="add-btn" (click)="addFriend(s.id)">{{ lang.t('add') }}</button>
-    </div>
-  }
+    } @empty {
+      <p class="text-sm text-muted">No new suggestions at the moment.</p>
+    }
+  </div>
 </div>
