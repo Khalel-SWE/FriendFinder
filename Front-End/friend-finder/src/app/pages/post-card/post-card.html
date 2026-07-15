@@ -4,7 +4,6 @@
 
     <div>
       <p class="post-author">{{ post().authorName }}</p>
-
       <p class="post-time">{{ post().timeLabel }}</p>
     </div>
   </div>
@@ -60,7 +59,6 @@
           <span>{{ reactionIcons[k] }}</span>
         }
       }
-
       <span class="summary-count">{{ totalReactions() }}</span>
     </span>
 
@@ -71,12 +69,11 @@
     @for (k of reactionKeys; track k) {
       <button type="button" class="reaction-btn" (click)="reactionClicked.emit(k)" [title]="k">
         <span>{{ reactionIcons[k] }}</span>
-
         <span class="count">{{ post().reactions[k] }}</span>
       </button>
     }
 
-    <button type="button" class="comment-btn">
+    <button type="button" class="comment-btn" (click)="toggleComments()">
       <svg
         width="16"
         height="16"
@@ -87,8 +84,37 @@
       >
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
-
       {{ post().commentsCount }}
     </button>
   </div>
+
+  @if (showComments()) {
+    <div class="comments-section">
+      <div class="comment-composer">
+        <input
+          type="text"
+          [(ngModel)]="newCommentText"
+          [placeholder]="lang.t('write_comment_ph') || 'Write a comment...'"
+          (keyup.enter)="submitComment()"
+        />
+        <button class="gold-btn px-4 py-1 rounded-full text-xs" (click)="submitComment()">
+          Send
+        </button>
+      </div>
+
+      <div class="comments-list">
+        @for (c of comments(); track c.id) {
+          <div class="comment-item">
+            <div class="comment-avatar">{{ getInitials(c.userFirstName, c.userLastName) }}</div>
+            <div class="comment-content-box">
+              <p class="comment-user">{{ c.userFirstName }} {{ c.userLastName }}</p>
+              <p class="comment-text">{{ c.content }}</p>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-xs text-center text-muted py-2">No comments yet. Be the first!</p>
+        }
+      </div>
+    </div>
+  }
 </article>
