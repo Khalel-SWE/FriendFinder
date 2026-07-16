@@ -21,6 +21,7 @@ export interface Post {
   mediaUrl?: string;
   reactions: Record<ReactionType, number>;
   commentsCount: number;
+  comments?: CommentResponse[]; // 👈 السطر ده اللي كان ناقص
 }
 
 export interface FriendSuggestion {
@@ -54,6 +55,10 @@ export interface PostResponse {
   mediaUrl?: string;
   mediaType?: string;
   createdAt: string;
+  reactionsCount?: Record<string, number>; // 👈 السطر ده اللي كان ناقص
+  currentUserReaction?: string;            // 👈 السطر ده اللي كان ناقص
+  commentsCount?: number;                  // 👈 السطر ده اللي كان ناقص
+  comments?: CommentResponse[];            // 👈 السطر ده اللي كان ناقص
 }
 
 export interface FriendSuggestionResponse {

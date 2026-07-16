@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -17,6 +18,8 @@ public class PostResponse {
     private String mediaUrl;
     private String mediaType;
     private LocalDateTime createdAt;
-    private Map<String, Integer> reactionsCount; // زي: {"LIKE": 5, "LOVE": 2}
-    private String currentUserReaction; // لو اليوزر ده عامل رياكت، يرجع نوعه (عشان الفرونت يعلمه)
+    private Map<String, Integer> reactionsCount;
+    private String currentUserReaction;
+    private int commentsCount; // 👈 ضفنا العداد الحقيقي
+    private List<CommentResponse> comments; // 👈 ضفنا لستة التعليقات عشان السيرش الفوري في الفرونت إند
 }

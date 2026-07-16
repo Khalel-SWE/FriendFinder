@@ -15,21 +15,20 @@ import { SearchService } from '../../core/services/search';
   styleUrl: './home-feed.css'
 })
 export class HomeFeed implements OnInit {
-  // المصفوفة الأساسية اللي بتشيل كل الداتا
   allPosts = signal<Post[]>([]);
 
-  // السيرش السحري اللي بيفلتر البوستات
+  // 👇 السيرش الفوري والذكي (جوه اسم اليوزر، محتوى البوست، وكمان محتوى التعليقات!) 👇
   posts = computed(() => {
     const q = this.searchService.query().toLowerCase().trim();
     if (!q) return this.allPosts();
     
     return this.allPosts().filter(p => 
       p.authorName.toLowerCase().includes(q) || 
-      (p.text && p.text.toLowerCase().includes(q))
+      (p.text && p.text.toLowerCase().includes(q)) ||
+      (p.comments && p.comments.some(c => c.content.toLowerCase().includes(q))) // 👈 البحث جوه التعليقات
     );
   });
 
-  // الـ Constructor النظيف
   constructor(
     private postService: PostService,
     private interactionService: InteractionService,
@@ -53,8 +52,19 @@ export class HomeFeed implements OnInit {
           text: res.content,
           mediaUrl: res.mediaUrl ? `http://localhost:9090${res.mediaUrl}` : undefined,
           mediaType: this.getMediaType(res.mediaType),
-          reactions: { like: 0, haha: 0, love: 0, sad: 0, angry: 0 },
-          commentsCount: 0
+          
+          // قراءة الرياكشنات الحقيقية من السيرفر
+          reactions: {
+            like: res.reactionsCount?.['LIKE'] || 0,
+            haha: res.reactionsCount?.['HAHA'] || 0,
+            love: res.reactionsCount?.['LOVE'] || 0,
+            sad: res.reactionsCount?.['SAD'] || 0,
+            angry: res.reactionsCount?.['ANGRY'] || 0
+          },
+          
+          // 👈 قراءة عدد ولستة التعليقات الحقيقية
+          commentsCount: res.commentsCount || 0,
+          comments: res.comments || []
         }));
         
         this.allPosts.set(mappedPosts); 
@@ -90,7 +100,7 @@ export class HomeFeed implements OnInit {
 
   onPostCreated(newPostData: {text?: string, file?: File}): void {
     this.postService.createPost(newPostData.text, newPostData.file).subscribe({
-      next: (res) => {
+      next: () => {
         this.loadFeed(); 
       },
       error: (err) => console.error('Error creating post', err)

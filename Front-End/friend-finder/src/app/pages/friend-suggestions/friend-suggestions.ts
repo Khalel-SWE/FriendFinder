@@ -1,7 +1,8 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { ProfileService } from '../../core/services/profile';
 import { FriendSuggestionResponse } from '../../core/models/post-model';
 import { LanguageService } from '../../core/services/language';
+import { SearchService } from '../../core/services/search'; // 👈 ضفنا ده
 
 @Component({
   selector: 'app-friend-suggestions',
@@ -15,6 +16,17 @@ export class FriendSuggestions implements OnInit {
   
   private profileService = inject(ProfileService);
   public lang = inject(LanguageService);
+  private searchService = inject(SearchService); // 👈 ضفنا ده
+
+  // 👇 الـ Computed لتصفية المقترحات فوراً لو بتبحث عن اسم يوزر 👇
+  filteredSuggestions = computed(() => {
+    const q = this.searchService.query().toLowerCase().trim();
+    if (!q) return this.suggestions();
+    return this.suggestions().filter(s => 
+      s.firstName.toLowerCase().includes(q) || 
+      s.lastName.toLowerCase().includes(q)
+    );
+  });
 
   ngOnInit() {
     this.profileService.getFriendSuggestions().subscribe({
@@ -24,7 +36,6 @@ export class FriendSuggestions implements OnInit {
   }
 
   addFriend(id: number) {
-    // هنربطها بالـ API بتاع إضافة الصديق بعدين
     console.log('Add friend clicked for User ID:', id);
   }
 }

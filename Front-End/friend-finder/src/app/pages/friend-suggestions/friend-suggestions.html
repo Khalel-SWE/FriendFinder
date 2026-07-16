@@ -4,7 +4,7 @@
   </h3>
 
   <div class="flex flex-col gap-4">
-    @for (user of suggestions(); track user.id) {
+    @for (user of filteredSuggestions(); track user.id) {
       <div class="flex items-center gap-3">
         <div
           class="suggestion-avatar bg-gold text-ink font-bold rounded-full flex items-center justify-center"
