@@ -1,0 +1,12 @@
+<div class="tabs-nav">
+  @for (tab of tabs; track tab.key) {
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="active === tab.key"
+      (click)="select(tab.key)"
+    >
+      {{ tab.label }}
+    </button>
+  }
+</div>

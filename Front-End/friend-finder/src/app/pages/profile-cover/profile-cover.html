@@ -1,0 +1,25 @@
+<div class="relative">
+  <div class="cover-photo h-52 sm:h-64"></div>
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="relative -mt-16 flex items-end gap-4 pb-3">
+      <div
+        class="profile-avatar w-28 h-28 rounded-full flex items-center justify-center text-2xl font-bold border-4 border-white shrink-0"
+      >
+        {{ initials }}
+      </div>
+      <div class="pb-2 hidden sm:block">
+        <p class="font-display text-2xl text-text leading-none">{{ fullName }}</p>
+        <p class="text-xs tracking-widest uppercase text-muted mt-1">
+          {{ profile.location }} · Member since {{ memberSince }}
+        </p>
+      </div>
+      <button
+        class="gold-btn ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block"
+      >
+        Edit Profile
+      </button>
+    </div>
+    <p class="sm:hidden font-display text-xl text-text -mt-1">{{ fullName }}</p>
+  </div>
+</div>

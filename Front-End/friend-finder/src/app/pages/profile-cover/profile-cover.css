@@ -1,0 +1,13 @@
+.cover-photo {
+  background:
+    radial-gradient(circle at 18% 30%, rgba(233,196,106,.30) 0%, rgba(233,196,106,0) 9%),
+    radial-gradient(circle at 78% 18%, rgba(201,162,75,.22) 0%, rgba(201,162,75,0) 11%),
+    radial-gradient(circle at 62% 55%, rgba(233,196,106,.16) 0%, rgba(233,196,106,0) 12%),
+    radial-gradient(circle at 88% 70%, rgba(201,162,75,.20) 0%, rgba(201,162,75,0) 9%),
+    linear-gradient(155deg,#211A14 0%,#161110 45%,#0D0B0A 100%);
+}
+.profile-avatar {
+  background: linear-gradient(135deg,#B4893A,#D9B769);
+  color: #17130E;
+  box-shadow: 0 0 0 2px var(--color-gold, #C9A24B);
+}

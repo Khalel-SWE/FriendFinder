@@ -69,3 +69,4 @@ export interface FriendSuggestionResponse {
   profilePicture: string;
   initials: string;
 }
+

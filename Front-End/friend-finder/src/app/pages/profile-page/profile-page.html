@@ -1,0 +1,36 @@
+@if (profile()) {
+  <section>
+    <app-profile-cover [profile]="profile()!" [memberSince]="'2024'"></app-profile-cover>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <app-profile-tabs-nav
+        [active]="activeTab()"
+        (tabChange)="onTabChange($event)"
+      ></app-profile-tabs-nav>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+      @switch (activeTab()) {
+        @case ('timeline') {
+          <app-profile-timeline-tab></app-profile-timeline-tab>
+        }
+        @case ('about') {
+          <app-profile-about-tab [profile]="profile()!"></app-profile-about-tab>
+        }
+        @case ('friends') {
+          <app-profile-friends-tab></app-profile-friends-tab>
+        }
+        @case ('photos') {
+          <app-profile-media-grid mediaType="photo"></app-profile-media-grid>
+        }
+        @case ('videos') {
+          <app-profile-media-grid mediaType="video"></app-profile-media-grid>
+        }
+      }
+    </div>
+  </section>
+} @else {
+  <div class="flex items-center justify-center min-h-screen">
+    <p class="text-gold font-bold animate-pulse">Loading Profile...</p>
+  </div>
+}
