@@ -3,30 +3,17 @@
     <div class="media-grid">
       @for (item of items(); track item.id) {
         <div class="media-thumb" [class.video-thumb]="mediaType === 'video'">
+          <!-- عرض الصورة الحقيقية -->
           @if (mediaType === 'photo') {
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.4"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
-          } @else {
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.4"
-            >
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
+            <img
+              [src]="item.url"
+              alt="Profile Photo"
+              class="w-full h-full object-cover rounded-lg"
+            />
+          }
+          <!-- عرض الفيديو الحقيقي -->
+          @else {
+            <video [src]="item.url" class="w-full h-full object-cover rounded-lg" controls></video>
           }
         </div>
       }
