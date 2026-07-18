@@ -1,0 +1,23 @@
+.timeline-layout { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+.timeline-main { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
+
+.timeline-rail {
+  position: relative;
+  border-inline-start: 2px solid var(--color-ivory-2, #F1EADA);
+  margin-inline-start: 18px;
+  padding-inline-start: 24px;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+.timeline-item { position: relative; }
+.timeline-dot {
+  position: absolute; inset-inline-start: -31px; top: 6px;
+  width: 12px; height: 12px; border-radius: 9999px;
+  background: var(--color-gold, #C9A24B); box-shadow: 0 0 0 3px #fff;
+}
+.timeline-time { font-size: .75rem; color: var(--color-muted, #8E8175); margin: 0 0 .5rem; }
+.timeline-post-card { background: #fff; border: 1px solid var(--color-ivory-2, #F1EADA); border-radius: 10px; padding: 1rem; }
+.timeline-post-text { font-size: .875rem; color: var(--color-text, #211C1F); margin: 0; }
+
+@media (min-width: 1024px) {
+  .timeline-layout { grid-template-columns: 1fr 260px; }
+}
