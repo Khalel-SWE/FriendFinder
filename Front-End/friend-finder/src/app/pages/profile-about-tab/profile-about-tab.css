@@ -1,0 +1,17 @@
+.about-card {
+  max-width: 42rem; background: #fff; border: 1px solid var(--color-ivory-2, #F1EADA);
+  border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+}
+.about-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-gold, #C9A24B); margin: 0 0 .4rem; }
+.about-bio { font-size: .875rem; color: var(--color-text, #211C1F); line-height: 1.6; margin: 0; }
+.about-value { font-size: .875rem; color: var(--color-text, #211C1F); margin: 0; }
+.about-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.interest-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+.interest-tag {
+  font-size: .75rem; padding: .35rem .75rem; border-radius: 9999px;
+  background: var(--color-ivory, #F8F4EA); color: var(--color-text, #211C1F);
+  border: 1px solid var(--color-ivory-2, #F1EADA);
+}
+@media (min-width: 640px) {
+  .about-grid { grid-template-columns: 1fr 1fr; }
+}

@@ -32,18 +32,18 @@ export interface FriendSuggestion {
 }
 
 // مطابق للـ ProfileResponse اللي في الجافا
-export interface ProfileResponse {
-  email: string;
-  firstName: string;
-  lastName: string;
-  bio?: string;
-  jobTitle?: string;
-  location?: string;
-  profilePicture?: string;
-  coverPhoto?: string;
-  interests?: string;
-  languages?: string;
-}
+// export interface ProfileResponse {
+//   email: string;
+//   firstName: string;
+//   lastName: string;
+//   bio?: string;
+//   jobTitle?: string;
+//   location?: string;
+//   profilePicture?: string;
+//   coverPhoto?: string;
+//   interests?: string;
+//   languages?: string;
+// }
 
 // مطابق للـ PostResponse اللي في الجافا
 export interface PostResponse {

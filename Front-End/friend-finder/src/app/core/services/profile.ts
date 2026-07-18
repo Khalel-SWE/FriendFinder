@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProfileResponse, FriendSuggestionResponse } from '../models/post-model'; 
+import { ProfileResponse} from '../models/profile-model'; 
+import {FriendSuggestionResponse} from '../models/post-model';
 
 @Injectable({
   providedIn: 'root'

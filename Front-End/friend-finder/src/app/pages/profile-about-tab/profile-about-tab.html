@@ -1,1 +1,36 @@
-<p>profile-about-tab works!</p>
+<div class="about-card">
+  <div class="about-block">
+    <p class="about-label">Bio</p>
+    <p class="about-bio">{{ profile.bio || 'No bio available yet.' }}</p>
+  </div>
+
+  <div class="about-grid">
+    <div>
+      <p class="about-label">Job Title</p>
+      <p class="about-value">{{ profile.jobTitle || '-' }}</p>
+    </div>
+    <div>
+      <p class="about-label">Location</p>
+      <p class="about-value">{{ profile.location || '-' }}</p>
+    </div>
+    <div>
+      <p class="about-label">Email</p>
+      <p class="about-value">{{ profile.email }}</p>
+    </div>
+    <div>
+      <p class="about-label">Languages</p>
+      <p class="about-value">{{ languageList || '-' }}</p>
+    </div>
+  </div>
+
+  @if (interestList.length > 0) {
+    <div class="about-block">
+      <p class="about-label">Interests</p>
+      <div class="interest-tags">
+        @for (interest of interestList; track interest) {
+          <span class="interest-tag">{{ interest }}</span>
+        }
+      </div>
+    </div>
+  }
+</div>
