@@ -1,0 +1,9 @@
+.media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+.media-thumb {
+  aspect-ratio: 1; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #F1EADA, #E7DCC0); color: var(--color-gold, #C9A24B);
+}
+.media-thumb.video-thumb { background: linear-gradient(135deg, #2a2320, #1a1512); color: var(--color-gold-soft, #E4D4A6); }
+.media-hint, .media-empty { font-size: .75rem; color: var(--color-muted, #8E8175); margin-top: .75rem; }
+@media (min-width: 640px) { .media-grid { grid-template-columns: repeat(4, 1fr); } }
