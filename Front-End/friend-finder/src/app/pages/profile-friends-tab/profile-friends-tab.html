@@ -1,1 +1,10 @@
-<p>profile-friends-tab works!</p>
+<div class="friends-grid">
+  @for (friend of friends(); track friend.id) {
+    <div class="friend-card">
+      <div class="friend-avatar" [class]="friend.gradient">{{ friend.initials }}</div>
+      <p class="friend-name">{{ friend.name }}</p>
+      <p class="friend-mutual">{{ friend.mutualCount }} mutual friends</p>
+      <button type="button" class="unfriend-btn" (click)="unfriend(friend)">Unfriend</button>
+    </div>
+  }
+</div>
