@@ -1,7 +1,7 @@
 <div class="timeline-layout">
   <div class="timeline-main">
     <!-- صندوق النشر -->
-    <app-post-composer (posted)="onPosted($event)"></app-post-composer>
+    <app-post-composer (posted)="onPosted($any($event))"></app-post-composer>
 
     <!-- شريط التايم لاين -->
     <div class="timeline-rail">

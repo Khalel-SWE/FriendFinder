@@ -1,6 +1,7 @@
 package com.media.friend_finder.controller;
 
 import com.media.friend_finder.dto.FriendRequestResponse;
+import com.media.friend_finder.dto.FriendResponse;
 import com.media.friend_finder.service.FriendshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +39,28 @@ public class FriendshipController {
             @RequestParam String status) {
         return ResponseEntity.ok(friendshipService.acceptOrRejectRequest(authentication.getName(), id, status));
     }
+
+    // 👇👇 الإضافات الجديدة 👇👇
+
+    // إرسال طلب باستخدام الـ ID
+    @PostMapping("/request/{receiverId}")
+    public ResponseEntity<String> sendFriendRequestById(
+            Authentication authentication,
+            @PathVariable Long receiverId) {
+        return ResponseEntity.ok(friendshipService.sendFriendRequestById(authentication.getName(), receiverId));
+    }
+
+    // جلب قائمة الأصدقاء للبروفايل
+    @GetMapping("/my-friends")
+    public ResponseEntity<List<FriendResponse>> getMyFriends(Authentication authentication) {
+        return ResponseEntity.ok(friendshipService.getMyFriends(authentication.getName()));
+    }
+
+    // مسح صديق
+    @DeleteMapping("/remove/{friendId}")
+    public ResponseEntity<Void> removeFriend(Authentication authentication, @PathVariable Long friendId) {
+        friendshipService.removeFriend(authentication.getName(), friendId);
+        return ResponseEntity.ok().build();
+    }
+
 }

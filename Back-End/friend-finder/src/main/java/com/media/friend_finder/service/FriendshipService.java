@@ -1,6 +1,7 @@
 package com.media.friend_finder.service;
 
 import com.media.friend_finder.dto.FriendRequestResponse;
+import com.media.friend_finder.dto.FriendResponse;
 import com.media.friend_finder.entity.*;
 import com.media.friend_finder.repository.FriendshipRepository;
 import com.media.friend_finder.repository.ProfileRepository;
@@ -113,5 +114,49 @@ public class FriendshipService {
         }
 
         return "Friend request has been " + status.toLowerCase();
+    }
+
+    // 👇👇 الإضافات الجديدة 👇👇
+
+    // 4. إرسال طلب صداقة بالـ ID (عشان زرار المقترحات في الفرونت إند بيبعت ID)
+    public String sendFriendRequestById(String requesterEmail, Long receiverId) {
+        User receiver = userRepository.findById(receiverId)
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+        // هننادي على الدالة الأصلية بتاعتك عشان نحافظ على اللوجيك والإشعارات
+        return sendFriendRequest(requesterEmail, receiver.getEmail());
+    }
+
+    // 5. جلب الأصدقاء الفعليين لتابة الـ Friends في البروفايل
+    public List<FriendResponse> getMyFriends(String email) {
+        User currentUser = userRepository.findByEmail(email).orElseThrow();
+        // بنستخدم الدالة بتاعتك اللي بتجيب الـ ACCEPTED
+        List<Friendship> friendships = friendshipRepository.findAcceptedFriendships(currentUser);
+
+        return friendships.stream().map(f -> {
+            User friendUser = f.getRequester().equals(currentUser) ? f.getAddressee() : f.getRequester();
+            Profile profile = profileRepository.findByUserEmail(friendUser.getEmail()).orElseThrow();
+
+            String initials = (profile.getFirstName().charAt(0) + "" + profile.getLastName().charAt(0)).toUpperCase();
+            String gradient = friendUser.getId() % 2 == 0 ? "from-burgundy" : "from-gold";
+
+            return FriendResponse.builder()
+                    .id(friendUser.getId())
+                    .name(profile.getFirstName() + " " + profile.getLastName())
+                    .initials(initials)
+                    .gradient(gradient)
+                    .mutualCount(0) // مؤقتاً بصفر
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    // 6. مسح صديق (Unfriend)
+    public void removeFriend(String userEmail, Long friendId) {
+        User currentUser = userRepository.findByEmail(userEmail).orElseThrow();
+        User friend = userRepository.findById(friendId).orElseThrow();
+
+        Friendship friendship = friendshipRepository.findFriendshipBetweenUsers(currentUser, friend)
+                .orElseThrow(() -> new RuntimeException("Friendship not found"));
+
+        friendshipRepository.delete(friendship);
     }
 }
