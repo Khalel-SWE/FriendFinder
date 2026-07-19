@@ -14,11 +14,22 @@
           {{ profile.location }} · Member since {{ memberSince }}
         </p>
       </div>
-      <button
-        class="gold-btn ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block"
-      >
-        Edit Profile
-      </button>
+
+      <!-- 👇 لو بروفايلي هيظهر تعديل، لو بروفايل حد تاني هيظهر مسح صديق 👇 -->
+      @if (isMyProfile) {
+        <button
+          class="gold-btn ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block"
+        >
+          Edit Profile
+        </button>
+      } @else {
+        <button
+          class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
+          style="border: 1px solid #dc3545; color: #dc3545; background: transparent"
+        >
+          Unfriend
+        </button>
+      }
     </div>
     <p class="sm:hidden font-display text-xl text-text -mt-1">{{ fullName }}</p>
   </div>

@@ -1,3 +1,116 @@
+<!-- <div class="ff-card suggestions-card">
+  <h3 class="font-display text-lg font-bold mb-4">
+    {{ lang.t('suggestions_title') || 'Suggested Friends' }}
+  </h3>
+
+  <div class="flex flex-col gap-4">
+    @for (user of filteredSuggestions(); track user.id) {
+      <div class="flex items-center gap-3">
+        <div
+          class="suggestion-avatar bg-gold text-ink font-bold rounded-full flex items-center justify-center"
+        >
+          {{ user.initials }}
+        </div>
+
+        <div class="flex-1">
+          <p class="suggestion-name font-bold">{{ user.firstName }} {{ user.lastName }}</p>
+        </div>
+
+        <button
+          (click)="addFriend(user.id)"
+          class="text-gold hover:bg-gold/10 p-2 rounded-full transition"
+          title="Add Friend"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+        </button>
+      </div>
+    } @empty {
+      <p class="text-sm text-muted">No new suggestions at the moment.</p>
+    }
+  </div>
+</div> -->
+
+<!-- 🔴 المربع الأول: الطلبات المعلقة (بيظهر بس لو في طلبات) 🔴 -->
+@if (pendingRequests().length > 0) {
+  <div class="ff-card suggestions-card mb-4">
+    <h3 class="font-display text-lg font-bold mb-4" style="color: var(--gold)">Pending Requests</h3>
+
+    <div class="flex flex-col gap-4">
+      <!-- التعديل هنا في الـ track خليناها req.requestId -->
+      @for (req of pendingRequests(); track req.requestId) {
+        <div class="flex items-center gap-3">
+          <!-- الحرف الأول من اسم المرسل -->
+          <div
+            class="suggestion-avatar bg-gold text-ink font-bold rounded-full flex items-center justify-center"
+          >
+            {{ req.requesterFirstName?.charAt(0) || req.requesterEmail?.charAt(0) | uppercase }}
+          </div>
+
+          <div class="flex-1">
+            <!-- عرض الاسم الأول والأخير -->
+            <p class="suggestion-name font-bold">
+              {{ req.requesterFirstName }} {{ req.requesterLastName }}
+            </p>
+          </div>
+
+          <!-- زراير القبول والرفض -->
+          <div class="flex gap-1">
+            <!-- زرار Accept (علامة صح) -->
+            <button
+              (click)="respondToRequest(req.requestId, 'ACCEPTED')"
+              class="text-green-500 hover:bg-green-500/10 p-2 rounded-full transition"
+              title="Accept"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+
+            <!-- زرار Reject (علامة إكس) -->
+            <button
+              (click)="respondToRequest(req.requestId, 'REJECTED')"
+              class="text-red-500 hover:bg-red-500/10 p-2 rounded-full transition"
+              title="Decline"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- 🔵 المربع التاني: مقترحات الأصدقاء (الكود بتاعك زي ما هو) 🔵 -->
 <div class="ff-card suggestions-card">
   <h3 class="font-display text-lg font-bold mb-4">
     {{ lang.t('suggestions_title') || 'Suggested Friends' }}

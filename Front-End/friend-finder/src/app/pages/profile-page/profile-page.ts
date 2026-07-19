@@ -1,11 +1,12 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router'; // 👈 استيراد ده عشان نقرا اللينك
 import { ProfileCover } from '../profile-cover/profile-cover';
 import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
 import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
 import { ProfileAboutTab } from '../profile-about-tab/profile-about-tab';
 import { ProfileFriendsTab } from '../profile-friends-tab/profile-friends-tab';
 import { ProfileMediaGrid } from '../profile-media-grid/profile-media-grid';
-import { ProfileResponse, ProfileTab } from '../../core/models/profile-model'; // 👈 التعديل هنا
+import { ProfileResponse, ProfileTab } from '../../core/models/profile-model';
 import { ProfileService } from '../../core/services/profile';
 
 @Component({
@@ -24,15 +25,42 @@ import { ProfileService } from '../../core/services/profile';
 })
 export class ProfilePage implements OnInit {
   activeTab = signal<ProfileTab>('timeline');
-  
   profile = signal<ProfileResponse | null>(null);
+  
+  // 👈 علم جديد عشان نعرف ده بروفايلك ولا بروفايل حد تاني
+  isMyProfile = signal<boolean>(true); 
 
   private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute); // 👈 حقن الـ Route
 
   ngOnInit() {
+    // نراقب اللينك، هل فيه ID مبعوت ولا لأ؟
+    this.route.paramMap.subscribe(params => {
+      const userId = params.get('id');
+
+      if (userId) {
+        // لو فيه ID، يبقى بنزور بروفايل شخص تاني
+        this.isMyProfile.set(false);
+        this.loadUserProfile(Number(userId));
+      } else {
+        // لو مفيش، يبقى ده بروفايلي أنا
+        this.isMyProfile.set(true);
+        this.loadMyProfile();
+      }
+    });
+  }
+
+  loadUserProfile(userId: number) {
+    this.profileService.getUserProfile(userId).subscribe({
+      next: (res: any) => this.profile.set(res as unknown as ProfileResponse),
+      error: (err: any) => console.error('Error fetching user profile', err)
+    });
+  }
+
+  loadMyProfile() {
     this.profileService.getMyProfile().subscribe({
-      next: (res) => this.profile.set(res as unknown as ProfileResponse),
-      error: (err) => console.error('Error fetching profile', err)
+      next: (res: any) => this.profile.set(res as unknown as ProfileResponse),
+      error: (err: any) => console.error('Error fetching my profile', err)
     });
   }
 

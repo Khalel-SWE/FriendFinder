@@ -15,11 +15,27 @@ export class ProfileTimelineTab implements OnInit {
   // 👈 سيجنال عشان نشيل البوستات الحقيقية
   posts = signal<Post[]>([]);
   
-  private postService = inject(PostService);
+  // private postService = inject(PostService);
 
-  ngOnInit() {
-    this.loadMyPosts();
+  // ضيف دول فوق في الكلاس
+@Input() userId?: number;
+private postService = inject(PostService);
+
+ngOnInit() {
+  // لو في userId مبعوت (يعني إحنا في بروفايل حد معين)
+  if (this.userId) {
+    this.postService.getUserPosts(this.userId).subscribe({
+      next: (res) => this.posts.set(res),
+      error: (err) => console.error(err)
+    });
+  } else {
+    // لو مفيش (يعني إحنا في الفيد العام أو بروفايلي لو كنت مبرمجه كده)
+    this.postService.getFeed().subscribe({
+      next: (res) => this.posts.set(res),
+      error: (err) => console.error(err)
+    });
   }
+}
 
   loadMyPosts() {
     this.postService.getFeed().subscribe({

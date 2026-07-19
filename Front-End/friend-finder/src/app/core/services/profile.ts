@@ -20,4 +20,9 @@ export class ProfileService {
   getFriendSuggestions(): Observable<FriendSuggestionResponse[]> {
     return this.http.get<FriendSuggestionResponse[]>(`${this.apiUrl}/suggestions`);
   }
+
+  // جلب بروفايل يوزر تاني بالـ ID
+  getUserProfile(userId: number): Observable<ProfileResponse> {
+    return this.http.get<ProfileResponse>(`${this.apiUrl}/${userId}`);
+  }
 }

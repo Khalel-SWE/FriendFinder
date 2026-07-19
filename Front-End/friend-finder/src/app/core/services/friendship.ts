@@ -24,4 +24,14 @@ export class FriendshipService {
   removeFriend(friendId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove/${friendId}`);
   }
+
+  // جلب طلبات الصداقة المعلقة
+  getPendingRequests(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/requests/pending`);
+  }
+
+  // قبول أو رفض الطلب (ACCEPTED أو REJECTED)
+  respondToRequest(requestId: number, status: 'ACCEPTED' | 'REJECTED'): Observable<string> {
+    return this.http.put(`${this.apiUrl}/requests/${requestId}?status=${status}`, {}, { responseType: 'text' });
+  }
 }
