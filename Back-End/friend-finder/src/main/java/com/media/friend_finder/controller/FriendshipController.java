@@ -40,8 +40,6 @@ public class FriendshipController {
         return ResponseEntity.ok(friendshipService.acceptOrRejectRequest(authentication.getName(), id, status));
     }
 
-    // 👇👇 الإضافات الجديدة 👇👇
-
     // إرسال طلب باستخدام الـ ID
     @PostMapping("/request/{receiverId}")
     public ResponseEntity<String> sendFriendRequestById(
