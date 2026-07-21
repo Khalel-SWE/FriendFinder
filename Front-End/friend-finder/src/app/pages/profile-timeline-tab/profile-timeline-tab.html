@@ -1,8 +1,10 @@
 <div class="timeline-layout">
   <div class="timeline-main">
-    <!-- صندوق النشر -->
-    <app-post-composer (posted)="onPosted($any($event))"></app-post-composer>
-
+    <!-- صندوق النشر مغلف بـ if -->
+    @if (isMyProfile) {
+      <!-- غيرنا posted لـ postCreated وشيلنا الـ $any -->
+      <app-post-composer (postCreated)="onPosted($event)"></app-post-composer>
+    }
     <!-- شريط التايم لاين -->
     <div class="timeline-rail">
       @for (post of posts(); track post.id) {

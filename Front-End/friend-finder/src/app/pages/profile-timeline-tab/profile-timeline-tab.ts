@@ -17,6 +17,7 @@ export class ProfileTimelineTab implements OnInit {
   
   // 👈 استقبلنا الـ userId 
   @Input() userId?: number;
+  @Input() isMyProfile: boolean = false;
   
   private postService = inject(PostService);
 
@@ -79,13 +80,13 @@ export class ProfileTimelineTab implements OnInit {
     return postDate.toLocaleDateString();
   }
 
-  onPosted(payload: { text: string; file: File | null }): void {
-    // إرسال البوست الجديد للسيرفر مباشرة
-    this.postService.createPost(payload.text, payload.file || undefined).subscribe({
+  onPosted(payload: { text?: string; file?: File }): void {
+    // لو النص مش موجود هنبعته كـ string فاضي، والملف هنبعته زي ما هو
+    this.postService.createPost(payload.text || '', payload.file).subscribe({
       next: () => {
-        this.loadPosts(); // 👈 تحديث التايم لاين فوراً بعد النشر
+        this.loadPosts(); // ده هيعمل ريفريش للبوستات فوراً بعد النشر
       },
-      error: (err) => console.error('Error creating post', err)
+      error: (err) => console.error('Error creating post in profile', err)
     });
   }
 }
