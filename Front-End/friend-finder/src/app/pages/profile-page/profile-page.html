@@ -23,10 +23,18 @@
           <app-profile-friends-tab></app-profile-friends-tab>
         }
         @case ('photos') {
-          <app-profile-media-grid mediaType="photo"></app-profile-media-grid>
+          <!-- ضفنا الـ userId هنا 👇 -->
+          <app-profile-media-grid
+            mediaType="photo"
+            [userId]="profile()?.id"
+          ></app-profile-media-grid>
         }
         @case ('videos') {
-          <app-profile-media-grid mediaType="video"></app-profile-media-grid>
+          <!-- وضفنا الـ userId هنا 👇 -->
+          <app-profile-media-grid
+            mediaType="video"
+            [userId]="profile()?.id"
+          ></app-profile-media-grid>
         }
       }
     </div>

@@ -15,16 +15,20 @@ interface MediaPost {
 })
 export class ProfileMediaGrid implements OnInit {
   @Input({ required: true }) mediaType!: 'photo' | 'video';
+  @Input() userId?: number; // 👈 ضفنا استقبال الـ ID هنا
 
   items = signal<MediaPost[]>([]);
   
-  // 👇 حقن سيرفيس البوستات
   private postService = inject(PostService);
 
   ngOnInit() {
-    this.postService.getFeed().subscribe({
+    // 👇 ذكاء الجلب: لو فيه ID يجيب بوستات اليوزر، لو مفيش يجيب الفيد العام
+    const request$ = this.userId 
+      ? this.postService.getUserPosts(this.userId)
+      : this.postService.getFeed();
+
+    request$.subscribe({
       next: (responses: PostResponse[]) => {
-        // 👇 فلترة ذكية: بنجيب البوستات اللي فيها Media، وبنتأكد إن نوعها بيطابق التابة الحالية
         const mediaPosts = responses
           .filter(res => {
             if (!res.mediaUrl || !res.mediaType) return false;
@@ -36,7 +40,7 @@ export class ProfileMediaGrid implements OnInit {
           })
           .map(res => ({
             id: res.id,
-            url: `http://localhost:9090${res.mediaUrl}` // تركيب رابط السيرفر
+            url: `http://localhost:9090${res.mediaUrl}`
           }));
         
         this.items.set(mediaPosts);
