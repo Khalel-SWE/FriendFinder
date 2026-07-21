@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
-import { PostComposer } from '../post-composer/post-composer'; // 👈 مسار مسطح ونظيف
-import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel'; // 👈 مسار مسطح ونظيف
-import { Post, PostResponse } from '../../core/models/post-model'; // 👈 عشان نقرأ البوستات الحقيقية
+import { Component, OnInit, signal, inject, Input } from '@angular/core'; // 👈 ضفنا Input هنا
+import { PostComposer } from '../post-composer/post-composer'; 
+import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel'; 
+import { Post, PostResponse } from '../../core/models/post-model'; 
 import { PostService } from '../../core/services/post';
 
 @Component({
@@ -12,33 +12,26 @@ import { PostService } from '../../core/services/post';
   styleUrl: './profile-timeline-tab.css'
 })
 export class ProfileTimelineTab implements OnInit {
-  // 👈 سيجنال عشان نشيل البوستات الحقيقية
+  // سيجنال عشان نشيل البوستات الحقيقية
   posts = signal<Post[]>([]);
   
-  // private postService = inject(PostService);
+  // 👈 استقبلنا الـ userId 
+  @Input() userId?: number;
+  
+  private postService = inject(PostService);
 
-  // ضيف دول فوق في الكلاس
-@Input() userId?: number;
-private postService = inject(PostService);
-
-ngOnInit() {
-  // لو في userId مبعوت (يعني إحنا في بروفايل حد معين)
-  if (this.userId) {
-    this.postService.getUserPosts(this.userId).subscribe({
-      next: (res) => this.posts.set(res),
-      error: (err) => console.error(err)
-    });
-  } else {
-    // لو مفيش (يعني إحنا في الفيد العام أو بروفايلي لو كنت مبرمجه كده)
-    this.postService.getFeed().subscribe({
-      next: (res) => this.posts.set(res),
-      error: (err) => console.error(err)
-    });
+  ngOnInit() {
+    this.loadPosts(); // 👈 هننادي على الدالة الموحدة أول ما الصفحة تفتح
   }
-}
 
-  loadMyPosts() {
-    this.postService.getFeed().subscribe({
+  // 👇 دالة موحدة بتجيب البوستات سواء للفيد أو لليوزر وتعملها Mapping 👇
+  loadPosts() {
+    // نحدد هنكلم أي API بناءً على وجود userId
+    const request$ = this.userId 
+      ? this.postService.getUserPosts(this.userId) 
+      : this.postService.getFeed();
+
+    request$.subscribe({
       next: (responses: PostResponse[]) => {
         // ترتيب البوستات من الأحدث للأقدم
         responses.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -87,10 +80,10 @@ ngOnInit() {
   }
 
   onPosted(payload: { text: string; file: File | null }): void {
-    // 👈 إرسال البوست الجديد للسيرفر مباشرة!
+    // إرسال البوست الجديد للسيرفر مباشرة
     this.postService.createPost(payload.text, payload.file || undefined).subscribe({
       next: () => {
-        this.loadMyPosts(); // 👈 تحديث التايم لاين فوراً بعد النشر
+        this.loadPosts(); // 👈 تحديث التايم لاين فوراً بعد النشر
       },
       error: (err) => console.error('Error creating post', err)
     });

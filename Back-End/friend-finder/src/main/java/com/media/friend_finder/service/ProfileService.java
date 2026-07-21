@@ -15,11 +15,11 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     public ProfileResponse getMyProfile(String email) {
-        // Query واحدة نظيفة بتجيب المطلوب مباشرة بناءً على الإيميل
         Profile p = profileRepository.findByUserEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Profile not found"));
 
         return ProfileResponse.builder()
+                .id(p.getUser().getId()) // 👈 السطر ده اللي كان ناقص!
                 .email(p.getUser().getEmail())
                 .firstName(p.getFirstName())
                 .lastName(p.getLastName())

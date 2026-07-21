@@ -29,7 +29,14 @@ public class PostController {
 
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getFeed(Authentication authentication) {
-        // اتأكد إنك بتنادي getFeed مش getAllPosts
         return ResponseEntity.ok(postService.getFeed(authentication.getName()));
+    }
+
+    // 👈 الدالة الجديدة اللي الأنجولار كان بيدور عليها ومش لاقيها
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PostResponse>> getUserPosts(
+            @PathVariable Long userId,
+            Authentication authentication) {
+        return ResponseEntity.ok(postService.getUserPosts(userId, authentication.getName()));
     }
 }

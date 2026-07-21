@@ -14,8 +14,7 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
       @switch (activeTab()) {
         @case ('timeline') {
-          <!-- مررنا الـ userId للـ Timeline -->
-          <app-profile-timeline-tab [userId]="profile()?.user?.id"></app-profile-timeline-tab>
+          <app-profile-timeline-tab [userId]="profile()?.id"></app-profile-timeline-tab>
         }
         @case ('about') {
           <app-profile-about-tab [profile]="profile()!"></app-profile-about-tab>

@@ -1,4 +1,5 @@
 export interface ProfileResponse {
+  id: number;          // 👈 ضفنا الـ ID هنا
   email: string;
   firstName: string;
   lastName: string;
@@ -7,8 +8,8 @@ export interface ProfileResponse {
   location: string;
   profilePicture: string;
   coverPhoto: string;
-  interests: string;   // مفصولة بفاصلة من الباك إند
-  languages: string;   // مفصولة بفاصلة من الباك إند
+  interests: string; 
+  languages: string; 
 }
 
 export interface TimelinePost {
