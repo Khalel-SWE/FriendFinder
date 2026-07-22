@@ -25,4 +25,23 @@ export class ProfileService {
   getUserProfile(userId: number): Observable<ProfileResponse> {
     return this.http.get<ProfileResponse>(`${this.apiUrl}/${userId}`);
   }
+
+  // ضيف الدالة دي جوا كلاس ProfileService
+  updateProfile(profileData: any, avatar: File | null, cover: File | null) {
+    const formData = new FormData();
+    
+    // بنبعت البيانات كنص JSON
+    formData.append('profile', new Blob([JSON.stringify(profileData)], { type: 'application/json' }));
+    
+    // لو في صور جديدة بنضيفها
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+    if (cover) {
+      formData.append('cover', cover);
+    }
+
+    // هنظبط مسار الباك إند بتاعها لاحقاً
+    return this.http.put(`${this.apiUrl}/update`, formData); 
+  }
 }

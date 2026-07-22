@@ -14,9 +14,7 @@
       <button type="button" class="acct-item" (click)="goTo('/profile')">
         {{ lang.t('my_profile') }}
       </button>
-      <button type="button" class="acct-item" (click)="goTo('/profile/edit')">
-        {{ lang.t('edit_profile_link') }}
-      </button>
+      <button type="button" class="acct-item" (click)="goToEditProfile()">Edit Profile</button>
       <button type="button" class="acct-item" (click)="goTo('/contact')">
         {{ lang.t('contact_us') }}
       </button>

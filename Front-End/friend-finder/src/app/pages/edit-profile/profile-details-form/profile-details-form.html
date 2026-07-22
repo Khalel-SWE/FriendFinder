@@ -1,0 +1,66 @@
+<form [formGroup]="form()" (ngSubmit)="onSave()" class="details-form">
+  <!-- الاسم الأول والأخير جنب بعض في الشاشات الكبيرة -->
+  <div class="row row--split">
+    <div class="field">
+      <label class="field__label">First Name</label>
+      <input type="text" formControlName="firstName" class="field__input" />
+    </div>
+    <div class="field">
+      <label class="field__label">Last Name</label>
+      <input type="text" formControlName="lastName" class="field__input" />
+    </div>
+  </div>
+
+  <!-- البايو -->
+  <div class="row">
+    <div class="field">
+      <label class="field__label">Bio</label>
+      <textarea
+        rows="3"
+        formControlName="bio"
+        class="field__input field__input--textarea"
+        placeholder="Tell us about yourself..."
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- الوظيفة والمكان -->
+  <div class="row row--split">
+    <div class="field">
+      <label class="field__label">Job Title</label>
+      <input type="text" formControlName="jobTitle" class="field__input" />
+    </div>
+    <div class="field">
+      <label class="field__label">Location</label>
+      <input type="text" formControlName="location" class="field__input" />
+    </div>
+  </div>
+
+  <!-- الاهتمامات واللغات -->
+  <div class="row row--split">
+    <div class="field">
+      <label class="field__label">Interests</label>
+      <input
+        type="text"
+        formControlName="interests"
+        class="field__input"
+        placeholder="e.g. Travel, Photography"
+      />
+    </div>
+    <div class="field">
+      <label class="field__label">Languages</label>
+      <input
+        type="text"
+        formControlName="languages"
+        class="field__input"
+        placeholder="e.g. English, Arabic"
+      />
+    </div>
+  </div>
+
+  <!-- زراير الحفظ والإلغاء -->
+  <div class="actions">
+    <button type="button" class="btn btn--outline" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn--gold">Save Changes</button>
+  </div>
+</form>

@@ -53,4 +53,9 @@ export class AccountMenu implements OnInit {
       this.close();
     }
   }
+
+  goToEditProfile(): void {
+    this.open.set(false); // بتقفل القائمة المنسدلة
+    this.router.navigate(['/edit-profile']); // بتنقل لصفحة التعديل فوراً
+  }
 }

@@ -1,53 +1,17 @@
-//package com.media.friend_finder.controller;
-//
-//import com.media.friend_finder.dto.FriendSuggestionResponse;
-//import com.media.friend_finder.dto.ProfileResponse;
-//import com.media.friend_finder.dto.UpdateProfileRequest;
-//import com.media.friend_finder.service.ProfileService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/friend-finder/profiles")
-//@RequiredArgsConstructor
-//public class ProfileController {
-//
-//    private final ProfileService profileService;
-//
-//    @GetMapping("/me")
-//    public ResponseEntity<ProfileResponse> getMyProfile(Authentication authentication) {
-//        return ResponseEntity.ok(profileService.getMyProfile(authentication.getName()));
-//    }
-//
-//    @PutMapping("/me")
-//    public ResponseEntity<ProfileResponse> updateMyProfile(
-//            Authentication authentication,
-//            @RequestBody UpdateProfileRequest request) {
-//        return ResponseEntity.ok(profileService.updateMyProfile(authentication.getName(), request));
-//    }
-//
-//    // في ProfileController.java
-//    @GetMapping("/suggestions")
-//    public ResponseEntity<List<FriendSuggestionResponse>> getSuggestions(Authentication authentication) {
-//        return ResponseEntity.ok(userService.getFriendSuggestions(authentication.getName()));
-//    }
-//}
-
 package com.media.friend_finder.controller;
 
-import com.media.friend_finder.dto.FriendSuggestionResponse; // ضيف ده
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.media.friend_finder.dto.FriendSuggestionResponse;
 import com.media.friend_finder.dto.ProfileResponse;
 import com.media.friend_finder.dto.UpdateProfileRequest;
 import com.media.friend_finder.service.ProfileService;
-import com.media.friend_finder.service.UserService; // ضيف ده
+import com.media.friend_finder.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -57,8 +21,6 @@ import java.util.List;
 public class ProfileController {
 
     private final ProfileService profileService;
-
-    // 👇 السطر ده هو اللي كان ناقص عشان يحل الإيرور 👇
     private final UserService userService;
 
     @GetMapping("/me")
@@ -66,14 +28,26 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getMyProfile(authentication.getName()));
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<ProfileResponse> updateMyProfile(
+    // 👇 Endpoint التعديل الجديد اللي بيستقبل صور وبيانات 👇
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileResponse> updateProfile(
             Authentication authentication,
-            @RequestBody UpdateProfileRequest request) {
-        return ResponseEntity.ok(profileService.updateMyProfile(authentication.getName(), request));
+            @RequestPart("profile") String profileJson,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar,
+            @RequestPart(value = "cover", required = false) MultipartFile cover) {
+
+        try {
+            // تحويل الـ JSON اللي جاي من الأنجولار لـ Object سبرينج يفهمه
+            ObjectMapper mapper = new ObjectMapper();
+            UpdateProfileRequest request = mapper.readValue(profileJson, UpdateProfileRequest.class);
+
+            // نبعت البيانات والصور للسيرفيس
+            return ResponseEntity.ok(profileService.updateMyProfileWithMedia(authentication.getName(), request, avatar, cover));
+        } catch (Exception e) {
+            throw new RuntimeException("Error processing profile update", e);
+        }
     }
 
-    // الدالة الجديدة بتاعت المقترحات
     @GetMapping("/suggestions")
     public ResponseEntity<List<FriendSuggestionResponse>> getSuggestions(Authentication authentication) {
         return ResponseEntity.ok(userService.getFriendSuggestions(authentication.getName()));

@@ -34,3 +34,19 @@ export interface FriendItem {
 }
 
 export type ProfileTab = 'timeline' | 'about' | 'friends' | 'photos' | 'videos';
+
+export interface ProfileFormValue {
+  firstName: string;
+  lastName: string;
+  bio: string;
+  jobTitle: string;
+  location: string;
+  interests: string;
+  languages: string;
+}
+ 
+export interface ProfileMedia {
+  avatarUrl: string | null;
+  avatarInitials: string;
+  coverUrl: string | null;
+}

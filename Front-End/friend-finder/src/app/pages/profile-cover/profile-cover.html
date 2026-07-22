@@ -16,9 +16,13 @@
       </div>
 
       <!-- 👇 لو بروفايلي هيظهر تعديل، لو بروفايل حد تاني هيظهر مسح صديق 👇 -->
+      <!-- 👇 لو بروفايلي هيظهر تعديل، لو بروفايل حد تاني هيظهر مسح صديق 👇 -->
       @if (isMyProfile) {
         <button
-          class="gold-btn ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block"
+          type="button"
+          (click)="goToEdit()"
+          class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
+          style="background: #c9a24b; color: #17130e"
         >
           Edit Profile
         </button>

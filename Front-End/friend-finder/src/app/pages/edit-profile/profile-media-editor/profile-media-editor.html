@@ -1,0 +1,75 @@
+<div class="media-editor">
+  <!-- صورة الغلاف -->
+  <button
+    type="button"
+    class="cover-bg"
+    (click)="triggerCoverPick()"
+    [style.backgroundImage]="
+      coverPreview()
+        ? 'url(' + coverPreview() + ')'
+        : media().coverUrl
+          ? 'url(' + media().coverUrl + ')'
+          : null
+    "
+  >
+    <div class="cover-overlay">
+      <span class="cover-overlay__cta">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+          ></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        Change Cover
+      </span>
+    </div>
+  </button>
+  <input
+    #coverInput
+    type="file"
+    class="hidden-input"
+    accept="image/*"
+    (change)="onCoverSelected($event)"
+  />
+
+  <!-- الصورة الشخصية -->
+  <button type="button" class="avatar-btn" (click)="triggerAvatarPick()">
+    <div
+      class="avatar"
+      [style.backgroundImage]="
+        avatarPreview()
+          ? 'url(' + avatarPreview() + ')'
+          : media().avatarUrl
+            ? 'url(' + media().avatarUrl + ')'
+            : null
+      "
+    >
+      @if (!avatarPreview() && !media().avatarUrl) {
+        <span class="avatar__initials">{{ media().avatarInitials }}</span>
+      }
+
+      <div class="avatar__overlay">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+          <path
+            d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+          ></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+      </div>
+    </div>
+  </button>
+  <input
+    #avatarInput
+    type="file"
+    class="hidden-input"
+    accept="image/*"
+    (change)="onAvatarSelected($event)"
+  />
+</div>
