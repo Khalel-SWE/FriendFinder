@@ -38,6 +38,7 @@ public class ProfileService {
                 .languages(p.getLanguages())
                 .profilePicture(p.getProfilePicture())
                 .coverPhoto(p.getCoverPhoto())
+                .createdAt(p.getUser().getCreatedAt())
                 .build();
     }
 

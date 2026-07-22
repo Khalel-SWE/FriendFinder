@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; // 👈 استيراد ده عشان نقرا اللينك
+import { ActivatedRoute } from '@angular/router'; 
 import { ProfileCover } from '../profile-cover/profile-cover';
 import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
 import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
@@ -27,23 +27,22 @@ export class ProfilePage implements OnInit {
   activeTab = signal<ProfileTab>('timeline');
   profile = signal<ProfileResponse | null>(null);
   
-  // 👈 علم جديد عشان نعرف ده بروفايلك ولا بروفايل حد تاني
   isMyProfile = signal<boolean>(true); 
+  
+  // 👈 متغير جديد عشان يشيل سنة الانضمام ويبعتها للـ Cover
+  memberSince = signal<string>('...'); 
 
   private profileService = inject(ProfileService);
-  private route = inject(ActivatedRoute); // 👈 حقن الـ Route
+  private route = inject(ActivatedRoute);
 
   ngOnInit() {
-    // نراقب اللينك، هل فيه ID مبعوت ولا لأ؟
     this.route.paramMap.subscribe(params => {
       const userId = params.get('id');
 
       if (userId) {
-        // لو فيه ID، يبقى بنزور بروفايل شخص تاني
         this.isMyProfile.set(false);
         this.loadUserProfile(Number(userId));
       } else {
-        // لو مفيش، يبقى ده بروفايلي أنا
         this.isMyProfile.set(true);
         this.loadMyProfile();
       }
@@ -52,16 +51,32 @@ export class ProfilePage implements OnInit {
 
   loadUserProfile(userId: number) {
     this.profileService.getUserProfile(userId).subscribe({
-      next: (res: any) => this.profile.set(res as unknown as ProfileResponse),
+      next: (res: any) => {
+        this.profile.set(res as unknown as ProfileResponse);
+        this.extractYear(res.createdAt); // 👈 تحديث التاريخ
+      },
       error: (err: any) => console.error('Error fetching user profile', err)
     });
   }
 
   loadMyProfile() {
     this.profileService.getMyProfile().subscribe({
-      next: (res: any) => this.profile.set(res as unknown as ProfileResponse),
+      next: (res: any) => {
+        this.profile.set(res as unknown as ProfileResponse);
+        this.extractYear(res.createdAt); // 👈 تحديث التاريخ
+      },
       error: (err: any) => console.error('Error fetching my profile', err)
     });
+  }
+
+  // 👇 دالة صغيرة بتستخرج السنة من التاريخ اللي راجع من الداتا بيز
+  private extractYear(dateString?: string) {
+    if (dateString) {
+      const date = new Date(dateString);
+      this.memberSince.set(date.getFullYear().toString());
+    } else {
+      this.memberSince.set('2024'); // قيمة افتراضية لو مفيش تاريخ
+    }
   }
 
   onTabChange(tab: ProfileTab): void {

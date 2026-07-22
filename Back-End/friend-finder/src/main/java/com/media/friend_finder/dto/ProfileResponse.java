@@ -3,6 +3,8 @@ package com.media.friend_finder.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class ProfileResponse {
@@ -17,4 +19,5 @@ public class ProfileResponse {
     private String coverPhoto;
     private String interests;
     private String languages;
+    private LocalDateTime createdAt;
 }

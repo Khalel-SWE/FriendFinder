@@ -1,18 +1,13 @@
 :host {
   --gold: #C9A24B;
   --burgundy: #5C1A2B;
-  --ivory: #F8F4EA;
-  --ivory2: #F1EADA;
   --text: #211C1F;
   --muted: #8E8175;
   display: block;
 }
 
 .details-form {
-  background: #fff;
-  border: 1px solid var(--ivory2);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
+  background: transparent;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -46,18 +41,20 @@
 
 .field__input {
   width: 100%;
-  border: 1px solid var(--ivory2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 0.5rem;
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
-  background: var(--ivory);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
   font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 .field__input:focus {
   outline: none;
   border-color: var(--gold);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .field__input--textarea {
@@ -92,11 +89,11 @@
 
 .btn--outline {
   background: transparent;
-  border-color: var(--ivory2);
-  color: var(--muted);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .btn--outline:hover {
-  border-color: var(--burgundy);
-  color: var(--burgundy);
+  border-color: var(--gold);
+  color: var(--gold);
 }

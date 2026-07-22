@@ -1,7 +1,11 @@
 @if (profile()) {
   <section>
-    <!-- مررنا isMyProfile للـ Cover -->
-    <app-profile-cover [profile]="profile()!" [isMyProfile]="isMyProfile()" [memberSince]="'2024'">
+    <!-- استبدل السطر ده بس -->
+    <app-profile-cover
+      [profile]="profile()!"
+      [isMyProfile]="isMyProfile()"
+      [memberSince]="memberSince()"
+    >
     </app-profile-cover>
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
