@@ -8,6 +8,7 @@ import com.media.friend_finder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,5 +37,11 @@ public class UserService {
                     .initials(initials)
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public User getCurrentUser(Authentication authentication) {
+
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

@@ -15,12 +15,20 @@ public class UserActivity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "action_type", nullable = false)
-    private String actionType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "activity_type", nullable = false)
+    private ActivityType activityType;
+
+
+    @Column(name = "reference_id")
+    private Long referenceId;
+
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -24,6 +24,7 @@ public class InteractionService {
 
     // ضفنا الـ NotificationService هنا
     private final NotificationService notificationService;
+    private final ActivityService activityService;
 
     public CommentResponse addComment(String email, Long postId, String content) {
         validateContent(content);
@@ -37,6 +38,12 @@ public class InteractionService {
         comment.setUser(user);
         comment.setContent(content);
         comment = commentRepository.save(comment);
+
+        activityService.saveActivity(
+                user,
+                ActivityType.COMMENT_CREATED,
+                comment.getId()
+        );
 
         Profile profile = profileRepository.findByUserEmail(email).orElseThrow();
 
@@ -100,6 +107,12 @@ public class InteractionService {
             newReaction.setUser(user);
             newReaction.setType(type);
             reactionRepository.save(newReaction);
+
+            activityService.saveActivity(
+                    user,
+                    ActivityType.REACTION_ADDED,
+                    post.getId()
+            );
 
             // إرسال الإشعار لصاحب البوست للرياكت الجديد فقط
             if (!user.equals(post.getUser())) {

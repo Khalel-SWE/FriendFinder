@@ -30,6 +30,7 @@ public class PostService {
     private final FriendshipRepository friendshipRepository;
     private final ReactionRepository reactionRepository;
     private final CommentRepository commentRepository;
+    private final ActivityService activityService;
 
     private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/posts/";
 
@@ -69,6 +70,12 @@ public class PostService {
         }
 
         postRepository.save(post);
+
+        activityService.saveActivity(
+                user,
+                ActivityType.POST_CREATED,
+                post.getId()
+        );
 
         Profile profile = profileRepository.findByUserEmail(email)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));

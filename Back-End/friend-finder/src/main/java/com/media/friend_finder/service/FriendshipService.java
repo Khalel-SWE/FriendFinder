@@ -20,6 +20,7 @@ public class FriendshipService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final NotificationService notificationService;
+    private final ActivityService activityService;
 
     // 1. إرسال طلب صداقة
     public String sendFriendRequest(String requesterEmail, String addresseeEmail) {
@@ -102,6 +103,22 @@ public class FriendshipService {
 
         friendship.setStatus(status.toUpperCase());
         friendshipRepository.save(friendship);
+
+        if(status.equalsIgnoreCase("ACCEPTED")){
+
+            activityService.saveActivity(
+                    friendship.getRequester(),
+                    ActivityType.FRIEND_ADDED,
+                    friendship.getId()
+            );
+
+            activityService.saveActivity(
+                    friendship.getAddressee(),
+                    ActivityType.FRIEND_ADDED,
+                    friendship.getId()
+            );
+
+        }
 
         // إرسال إشعار مرتد في حالة القبول فقط
         if (status.equalsIgnoreCase("ACCEPTED")) {
