@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activities")
+@RequestMapping("/friend-finder/activities")
 @RequiredArgsConstructor
 public class ActivityController {
 
