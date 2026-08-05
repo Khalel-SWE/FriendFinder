@@ -1,5 +1,7 @@
-import { Component, signal, HostListener, ElementRef } from '@angular/core';
-import { LanguageService } from '../../core/services/language';
+import {Component, signal, HostListener, ElementRef, inject, OnInit}from '@angular/core';
+import {LanguageService } from '../../core/services/language';
+import {Notification } from '../../core/services/notification';
+import { NotificationResponse } from '../../core/models/notification.model';
 
 @Component({
   selector: 'app-notification-bell',
@@ -8,10 +10,23 @@ import { LanguageService } from '../../core/services/language';
   templateUrl: './notification-bell.html', // شلنا .component
   styleUrl: './notification-bell.css'      // شلنا .component
 })
-export class NotificationBell{
+export class NotificationBell implements OnInit{
+  private notification= inject(Notification);
   open = signal(false);
+  notifications = signal<NotificationResponse[]>([]);
 
   constructor(public lang: LanguageService, private eRef: ElementRef) {}
+
+  ngOnInit(): void {
+  this.notification.getMyNotifications().subscribe({
+    next: (data) => {
+      this.notifications.set(data);
+    },
+    error: (err) => {
+      console.error('Error loading notifications', err);
+    }
+  });
+}
 
   toggle(): void { this.open.update(v => !v); }
   close(): void { this.open.set(false); }
