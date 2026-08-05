@@ -15,6 +15,7 @@ export class NotificationBell implements OnInit{
   private notification= inject(Notification);
   open = signal(false);
   notifications = signal<NotificationResponse[]>([]);
+  unreadCount = signal(0);
 
   constructor(public lang: LanguageService, private eRef: ElementRef) {}
 
@@ -22,6 +23,9 @@ export class NotificationBell implements OnInit{
   this.notification.getMyNotifications().subscribe({
     next: (data) => {
       this.notifications.set(data);
+      this.unreadCount.set(
+  data.filter(n => !n.read).length
+);
     },
     error: (err) => {
       console.error('Error loading notifications', err);
@@ -29,7 +33,35 @@ export class NotificationBell implements OnInit{
   });
 }
 
-  toggle(): void { this.open.update(v => !v); }
+  toggle(): void {
+
+  this.open.update(v => !v);
+
+  if (this.open() && this.unreadCount() > 0) {
+
+    this.notification.markAllAsRead().subscribe({
+
+      next: () => {
+
+        this.notifications.update(list =>
+          list.map(item => ({
+            ...item,
+            read: true
+          }))
+        );
+
+        this.unreadCount.set(0);
+
+      },
+
+      error: err => console.error(err)
+
+    });
+
+  }
+
+}
+
   close(): void { this.open.set(false); }
 
   @HostListener('document:click', ['$event'])
