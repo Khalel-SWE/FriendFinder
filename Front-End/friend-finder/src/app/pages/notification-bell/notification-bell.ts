@@ -2,11 +2,12 @@ import {Component, signal, HostListener, ElementRef, inject, OnInit}from '@angul
 import {LanguageService } from '../../core/services/language';
 import {Notification } from '../../core/services/notification';
 import { NotificationResponse } from '../../core/models/notification.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-notification-bell',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './notification-bell.html', // شلنا .component
   styleUrl: './notification-bell.css'      // شلنا .component
 })

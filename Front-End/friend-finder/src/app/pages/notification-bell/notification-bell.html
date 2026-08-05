@@ -21,32 +21,25 @@
       <p class="bell-title">{{ lang.t('notifications') }}</p>
 
       <div class="bell-list">
-        <div class="bell-item">
-          <span class="bell-avatar from-burgundy">SA</span>
+        @for (item of notifications(); track item.id) {
+          <div class="bell-item">
+            <span class="bell-avatar from-burgundy">
+              {{ item.message.charAt(0).toUpperCase() }}
+            </span>
 
-          <span class="bell-text"
-            ><b>Sara Adel</b> {{ lang.t('notif_friend_req')
-            }}<span class="bell-time">5m</span></span
-          >
-        </div>
+            <span class="bell-text">
+              {{ item.message }}
 
-        <div class="bell-item">
-          <span class="bell-avatar from-gold">OM</span>
-
-          <span class="bell-text"
-            ><b>Omar Mostafa</b> {{ lang.t('notif_reacted') }} ❤️<span class="bell-time"
-              >1h</span
-            ></span
-          >
-        </div>
-
-        <div class="bell-item">
-          <span class="bell-avatar admin">A</span>
-
-          <span class="bell-text"
-            ><b>Admin</b> {{ lang.t('notif_admin_reply') }}<span class="bell-time">2h</span></span
-          >
-        </div>
+              <span class="bell-time">
+                {{ item.createdAt | date: 'short' }}
+              </span>
+            </span>
+          </div>
+        } @empty {
+          <div class="bell-item">
+            <span class="bell-text"> No notifications </span>
+          </div>
+        }
       </div>
     </div>
   }
