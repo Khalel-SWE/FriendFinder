@@ -32,7 +32,12 @@ public class ContactMessage {
     private String adminReply;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ContactStatus status;
+
+    @Column(nullable =false)
+    @Enumerated(EnumType.STRING)
+    private ContactType type;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
