@@ -1,63 +1,93 @@
-import { Component, Input, OnInit, signal, inject } from '@angular/core';
-import { PostService } from '../../core/services/post';
-import { PostResponse } from '../../core/models/post-model';
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { ActivityService } from '../../core/services/activity';
+import { ActivityResponse } from '../../core/models/activity-model';
 
 @Component({
   selector: 'app-recent-activity-panel',
-  standalone: true, // 👈 اتأكد إنها standalone
+  standalone: true,
   imports: [],
   templateUrl: './recent-activity-panel.html',
   styleUrl: './recent-activity-panel.css',
 })
 export class RecentActivityPanel implements OnInit {
-  @Input() userId?: number; // 👈 استقبال الـ ID
-  
+
+  private activityService = inject(ActivityService);
+
   activities = signal<any[]>([]);
-  private postService = inject(PostService);
 
-  ngOnInit() {
-    const request$ = this.userId 
-      ? this.postService.getUserPosts(this.userId)
-      : this.postService.getFeed();
+  ngOnInit(): void {
 
-    request$.subscribe({
-      next: (responses: PostResponse[]) => {
-        // ترتيب من الأحدث للأقدم
-        responses.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        
-        // 👈 نأخد أول 5 أنشطة بس ونحولهم لنص مفهوم
-        const recent = responses.slice(0, 5).map(post => {
-          let actionText = 'Published a new post';
-          if (post.mediaType?.includes('IMAGE')) actionText = 'Shared a new photo';
-          if (post.mediaType?.includes('VIDEO')) actionText = 'Uploaded a new video';
+    this.activityService.getActivities().subscribe({
 
-          return {
-            id: post.id,
-            text: actionText,
-            time: this.calculateTimeAgo(post.createdAt)
-          };
-        });
+      next: (data: ActivityResponse[]) => {
+
+        const recent = data.slice(0, 5).map(activity => ({
+
+          id: activity.id,
+
+          text: this.getActivityText(activity.activityType),
+
+          time: this.calculateTimeAgo(activity.createdAt)
+
+        }));
 
         this.activities.set(recent);
+
       },
-      error: (err) => console.error('Error fetching activities', err)
+
+      error: err => console.error('Error loading activities', err)
+
     });
+
   }
 
-  calculateTimeAgo(dateString: string): string {
-    if (!dateString) return '';
-    const postDate = new Date(dateString);
+  private getActivityText(type: string): string {
+
+    switch (type) {
+
+      case 'POST_CREATED':
+        return 'Published a new post';
+
+      case 'COMMENT_CREATED':
+        return 'Commented on a post';
+
+      case 'REACTION_ADDED':
+        return 'Reacted to a post';
+
+      case 'FRIEND_ADDED':
+        return 'Became friends with someone';
+
+      default:
+        return type;
+
+    }
+
+  }
+
+  private calculateTimeAgo(dateString: string): string {
+
+    const date = new Date(dateString);
+
     const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes}m`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d`;
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    return postDate.toLocaleDateString();
+    if (seconds < 60) return 'Just now';
+
+    const minutes = Math.floor(seconds / 60);
+
+    if (minutes < 60) return `${minutes}m`;
+
+    const hours = Math.floor(minutes / 60);
+
+    if (hours < 24) return `${hours}h`;
+
+    const days = Math.floor(hours / 24);
+
+    if (days < 7) return `${days}d`;
+
+    return date.toLocaleDateString();
+
   }
+
 }
