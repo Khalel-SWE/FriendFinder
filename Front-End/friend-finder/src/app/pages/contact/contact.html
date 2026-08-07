@@ -1,48 +1,69 @@
-<div class="max-w-3xl mx-auto mt-10 bg-white rounded-xl shadow-lg p-8">
-  <h1 class="text-3xl font-bold mb-6 text-center">Contact Support</h1>
+<section class="min-h-screen bg-[#0D0B0A] py-16 px-6">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-bold text-white mb-3">Contact Support</h1>
 
-  <form (ngSubmit)="sendMessage()">
-    <div class="mb-5">
-      <label class="block mb-2 font-semibold"> Type </label>
-
-      <select [(ngModel)]="model.type" name="type" class="w-full border rounded-lg p-3">
-        <option value="COMPLAINT">Complaint</option>
-
-        <option value="SUGGESTION">Suggestion</option>
-
-        <option value="BUG">Bug</option>
-
-        <option value="OTHER">Other</option>
-      </select>
+      <p class="text-white/60">
+        Need help? Send us your message and we'll reply as soon as possible.
+      </p>
     </div>
 
-    <div class="mb-5">
-      <label class="block mb-2 font-semibold"> Message </label>
+    <div class="bg-[#17130E] border border-yellow-600/20 rounded-2xl shadow-xl p-8">
+      <form (ngSubmit)="sendMessage()">
+        <div class="mb-6">
+          <label class="block text-white mb-2"> Subject </label>
 
-      <textarea
-        rows="8"
-        [(ngModel)]="model.message"
-        name="message"
-        class="w-full border rounded-lg p-3"
-        maxlength="3000"
-        required
+          <select
+            [(ngModel)]="model.type"
+            name="type"
+            class="w-full rounded-xl bg-[#211A14] border border-white/10 text-white p-3 focus:outline-none focus:border-yellow-500"
+          >
+            <option value="COMPLAINT">Complaint</option>
+
+            <option value="SUGGESTION">Suggestion</option>
+
+            <option value="BUG">Bug Report</option>
+
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-white mb-2"> Message </label>
+
+          <textarea
+            rows="8"
+            maxlength="3000"
+            required
+            [(ngModel)]="model.message"
+            name="message"
+            class="w-full rounded-xl bg-[#211A14] border border-white/10 text-white placeholder-white/40 p-4 focus:outline-none focus:border-yellow-500"
+          >
+          </textarea>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full bg-yellow-600 hover:bg-yellow-500 transition rounded-xl py-3 font-semibold text-[#17130E]"
+        >
+          {{ loading ? 'Sending...' : 'Send Message' }}
+        </button>
+      </form>
+
+      <div
+        *ngIf="success"
+        class="mt-5 rounded-lg bg-green-500/20 border border-green-500 text-green-300 p-3"
       >
-      </textarea>
+        {{ success }}
+      </div>
+
+      <div
+        *ngIf="error"
+        class="mt-5 rounded-lg bg-red-500/20 border border-red-500 text-red-300 p-3"
+      >
+        {{ error }}
+      </div>
     </div>
-
-    <button
-      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
-      [disabled]="loading"
-    >
-      {{ loading ? 'Sending...' : 'Send Message' }}
-    </button>
-  </form>
-
-  <div *ngIf="success" class="text-green-600 mt-5">
-    {{ success }}
   </div>
-
-  <div *ngIf="error" class="text-red-600 mt-5">
-    {{ error }}
-  </div>
-</div>
+</section>
