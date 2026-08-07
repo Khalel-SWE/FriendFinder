@@ -1,0 +1,102 @@
+/*
+  Tailwind v4: register these tokens once in your global styles.css:
+
+  @theme {
+    --color-ink: #141014;
+    --color-gold: #C9A24B;
+    --color-goldSoft: #E4D4A6;
+    --color-burgundy: #5C1A2B;
+    --color-ivory: #F8F4EA;
+    --color-ivory2: #F1EADA;
+    --color-text: #211C1F;
+    --color-muted: #8E8175;
+    --font-display: "Cormorant Garamond", serif;
+  }
+*/
+
+:host {
+  display: block;
+  --gold: #C9A24B;
+  --gold-dark: #B4893A;
+  --gold-light: #D9B769;
+  --ink-dark: #17130E;
+  --ivory2: #F1EADA;
+  --muted: #8E8175;
+}
+
+.lang-switcher {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  background: #0E0C0E;
+}
+
+.lang-btn {
+  padding: .35rem 1rem;
+  border-radius: 9999px;
+  font-size: .75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .6);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .15);
+  cursor: pointer;
+  transition: .15s;
+}
+
+.lang-btn:hover {
+  color: #fff;
+}
+
+.lang-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink-dark);
+}
+
+.cover-bg {
+  background:
+    radial-gradient(circle at 18% 30%, rgba(233, 196, 106, .30) 0%, rgba(233, 196, 106, 0) 9%),
+    radial-gradient(circle at 78% 18%, rgba(201, 162, 75, .22) 0%, rgba(201, 162, 75, 0) 11%),
+    radial-gradient(circle at 62% 55%, rgba(233, 196, 106, .16) 0%, rgba(233, 196, 106, 0) 12%),
+    radial-gradient(circle at 88% 70%, rgba(201, 162, 75, .20) 0%, rgba(201, 162, 75, 0) 9%),
+    linear-gradient(155deg, #211A14 0%, #161110 45%, #0D0B0A 100%);
+}
+
+.gold-btn {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  color: var(--ink-dark);
+  transition: filter .2s;
+  border: none;
+  cursor: pointer;
+}
+
+.gold-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.contact-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .375rem;
+  border: 2px solid var(--ivory2);
+  border-radius: .5rem;
+  padding: .75rem 0;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background-color .15s;
+}
+
+.contact-chip:hover {
+  border-color: var(--gold);
+}
+
+.contact-chip.selected {
+  border-color: var(--gold);
+  color: #17130E;
+  background: rgba(201, 162, 75, .08);
+}
