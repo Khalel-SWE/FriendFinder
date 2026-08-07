@@ -9,6 +9,7 @@ import { HomeFeed } from './pages/home-feed/home-feed'; // الفيد
 import { ProfilePage } from './pages/profile-page/profile-page';
 import { EditProfile } from './pages/edit-profile/edit-profile';
 import { Contact } from './pages/contact/contact';
+import { MyMessages } from './pages/my-messages/my-messages';
 
 export const routes: Routes = [
   // الهوم الأساسي (لو مسجل دخول هيروح للفيد، لو لأ هيفتح الهوم العادي)
@@ -19,9 +20,10 @@ export const routes: Routes = [
   { path: 'profile', component: ProfilePage }, // 👈 إضافة طريق البروفايل
   { path: 'edit-profile', component: EditProfile, canActivate: [authGuard] },
   
-  { path: 'login', component: Login, canActivate: [noAuthGuard] },
-  { path: 'register', component: Register, canActivate: [noAuthGuard] },
+  { path: 'login', component: Login, canActivate: [noAuthGuard]},
+  { path: 'register', component: Register, canActivate: [noAuthGuard]},
   { path: 'contact', component: Contact, canActivate: [authGuard]},
+  { path:'my-messages', component:MyMessages, canActivate:[authGuard]},
   
   { path: '**', redirectTo: '' }
 ];

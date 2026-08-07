@@ -1,1 +1,45 @@
-<p>my-messages works!</p>
+<section class="max-w-5xl mx-auto py-12 px-6">
+  <h1 class="text-4xl font-bold text-white mb-2">My Messages</h1>
+
+  <p class="text-gray-400 mb-8">
+    Here you can see all messages you have sent to the administration.
+  </p>
+
+  <div class="space-y-5">
+    @for (message of messages; track message.id) {
+      <div class="complaint-card">
+        <div class="complaint-header">
+          <div>
+            <h3 class="text-white font-semibold">
+              {{ message.type }}
+            </h3>
+          </div>
+
+          <span
+            class="status"
+            [class.open]="message.status == 'OPEN'"
+            [class.replied]="message.status == 'REPLIED'"
+          >
+            {{ message.status }}
+          </span>
+        </div>
+
+        <div class="complaint-body">
+          <p class="text-gray-300">
+            {{ message.message }}
+          </p>
+
+          @if (message.status == 'REPLIED') {
+            <div class="reply-box">
+              <h4>Admin Reply</h4>
+
+              <p>
+                {{ message.adminReply }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>

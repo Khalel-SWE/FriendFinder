@@ -8,6 +8,20 @@
       </p>
     </div>
 
+    <div
+      *ngIf="success"
+      class="mb-5 rounded-lg bg-green-600/20 border border-green-500 text-green-300 px-4 py-3"
+    >
+      {{ success }}
+    </div>
+
+    <div
+      *ngIf="error"
+      class="mb-5 rounded-lg bg-red-600/20 border border-red-500 text-red-300 px-4 py-3"
+    >
+      {{ error }}
+    </div>
+
     <div class="bg-[#17130E] border border-yellow-600/20 rounded-2xl shadow-xl p-8">
       <form (ngSubmit)="sendMessage()">
         <div class="mb-6">
@@ -33,11 +47,11 @@
 
           <textarea
             rows="8"
-            maxlength="3000"
-            required
             [(ngModel)]="model.message"
             name="message"
-            class="w-full rounded-xl bg-[#211A14] border border-white/10 text-white placeholder-white/40 p-4 focus:outline-none focus:border-yellow-500"
+            class="w-full rounded-xl bg-[#211A14] border border-white/10 text-white px-4 py-3"
+            maxlength="3000"
+            required
           >
           </textarea>
         </div>
