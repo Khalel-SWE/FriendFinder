@@ -6,16 +6,16 @@ export interface ContactResponse {
 
   senderEmail: string;
 
-  type: string;
+  type: 'COMPLAINT' | 'SUGGESTION' | 'BUG' | 'OTHER';
 
   message: string;
 
-  adminReply: string;
+  adminReply: string | null;
 
-  status: string;
+  status: 'OPEN' | 'REPLIED' | 'CLOSED';
 
   createdAt: string;
 
-  repliedAt: string;
+  repliedAt: string | null;
 
 }

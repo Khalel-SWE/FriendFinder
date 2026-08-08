@@ -10,7 +10,7 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   my_profile: { en: 'My Profile', ar: 'بروفايلي', de: 'Mein Profil' },
   edit_profile_link: { en: 'Edit Profile', ar: 'تعديل البروفايل', de: 'Profil bearbeiten' },
   contact_us: { en: 'Contact Us', ar: 'تواصل معنا', de: 'Kontakt' },
-  my_complaints: { en: 'My Messages', ar: 'رسائلي', de: 'Meine Nachrichten' },
+  my_messages: { en: 'My Messages', ar: 'رسائلي', de: 'Meine Nachrichten' },
   logout: { en: 'Log Out', ar: 'تسجيل الخروج', de: 'Abmelden' },
   composer_ph: { en: "What's on your mind?", ar: 'بتفكر في إيه؟', de: 'Was denkst du gerade?' },
   add_media: { en: 'Photo / Video', ar: 'صورة / فيديو', de: 'Foto / Video' },

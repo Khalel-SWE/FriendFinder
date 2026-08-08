@@ -11,7 +11,15 @@
         <div class="complaint-header">
           <div>
             <h3 class="text-white font-semibold">
-              {{ message.type }}
+              {{
+                message.type === 'COMPLAINT'
+                  ? 'Complaint'
+                  : message.type === 'BUG'
+                    ? 'Bug'
+                    : message.type === 'SUGGESTION'
+                      ? 'Suggestion'
+                      : 'Other'
+              }}
             </h3>
           </div>
 
@@ -20,7 +28,13 @@
             [class.open]="message.status == 'OPEN'"
             [class.replied]="message.status == 'REPLIED'"
           >
-            {{ message.status }}
+            {{
+              message.status === 'OPEN'
+                ? 'Open'
+                : message.status === 'REPLIED'
+                  ? 'Replied'
+                  : 'Closed'
+            }}
           </span>
         </div>
 
@@ -29,7 +43,7 @@
             {{ message.message }}
           </p>
 
-          @if (message.status == 'REPLIED') {
+          @if (message.adminReply) {
             <div class="reply-box">
               <h4>Admin Reply</h4>
 
