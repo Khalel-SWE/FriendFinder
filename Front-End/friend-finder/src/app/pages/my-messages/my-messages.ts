@@ -39,7 +39,7 @@
 
 // }
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContactService } from '../../core/services/contact';
@@ -57,7 +57,8 @@ export class MyMessages implements OnInit {
   messages: ContactResponse[] = [];
 
   constructor(
-    private contactService: ContactService
+    private contactService: ContactService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +73,10 @@ export class MyMessages implements OnInit {
 
       next: (response) => {
 
+        // this.messages = response;
         this.messages = response;
+
+  this.cdr.detectChanges();
 
       },
 
