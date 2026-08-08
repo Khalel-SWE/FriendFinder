@@ -73,10 +73,8 @@ export class MyMessages implements OnInit {
 
       next: (response) => {
 
-        // this.messages = response;
         this.messages = response;
-
-  this.cdr.detectChanges();
+        this.cdr.detectChanges();
 
       },
 
