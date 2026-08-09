@@ -1,12 +1,17 @@
 package com.media.friend_finder.controller;
 
 import com.media.friend_finder.dto.AdminUserResponse;
+import com.media.friend_finder.dto.ContactResponse;
 import com.media.friend_finder.dto.DashboardStatsResponse;
+import com.media.friend_finder.dto.ReplyRequest;
 import com.media.friend_finder.service.AdminService;
+import com.media.friend_finder.service.ContactMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friend-finder/admin")
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+    private final ContactMessageService contactMessageService;
 
     @GetMapping("/users")
     public ResponseEntity<Page<AdminUserResponse>> getAllUsers(
@@ -32,4 +38,33 @@ public class AdminController {
     public ResponseEntity<DashboardStatsResponse> getSystemStats() {
         return ResponseEntity.ok(adminService.getSystemStats());
     }
+
+//    *****************************************************************
+
+    @GetMapping("/contacts")
+    public ResponseEntity<List<ContactResponse>> getAllContacts() {
+    return ResponseEntity.ok(contactMessageService.getAllMessages());
+    }
+
+    @PatchMapping("/contacts/{id}/reply")
+    public ResponseEntity<String> reply(
+            @PathVariable Long id,
+            @RequestBody ReplyRequest request
+    ) {
+
+        contactMessageService.reply(id, request);
+
+        return ResponseEntity.ok("Reply sent successfully");
+    }
+
+    @PatchMapping("/contacts/{id}/close")
+    public ResponseEntity<String> close(
+            @PathVariable Long id
+    ) {
+
+        contactMessageService.close(id);
+
+        return ResponseEntity.ok("Contact closed");
+    }
+
 }
