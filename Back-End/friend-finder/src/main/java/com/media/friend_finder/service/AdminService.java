@@ -1,14 +1,12 @@
 package com.media.friend_finder.service;
 
+import com.media.friend_finder.dto.AdminPostResponse;
 import com.media.friend_finder.dto.AdminUserResponse;
 import com.media.friend_finder.dto.DashboardStatsResponse;
+import com.media.friend_finder.entity.Post;
 import com.media.friend_finder.entity.Profile;
 import com.media.friend_finder.entity.User;
-import com.media.friend_finder.repository.CommentRepository;
-import com.media.friend_finder.repository.FriendshipRepository;
-import com.media.friend_finder.repository.PostRepository;
-import com.media.friend_finder.repository.ProfileRepository;
-import com.media.friend_finder.repository.UserRepository;
+import com.media.friend_finder.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +22,7 @@ public class AdminService {
     // ضفنا التلاتة دول عشان نستخدمهم في الإحصائيات
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final ReactionRepository reactionRepository;
     private final FriendshipRepository friendshipRepository;
 
     public Page<AdminUserResponse> getAllUsers(int page, int size) {
@@ -60,5 +59,42 @@ public class AdminService {
                 .totalComments(commentRepository.count())
                 .activeFriendships(friendshipRepository.countByStatus("ACCEPTED"))
                 .build();
+    }
+
+    public Page<AdminPostResponse> getAllPosts(int page, int size) {
+
+        Page<Post> postsPage = postRepository.findAllByOrderByCreatedAtDesc(
+                PageRequest.of(page, size)
+        );
+
+        return postsPage.map(post -> {
+
+            Profile profile = profileRepository.findByUser(post.getUser())
+                    .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+            return AdminPostResponse.builder()
+                    .postId(post.getId())
+                    .userId(post.getUser().getId())
+                    .firstName(profile.getFirstName())
+                    .lastName(profile.getLastName())
+                    .email(post.getUser().getEmail())
+                    .content(post.getContent())
+                    .mediaUrl(post.getMediaUrl())
+                    .mediaType(post.getMediaType())
+                    .createdAt(post.getCreatedAt())
+                    .build();
+        });
+    }
+
+    public void deletePost(Long postId) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        reactionRepository.deleteByPost(post);
+
+        commentRepository.deleteByPost(post);
+
+        postRepository.delete(post);
     }
 }

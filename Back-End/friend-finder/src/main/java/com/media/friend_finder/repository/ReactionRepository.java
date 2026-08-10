@@ -32,4 +32,6 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
 
     // 👇 السطر اللي ناقص عشان الـ InteractionService يشتغل 👇
     Optional<Reaction> findByPostAndUser(Post post, User user);
+
+    void deleteByPost(Post post);
 }
