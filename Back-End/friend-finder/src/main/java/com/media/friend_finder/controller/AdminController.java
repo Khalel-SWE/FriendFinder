@@ -1,9 +1,6 @@
 package com.media.friend_finder.controller;
 
-import com.media.friend_finder.dto.AdminUserResponse;
-import com.media.friend_finder.dto.ContactResponse;
-import com.media.friend_finder.dto.DashboardStatsResponse;
-import com.media.friend_finder.dto.ReplyRequest;
+import com.media.friend_finder.dto.*;
 import com.media.friend_finder.service.AdminService;
 import com.media.friend_finder.service.ContactMessageService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +37,31 @@ public class AdminController {
     }
 
 //    *****************************************************************
+
+    @GetMapping("/posts")
+    public ResponseEntity<Page<AdminPostResponse>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        return ResponseEntity.ok(
+                adminService.getAllPosts(page, size)
+        );
+    }
+
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<String> deletePost(
+            @PathVariable Long postId
+    ) {
+
+        adminService.deletePost(postId);
+
+        return ResponseEntity.ok("Post deleted successfully");
+    }
+
+
+//    *********************************************************************
 
     @GetMapping("/contacts")
     public ResponseEntity<List<ContactResponse>> getAllContacts() {
