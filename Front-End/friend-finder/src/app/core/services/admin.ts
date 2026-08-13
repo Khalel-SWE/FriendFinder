@@ -1,93 +1,3 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AdminService {
-
-//   private api = 'http://localhost:9090/friend-finder/admin';
-
-//   constructor(private http: HttpClient) {}
-
-//   // ================= Dashboard =================
-
-//   getDashboardStats(): Observable<any> {
-//     return this.http.get<any>(`${this.api}/stats`);
-//   }
-
-//   // ================= Users =================
-
-//   getUsers(page: number, size: number): Observable<any> {
-//     return this.http.get<any>(
-//       `${this.api}/users?page=${page}&size=${size}`
-//     );
-//   }
-
-//   toggleUserStatus(userId: number): Observable<string> {
-//     return this.http.patch(
-//       `${this.api}/users/${userId}/status`,
-//       {},
-//       {
-//         responseType: 'text'
-//       }
-//     );
-//   }
-
-//   // ================= Posts =================
-
-//   getPosts(page: number, size: number): Observable<any> {
-//     return this.http.get<any>(
-//       `${this.api}/posts?page=${page}&size=${size}`
-//     );
-//   }
-
-//   deletePost(postId: number): Observable<string> {
-//     return this.http.delete(
-//       `${this.api}/posts/${postId}`,
-//       {
-//         responseType: 'text'
-//       }
-//     );
-//   }
-
-//   // ================= Contacts =================
-
-//   getContacts(): Observable<any> {
-//     return this.http.get<any>(
-//       `${this.api}/contacts`
-//     );
-//   }
-
-//   replyContact(id: number, adminReply: string): Observable<string> {
-
-//     return this.http.patch(
-//       `${this.api}/contacts/${id}/reply`,
-//       {
-//         adminReply: adminReply
-//       },
-//       {
-//         responseType: 'text'
-//       }
-//     );
-
-//   }
-
-//   closeContact(id: number): Observable<string> {
-
-//     return this.http.patch(
-//       `${this.api}/contacts/${id}/close`,
-//       {},
-//       {
-//         responseType: 'text'
-//       }
-//     );
-
-//   }
-
-// }
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -151,97 +61,76 @@ export class AdminService {
     return this.http.get<any>(`${this.api}/stats`);
   }
 
-  getUsers(page: number = 0, size: number = 10): Observable<PageResponse<AdminUser>> {
+  getUsers(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PageResponse<AdminUser>> {
+
     return this.http.get<PageResponse<AdminUser>>(
       `${this.api}/users?page=${page}&size=${size}`
     );
   }
 
-  // toggleUserStatus(userId: number): Observable<string> {
-  //   return this.http.patch<string>(
-  //     `${this.api}/users/${userId}/status`,
-  //     {}
-  //   );
-  // }
-
   toggleUserStatus(userId: number): Observable<string> {
-  return this.http.patch(
-    `${this.api}/users/${userId}/status`,
-    {},
-    {
-      responseType: 'text'
-    }
-  );
-}
 
-  getPosts(page: number = 0, size: number = 10): Observable<PageResponse<AdminPost>> {
+    return this.http.patch(
+      `${this.api}/users/${userId}/status`,
+      {},
+      {
+        responseType: 'text'
+      }
+    );
+  }
+
+  getPosts(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PageResponse<AdminPost>> {
+
     return this.http.get<PageResponse<AdminPost>>(
       `${this.api}/posts?page=${page}&size=${size}`
     );
   }
 
-  // deletePost(postId: number): Observable<string> {
-  //   return this.http.delete<string>(
-  //     `${this.api}/posts/${postId}`
-  //   );
-  // }
-
   deletePost(postId: number): Observable<string> {
-  return this.http.delete(
-    `${this.api}/posts/${postId}`,
-    {
-      responseType: 'text'
-    }
-  );
-}
+
+    return this.http.delete(
+      `${this.api}/posts/${postId}`,
+      {
+        responseType: 'text'
+      }
+    );
+  }
 
   getContacts(): Observable<AdminContact[]> {
+
     return this.http.get<AdminContact[]>(
       `${this.api}/contacts`
     );
   }
 
-  // replyToContact(
-  //   id: number,
-  //   adminReply: string
-  // ): Observable<string> {
-
-  //   return this.http.patch<string>(
-  //     `${this.api}/contacts/${id}/reply`,
-  //     { adminReply }
-  //   );
-  // }
-
   replyToContact(
-  id: number,
-  adminReply: string
-): Observable<string> {
+    id: number,
+    adminReply: string
+  ): Observable<string> {
 
-  return this.http.patch(
-    `${this.api}/contacts/${id}/reply`,
-    { adminReply },
-    {
-      responseType: 'text'
-    }
-  );
-}
-
-  // closeContact(id: number): Observable<string> {
-
-  //   return this.http.patch<string>(
-  //     `${this.api}/contacts/${id}/close`,
-  //     {}
-  //   );
-  // }
+    return this.http.patch(
+      `${this.api}/contacts/${id}/reply`,
+      { adminReply },
+      {
+        responseType: 'text'
+      }
+    );
+  }
 
   closeContact(id: number): Observable<string> {
 
-  return this.http.patch(
-    `${this.api}/contacts/${id}/close`,
-    {},
-    {
-      responseType: 'text'
-    }
-  );
-}
+    return this.http.patch(
+      `${this.api}/contacts/${id}/close`,
+      {},
+      {
+        responseType: 'text'
+      }
+    );
+  }
 }
