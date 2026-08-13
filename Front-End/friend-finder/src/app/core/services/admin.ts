@@ -18,6 +18,7 @@ export interface AdminPost {
   firstName: string;
   lastName: string;
   email: string;
+  profilePicture: string | null;
   content: string | null;
   mediaUrl: string | null;
   mediaType: string | null;

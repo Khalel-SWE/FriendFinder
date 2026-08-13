@@ -1,0 +1,376 @@
+:host {
+  display: block;
+
+  --gold: #C9A24B;
+  --burgundy: #5C1A2B;
+
+  --page-bg: #0D0B0A;
+  --card-bg: #171214;
+
+  --border: rgba(201, 162, 75, .18);
+  --border-light: rgba(255, 255, 255, .07);
+
+  --text-main: #F5F1EC;
+  --text-muted: rgba(255, 255, 255, .48);
+
+  --red: #E27B7B;
+  --red-bg: rgba(178, 63, 63, .14);
+}
+
+
+/* =========================
+   Page
+   ========================= */
+
+.admin-posts-page {
+  color: var(--text-main);
+}
+
+
+/* =========================
+   Grid
+   ========================= */
+
+.posts-grid {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 1.25rem;
+}
+
+@media (min-width: 900px) {
+  .posts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================
+   Card
+   ========================= */
+
+.post-card {
+  background: var(--card-bg);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  transition:
+    border-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.post-card:hover {
+  border-color: rgba(201, 162, 75, .32);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, .25);
+}
+
+
+/* =========================
+   Header
+   ========================= */
+
+.post-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.1rem 1.15rem;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.author-section {
+  display: flex;
+
+  align-items: center;
+
+  gap: .8rem;
+
+  min-width: 0;
+}
+
+
+/* =========================
+   Profile Picture
+   ========================= */
+
+.profile-avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #9A742D,
+      #C9A24B
+    );
+
+  color: #17130E;
+
+  font-size: .8rem;
+
+  font-weight: 800;
+
+  box-shadow:
+    0 0 0 2px rgba(201, 162, 75, .18);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+/* =========================
+   Author Info
+   ========================= */
+
+.author-info {
+  min-width: 0;
+}
+
+.author-info h2 {
+  margin: 0;
+
+  color: #fff;
+
+  font-size: .95rem;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.author-info p {
+  margin-top: .15rem;
+
+  color: var(--text-muted);
+
+  font-size: .72rem;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   Post ID
+   ========================= */
+
+.post-id {
+  flex-shrink: 0;
+
+  color: rgba(255, 255, 255, .32);
+
+  font-size: .7rem;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   Content
+   ========================= */
+
+.post-content {
+  padding: 1rem 1.15rem 0;
+
+  margin: 0;
+
+  color: rgba(255, 255, 255, .78);
+
+  font-size: .9rem;
+
+  line-height: 1.6;
+
+  white-space: pre-line;
+}
+
+
+/* =========================
+   Media
+   ========================= */
+
+.post-media,
+.post-video {
+  display: block;
+
+  width: calc(100% - 2.3rem);
+
+  margin: 1rem 1.15rem 0;
+
+  border-radius: 10px;
+
+  max-height: 380px;
+
+  object-fit: cover;
+
+  background: #0F0C0D;
+}
+
+.post-video {
+  object-fit: contain;
+}
+
+
+/* =========================
+   Footer
+   ========================= */
+
+.post-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1rem 1.15rem 1.1rem;
+}
+
+.post-date {
+  color: rgba(255, 255, 255, .34);
+
+  font-size: .7rem;
+}
+
+
+/* =========================
+   Delete
+   ========================= */
+
+.delete-button {
+  border: 1px solid rgba(178, 63, 63, .25);
+
+  background: var(--red-bg);
+
+  color: var(--red);
+
+  padding: .45rem .8rem;
+
+  border-radius: 8px;
+
+  font-size: .72rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.delete-button:hover {
+  background: rgba(178, 63, 63, .22);
+
+  border-color: rgba(178, 63, 63, .4);
+}
+
+
+/* =========================
+   Empty
+   ========================= */
+
+.empty-state {
+  text-align: center;
+
+  padding: 3rem;
+
+  color: var(--text-muted);
+
+  border: 1px dashed var(--border);
+
+  border-radius: 12px;
+}
+
+
+/* =========================
+   Pagination
+   ========================= */
+
+.pagination {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  border: 1px solid var(--border);
+
+  background: var(--card-bg);
+
+  color: rgba(255, 255, 255, .72);
+
+  padding: .5rem .85rem;
+
+  border-radius: 8px;
+
+  font-size: .8rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color .15s ease,
+    color .15s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  color: var(--gold);
+
+  border-color: var(--gold);
+}
+
+.pagination button:disabled {
+  opacity: .3;
+
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--text-muted);
+
+  font-size: .8rem;
+}

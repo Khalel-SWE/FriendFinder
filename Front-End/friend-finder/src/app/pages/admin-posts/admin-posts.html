@@ -1,82 +1,96 @@
-<div class="p-8 text-white">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold">Posts</h1>
+<div class="admin-posts-page">
+  <!-- Page Header -->
+  <div class="page-header mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold text-white">Posts</h1>
 
-    <p class="text-white/50 mt-2">Manage posts published on Friend Finder.</p>
+      <p class="text-white/45 mt-2">Manage posts published on Friend Finder.</p>
+    </div>
   </div>
 
-  <div *ngIf="loading" class="text-white/50">Loading posts...</div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-white/45 py-10 text-center">Loading posts...</div>
 
-  <div *ngIf="!loading" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-    <div
-      *ngFor="let post of posts"
-      class="bg-[#16120F] border border-white/10 rounded-xl overflow-hidden"
-    >
-      <div class="p-5">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="font-semibold text-lg">
+  <!-- Posts -->
+  <div *ngIf="!loading" class="posts-grid">
+    <div *ngFor="let post of posts" class="post-card">
+      <!-- Post Header -->
+      <div class="post-header">
+        <div class="author-section">
+          <!-- Profile Picture -->
+          <div class="profile-avatar">
+            <img
+              *ngIf="post.profilePicture"
+              [src]="'http://localhost:9090' + post.profilePicture"
+              [alt]="post.firstName + ' ' + post.lastName"
+            />
+
+            <!-- Fallback -->
+            <span *ngIf="!post.profilePicture">
+              {{ post.firstName?.charAt(0) }}
+              {{ post.lastName?.charAt(0) }}
+            </span>
+          </div>
+
+          <!-- Author Info -->
+          <div class="author-info">
+            <h2>
               {{ post.firstName }}
               {{ post.lastName }}
             </h2>
 
-            <p class="text-sm text-white/40">
+            <p>
               {{ post.email }}
             </p>
           </div>
-
-          <span class="text-xs text-white/40"> #{{ post.postId }} </span>
         </div>
 
-        <p *ngIf="post.content" class="text-white/80 mb-4 whitespace-pre-line">
-          {{ post.content }}
-        </p>
+        <!-- Post ID -->
+        <span class="post-id"> #{{ post.postId }} </span>
+      </div>
 
-        <img
-          *ngIf="post.mediaType === 'IMAGE' && post.mediaUrl"
-          [src]="'http://localhost:9090' + post.mediaUrl"
-          class="w-full max-h-80 object-cover rounded-lg mb-4"
-          alt="Post image"
-        />
+      <!-- Post Text -->
+      <p *ngIf="post.content" class="post-content">
+        {{ post.content }}
+      </p>
 
-        <video
-          *ngIf="post.mediaType === 'VIDEO' && post.mediaUrl"
-          [src]="'http://localhost:9090' + post.mediaUrl"
-          controls
-          class="w-full max-h-80 rounded-lg mb-4"
-        ></video>
+      <!-- Post Image -->
+      <img
+        *ngIf="post.mediaType === 'IMAGE' && post.mediaUrl"
+        [src]="'http://localhost:9090' + post.mediaUrl"
+        class="post-media"
+        alt="Post image"
+      />
 
-        <div class="text-xs text-white/40 mb-5">
+      <!-- Post Video -->
+      <video
+        *ngIf="post.mediaType === 'VIDEO' && post.mediaUrl"
+        [src]="'http://localhost:9090' + post.mediaUrl"
+        controls
+        class="post-video"
+      ></video>
+
+      <!-- Date -->
+      <div class="post-footer">
+        <span class="post-date">
           {{ post.createdAt | date: 'medium' }}
-        </div>
+        </span>
 
-        <button (click)="deletePost(post)" class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-lg">
-          Delete Post
-        </button>
+        <button type="button" class="delete-button" (click)="deletePost(post)">Delete Post</button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="!loading && posts.length === 0" class="text-center text-white/40 py-12">
-    No posts found.
-  </div>
+  <!-- Empty -->
+  <div *ngIf="!loading && posts.length === 0" class="empty-state">No posts found.</div>
 
-  <div class="flex items-center justify-center gap-4 mt-8">
-    <button
-      (click)="previousPage()"
-      [disabled]="currentPage === 0"
-      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
-    >
-      Previous
-    </button>
+  <!-- Pagination -->
+  <div class="pagination">
+    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
 
-    <span class="text-white/60"> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
+    <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
 
-    <button
-      (click)="nextPage()"
-      [disabled]="currentPage >= totalPages - 1"
-      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
-    >
+    <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
       Next
     </button>
   </div>

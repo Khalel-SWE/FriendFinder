@@ -14,10 +14,11 @@ public class AdminPostResponse {
     private Long userId;
 
     private String firstName;
-
     private String lastName;
 
     private String email;
+
+    private String profilePicture;
 
     private String content;
 
@@ -26,5 +27,4 @@ public class AdminPostResponse {
     private String mediaType;
 
     private LocalDateTime createdAt;
-
 }

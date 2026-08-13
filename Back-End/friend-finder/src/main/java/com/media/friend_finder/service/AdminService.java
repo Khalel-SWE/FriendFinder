@@ -80,6 +80,7 @@ public class AdminService {
                     .firstName(profile.getFirstName())
                     .lastName(profile.getLastName())
                     .email(post.getUser().getEmail())
+                    .profilePicture(profile.getProfilePicture())
                     .content(post.getContent())
                     .mediaUrl(post.getMediaUrl())
                     .mediaType(post.getMediaType())
