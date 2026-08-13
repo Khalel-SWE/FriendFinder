@@ -19,6 +19,7 @@ export class Header implements OnInit {
   // المتغيرات اللي الـ HTML محتاجها
   isLoggedIn = false;
   isDropdownOpen = false;
+  isAdmin = false;
   public router = inject(Router);
 
   dict: any = {
@@ -46,6 +47,9 @@ export class Header implements OnInit {
 
   checkAuthStatus() {
     this.isLoggedIn = !!localStorage.getItem('auth_token');
+
+    const role = localStorage.getItem('role');
+    this.isAdmin = role === 'ADMIN';
   }
 
   toggleDropdown() {
@@ -68,5 +72,20 @@ export class Header implements OnInit {
   onSearchChange(event: Event) {
   const text = (event.target as HTMLInputElement).value;
   this.searchService.setQuery(text); // بنبعت النص للـ Service
+}
+
+goHome(): void {
+
+  if (!this.isLoggedIn) {
+    this.router.navigate(['/']);
+    return;
+  }
+
+  if (this.isAdmin) {
+    this.router.navigate(['/admin/dashboard']);
+  } else {
+    this.router.navigate(['/feed']);
+  }
+
 }
 }
