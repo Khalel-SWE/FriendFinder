@@ -73,8 +73,13 @@ export class Login {
         
         // ====== اللقطة السحرية: حفظ التوكن في المتصفح ======
         localStorage.setItem('auth_token', response.token);
-        
-        this.router.navigate(['/']);
+localStorage.setItem('role', response.role);
+
+if (response.role === 'ADMIN') {
+    this.router.navigate(['/admin']);
+} else {
+    this.router.navigate(['/feed']);
+}
       },
       error: (err) => {
         this.isLoading = false;

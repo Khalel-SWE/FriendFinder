@@ -11,6 +11,13 @@ import { EditProfile } from './pages/edit-profile/edit-profile';
 import { Contact } from './pages/contact/contact';
 import { MyMessages } from './pages/my-messages/my-messages';
 
+import { AdminLayout } from './pages/admin-layout/admin-layout';
+
+import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
+import { AdminUsers } from './pages/admin-users/admin-users';
+import { AdminPosts } from './pages/admin-posts/admin-posts';
+import { AdminContacts } from './pages/admin-contacts/admin-contacts';
+
 export const routes: Routes = [
   // الهوم الأساسي (لو مسجل دخول هيروح للفيد، لو لأ هيفتح الهوم العادي)
   { path: '', component: Home, canActivate: [noAuthGuard] },
@@ -25,5 +32,13 @@ export const routes: Routes = [
   { path: 'contact', component: Contact, canActivate: [authGuard]},
   { path:'my-messages', component:MyMessages, canActivate:[authGuard]},
   
+  { path: 'admin', component: AdminLayout, canActivate: [authGuard], children: [
+    { path: 'dashboard', component: AdminDashboard}, 
+    { path: 'users', component: AdminUsers},
+    { path: 'posts', component: AdminPosts},
+    { path: 'contacts', component: AdminContacts},
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full'}
+  ]},
+
   { path: '**', redirectTo: '' }
 ];

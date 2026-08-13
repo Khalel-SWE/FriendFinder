@@ -51,7 +51,11 @@ public class AuthenticationService {
         profileRepository.save(profile);
 
         var jwtToken = jwtService.generateToken(savedUser);
-        return AuthResponse.builder().token(jwtToken).build();
+//        return AuthResponse.builder().token(jwtToken).build();
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .role(user.getRole())
+                .build();
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -66,6 +70,10 @@ public class AuthenticationService {
                 .orElseThrow();
 
         var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder().token(jwtToken).build();
+//        return AuthResponse.builder().token(jwtToken).build();
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .role(user.getRole())
+                .build();
     }
 }
