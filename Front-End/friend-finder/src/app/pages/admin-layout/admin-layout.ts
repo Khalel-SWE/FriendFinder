@@ -21,7 +21,7 @@ export class AdminLayout {
   localStorage.removeItem('auth_token');
   localStorage.removeItem('role');
 
-  this.router.navigate(['/login']);
+  this.router.navigate(['/']);
 
 }
 }

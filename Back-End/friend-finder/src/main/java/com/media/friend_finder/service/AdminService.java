@@ -10,6 +10,7 @@ import com.media.friend_finder.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +36,7 @@ public class AdminService {
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
                 .joinedAt(profile.getUser().getCreatedAt())
+                .enabled(profile.getUser().isEnabled())
                 .build());
     }
 
@@ -86,6 +88,7 @@ public class AdminService {
         });
     }
 
+    @Transactional
     public void deletePost(Long postId) {
 
         Post post = postRepository.findById(postId)

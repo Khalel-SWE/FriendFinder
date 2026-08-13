@@ -1,1 +1,84 @@
-<p>admin-users works!</p>
+<div class="p-8 text-white">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">Users</h1>
+
+      <p class="text-white/50 mt-2">Manage registered users.</p>
+    </div>
+
+    <div class="text-sm text-white/50">Total: {{ totalElements }}</div>
+  </div>
+
+  <div *ngIf="loading" class="text-white/50 mb-6">Loading users...</div>
+
+  <div *ngIf="!loading" class="overflow-x-auto rounded-xl border border-white/10 bg-[#16120F]">
+    <table class="w-full text-left">
+      <thead class="border-b border-white/10">
+        <tr>
+          <th class="p-4 text-sm text-gold">Name</th>
+
+          <th class="p-4 text-sm text-gold">Email</th>
+
+          <th class="p-4 text-sm text-gold">Role</th>
+
+          <th class="p-4 text-sm text-gold">Joined</th>
+
+          <th class="p-4 text-sm text-gold">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let user of users" class="border-b border-white/5">
+          <td class="p-4">
+            {{ user.firstName }}
+            {{ user.lastName }}
+          </td>
+
+          <td class="p-4 text-white/60">
+            {{ user.email }}
+          </td>
+
+          <td class="p-4">
+            {{ user.role }}
+          </td>
+
+          <td class="p-4 text-white/50">
+            {{ user.joinedAt | date: 'medium' }}
+          </td>
+
+          <td class="p-4">
+            <button
+              *ngIf="user.role !== 'ADMIN'"
+              (click)="toggleUser(user)"
+              class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-lg text-sm"
+            >
+              Ban / Unban
+            </button>
+
+            <span *ngIf="user.role === 'ADMIN'" class="text-gold text-sm"> Protected </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex items-center justify-center gap-4 mt-8">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 0"
+      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
+    >
+      Previous
+    </button>
+
+    <span class="text-white/60"> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage >= totalPages - 1"
+      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
+    >
+      Next
+    </button>
+  </div>
+</div>
