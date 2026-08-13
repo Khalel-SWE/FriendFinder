@@ -1,0 +1,292 @@
+:host {
+  display: block;
+
+  --gold: #C9A24B;
+  --gold-soft: rgba(201, 162, 75, .18);
+
+  --burgundy: #5C1A2B;
+
+  --page-bg: #0D0B0A;
+  --card-bg: #171214;
+  --card-bg-soft: #1D171B;
+
+  --border: rgba(201, 162, 75, .18);
+  --border-light: rgba(255, 255, 255, .07);
+
+  --text-main: #F5F1EC;
+  --text-muted: rgba(255, 255, 255, .52);
+
+  --green: #79C48A;
+  --green-bg: rgba(87, 160, 104, .14);
+
+  --red: #E27B7B;
+  --red-bg: rgba(178, 63, 63, .14);
+}
+
+.admin-page {
+  color: var(--text-main);
+}
+
+/* Header */
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.page-header p {
+  margin-top: .4rem;
+  color: var(--text-muted);
+  font-size: .9rem;
+}
+
+.total-users {
+  color: var(--text-muted);
+  font-size: .85rem;
+  padding-top: .5rem;
+}
+
+/* Loading */
+
+.loading-state {
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Card */
+
+.users-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Table */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+}
+
+.users-table thead {
+  background: #120E0F;
+}
+
+.users-table th {
+  padding: 1rem;
+  text-align: start;
+
+  color: var(--gold);
+
+  font-size: .72rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: .08em;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.users-table td {
+  padding: 1rem;
+
+  border-bottom: 1px solid var(--border-light);
+
+  font-size: .88rem;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+  background: rgba(255, 255, 255, .025);
+}
+
+/* User */
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.user-avatar {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    #8C6B2A,
+    #C9A24B
+  );
+
+  color: #17130E;
+
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.full-name {
+  font-weight: 600;
+}
+
+.email-cell,
+.joined-cell {
+  color: var(--text-muted);
+}
+
+/* Role */
+
+.role-badge {
+  display: inline-flex;
+
+  padding: .28rem .65rem;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.72);
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  letter-spacing: .04em;
+}
+
+.admin-role {
+  background: rgba(201,162,75,.12);
+  color: var(--gold);
+}
+
+/* Status */
+
+.status-badge,
+.protected-badge {
+  display: inline-flex;
+
+  padding: .3rem .7rem;
+
+  border-radius: 999px;
+
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.status-badge {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.status-badge.banned {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.protected-badge {
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
+/* Button */
+
+.status-button {
+  border: none;
+
+  padding: .45rem .8rem;
+
+  border-radius: 8px;
+
+  background: var(--red-bg);
+  color: var(--red);
+
+  font-size: .72rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background .15s,
+    transform .15s;
+}
+
+.status-button:hover {
+  background: rgba(178, 63, 63, .24);
+  transform: translateY(-1px);
+}
+
+.status-button.unban {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.status-button.unban:hover {
+  background: rgba(87, 160, 104, .22);
+}
+
+.protected-text {
+  color: rgba(201,162,75,.55);
+  font-size: .72rem;
+}
+
+/* Pagination */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  margin-top: 1.25rem;
+}
+
+.pagination button {
+  border: 1px solid var(--border);
+
+  background: var(--card-bg);
+
+  color: rgba(255,255,255,.72);
+
+  padding: .5rem .85rem;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.pagination button:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--text-muted);
+  font-size: .85rem;
+}

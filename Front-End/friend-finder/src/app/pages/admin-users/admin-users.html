@@ -1,83 +1,104 @@
-<div class="p-8 text-white">
-  <div class="flex items-center justify-between mb-8">
+<div class="admin-page">
+  <!-- Header -->
+  <div class="page-header">
     <div>
-      <h1 class="text-3xl font-bold">Users</h1>
-
-      <p class="text-white/50 mt-2">Manage registered users.</p>
+      <h1>Users</h1>
+      <p>Manage registered users and account access.</p>
     </div>
 
-    <div class="text-sm text-white/50">Total: {{ totalElements }}</div>
+    <div class="total-users">Total: {{ totalElements }}</div>
   </div>
 
-  <div *ngIf="loading" class="text-white/50 mb-6">Loading users...</div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">Loading users...</div>
 
-  <div *ngIf="!loading" class="overflow-x-auto rounded-xl border border-white/10 bg-[#16120F]">
-    <table class="w-full text-left">
-      <thead class="border-b border-white/10">
-        <tr>
-          <th class="p-4 text-sm text-gold">Name</th>
+  <!-- Table -->
+  <div *ngIf="!loading" class="users-card">
+    <div class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th class="action-column">Action</th>
+          </tr>
+        </thead>
 
-          <th class="p-4 text-sm text-gold">Email</th>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <!-- Name -->
+            <td class="name-cell">
+              <div class="user-name">
+                <div class="user-avatar">
+                  {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                </div>
 
-          <th class="p-4 text-sm text-gold">Role</th>
+                <div>
+                  <span class="full-name"> {{ user.firstName }} {{ user.lastName }} </span>
+                </div>
+              </div>
+            </td>
 
-          <th class="p-4 text-sm text-gold">Joined</th>
+            <!-- Email -->
+            <td class="email-cell">
+              {{ user.email }}
+            </td>
 
-          <th class="p-4 text-sm text-gold">Action</th>
-        </tr>
-      </thead>
+            <!-- Role -->
+            <td>
+              <span class="role-badge" [class.admin-role]="user.role === 'ADMIN'">
+                {{ user.role }}
+              </span>
+            </td>
 
-      <tbody>
-        <tr *ngFor="let user of users" class="border-b border-white/5">
-          <td class="p-4">
-            {{ user.firstName }}
-            {{ user.lastName }}
-          </td>
+            <!-- Status -->
+            <td>
+              <span
+                *ngIf="user.role !== 'ADMIN'"
+                class="status-badge"
+                [class.banned]="!user.enabled"
+              >
+                {{ getStatusLabel(user) }}
+              </span>
 
-          <td class="p-4 text-white/60">
-            {{ user.email }}
-          </td>
+              <span *ngIf="user.role === 'ADMIN'" class="protected-badge"> Protected </span>
+            </td>
 
-          <td class="p-4">
-            {{ user.role }}
-          </td>
+            <!-- Joined -->
+            <td class="joined-cell">
+              {{ user.joinedAt | date: 'medium' }}
+            </td>
 
-          <td class="p-4 text-white/50">
-            {{ user.joinedAt | date: 'medium' }}
-          </td>
+            <!-- Action -->
+            <td class="action-cell">
+              <button
+                *ngIf="user.role !== 'ADMIN'"
+                type="button"
+                class="status-button"
+                [class.unban]="!user.enabled"
+                (click)="toggleUser(user)"
+              >
+                {{ user.enabled ? 'Ban User' : 'Unban User' }}
+              </button>
 
-          <td class="p-4">
-            <button
-              *ngIf="user.role !== 'ADMIN'"
-              (click)="toggleUser(user)"
-              class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-lg text-sm"
-            >
-              Ban / Unban
-            </button>
-
-            <span *ngIf="user.role === 'ADMIN'" class="text-gold text-sm"> Protected </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <span *ngIf="user.role === 'ADMIN'" class="protected-text"> Admin account </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="flex items-center justify-center gap-4 mt-8">
-    <button
-      (click)="previousPage()"
-      [disabled]="currentPage === 0"
-      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
-    >
-      Previous
-    </button>
+  <!-- Pagination -->
+  <div class="pagination">
+    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
 
-    <span class="text-white/60"> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
+    <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
 
-    <button
-      (click)="nextPage()"
-      [disabled]="currentPage >= totalPages - 1"
-      class="px-4 py-2 rounded-lg bg-white/10 disabled:opacity-30"
-    >
+    <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
       Next
     </button>
   </div>

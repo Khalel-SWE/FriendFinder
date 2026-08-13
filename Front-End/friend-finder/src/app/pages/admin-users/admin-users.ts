@@ -1,15 +1,6 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import {
-  AdminService,
-  AdminUser
-} from '../../core/services/admin';
+import { AdminService, AdminUser} from '../../core/services/admin';
 
 @Component({
   selector: 'app-admin-users',
@@ -43,8 +34,7 @@ export class AdminUsers implements OnInit {
 
     this.loading = true;
 
-    this.adminService
-      .getUsers(this.currentPage, this.pageSize)
+    this.adminService.getUsers(this.currentPage, this.pageSize)
       .subscribe({
 
         next: (response) => {
@@ -73,20 +63,33 @@ export class AdminUsers implements OnInit {
 
   toggleUser(user: AdminUser): void {
 
-    this.adminService
-      .toggleUserStatus(user.userId)
+    this.adminService.toggleUserStatus(user.userId)
       .subscribe({
 
         next: (message) => {
 
           console.log(message);
 
-          this.loadUsers();
+          /*
+           * بدل ما نعيد تحميل الصفحة كلها،
+           * نغير حالة المستخدم مباشرة في الـ UI.
+           */
+          this.users = this.users.map(currentUser =>
+            currentUser.userId === user.userId
+              ? {
+                  ...currentUser,
+                  enabled: !currentUser.enabled
+                }
+              : currentUser
+          );
+
+          this.cdr.detectChanges();
         },
 
         error: (err) => {
 
           console.error('Failed to change user status', err);
+
         }
 
       });
@@ -112,17 +115,9 @@ export class AdminUsers implements OnInit {
     }
   }
 
-  isBanned(user: AdminUser): boolean {
+  getStatusLabel(user: AdminUser): string {
 
-    /*
-     * ملاحظة:
-     * AdminUserResponse الحالي من الـ Backend
-     * لا يحتوي isEnabled.
-     *
-     * لذلك في المرحلة الحالية
-     * لا نستطيع معرفة حالة المستخدم الحقيقية
-     * من الـ response.
-     */
-    return false;
+    return user.enabled ? 'Active' : 'Banned';
   }
+
 }
