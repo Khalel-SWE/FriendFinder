@@ -1,59 +1,85 @@
-<div class="min-h-screen bg-gray-100 flex">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-gray-900 text-white">
-    <div class="p-6 border-b border-gray-700">
-      <h1 class="text-2xl font-bold">Friend Finder</h1>
+<div class="admin-layout">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="admin-sidebar">
+    <!-- Brand -->
+    <button type="button" class="brand-button" (click)="goDashboard()">
+      <div class="brand-icon">
+        <svg width="26" height="26" viewBox="0 0 400 400">
+          <g stroke="#C9A24B" stroke-width="7" fill="none">
+            <circle cx="200" cy="200" r="150"></circle>
+            <path d="M200 60 L200 340"></path>
+            <path d="M60 200 L340 200"></path>
+            <path d="M97 97 L303 303"></path>
+            <path d="M303 97 L97 303"></path>
+          </g>
+        </svg>
+      </div>
 
-      <p class="text-sm text-gray-400 mt-1">Admin Panel</p>
-    </div>
+      <div class="brand-text">
+        <span class="brand-name">Friend Finder</span>
+        <span class="brand-role">Admin Panel</span>
+      </div>
+    </button>
 
-    <nav class="p-4 space-y-2">
-      <a
+    <!-- Navigation -->
+    <nav class="admin-nav">
+      <button
+        type="button"
+        class="nav-item"
         routerLink="/admin/dashboard"
-        routerLinkActive="bg-blue-600"
-        class="block rounded-lg px-4 py-3 hover:bg-gray-700 transition"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
       >
-        📊 Dashboard
-      </a>
+        <span class="nav-icon">▦</span>
+        <span>Dashboard</span>
+      </button>
 
-      <a
-        routerLink="/admin/users"
-        routerLinkActive="bg-blue-600"
-        class="block rounded-lg px-4 py-3 hover:bg-gray-700 transition"
-      >
-        👥 Users
-      </a>
+      <button type="button" class="nav-item" routerLink="/admin/users" routerLinkActive="active">
+        <span class="nav-icon">♙</span>
+        <span>Users</span>
+      </button>
 
-      <a
-        routerLink="/admin/posts"
-        routerLinkActive="bg-blue-600"
-        class="block rounded-lg px-4 py-3 hover:bg-gray-700 transition"
-      >
-        📝 Posts
-      </a>
+      <button type="button" class="nav-item" routerLink="/admin/posts" routerLinkActive="active">
+        <span class="nav-icon">▤</span>
+        <span>Posts</span>
+      </button>
 
-      <a
-        routerLink="/admin/contacts"
-        routerLinkActive="bg-blue-600"
-        class="block rounded-lg px-4 py-3 hover:bg-gray-700 transition"
-      >
-        📨 Contacts
-      </a>
+      <button type="button" class="nav-item" routerLink="/admin/contacts" routerLinkActive="active">
+        <span class="nav-icon">✉</span>
+        <span>Contacts</span>
+      </button>
     </nav>
 
-    <div class="absolute bottom-0 w-64 p-4 border-t border-gray-700">
-      <button
-        (click)="logout()"
-        class="w-full bg-red-600 hover:bg-red-700 rounded-lg py-3 transition"
-      >
-        Logout
+    <!-- Sidebar Bottom -->
+    <div class="sidebar-bottom">
+      <div class="admin-identity">
+        <div class="admin-avatar">AS</div>
+
+        <div class="admin-info">
+          <strong>Admin System</strong>
+          <span>Administrator</span>
+        </div>
+      </div>
+
+      <button type="button" class="logout-button" (click)="logout()">
+        <span>↪</span>
+        <span>Logout</span>
       </button>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- ================= MAIN ================= -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <p class="topbar-label">Administration</p>
 
-  <main class="flex-1 p-8">
-    <router-outlet></router-outlet>
+        <span class="topbar-badge"> ADMIN </span>
+      </div>
+    </header>
+
+    <section class="admin-content">
+      <router-outlet></router-outlet>
+    </section>
   </main>
 </div>

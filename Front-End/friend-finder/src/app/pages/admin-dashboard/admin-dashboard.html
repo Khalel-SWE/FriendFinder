@@ -1,41 +1,75 @@
-<div class="p-8">
-  <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+<div class="dashboard-page">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <p class="dashboard-eyebrow">Friend Finder Administration</p>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-    <!-- Total Users -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm">Total Users</h2>
+      <h1>Admin Dashboard</h1>
 
-      <p class="text-4xl font-bold mt-3">
-        {{ stats.totalUsers }}
-      </p>
+      <p class="dashboard-description">Overview of the platform activity and statistics.</p>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="stats-grid">
+    <!-- Users -->
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label"> Total Users </span>
+
+        <span class="stat-icon"> ♙ </span>
+      </div>
+
+      <div class="stat-value">
+        {{ stats.totalUsers ?? 0 }}
+      </div>
+
+      <div class="stat-footer">Registered accounts</div>
     </div>
 
-    <!-- Total Posts -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm">Total Posts</h2>
+    <!-- Posts -->
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label"> Total Posts </span>
 
-      <p class="text-4xl font-bold mt-3">
-        {{ stats.totalPosts }}
-      </p>
+        <span class="stat-icon"> ▤ </span>
+      </div>
+
+      <div class="stat-value">
+        {{ stats.totalPosts ?? 0 }}
+      </div>
+
+      <div class="stat-footer">Published posts</div>
     </div>
 
-    <!-- Total Comments -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm">Total Comments</h2>
+    <!-- Comments -->
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label"> Total Comments </span>
 
-      <p class="text-4xl font-bold mt-3">
-        {{ stats.totalComments }}
-      </p>
+        <span class="stat-icon"> ◌ </span>
+      </div>
+
+      <div class="stat-value">
+        {{ stats.totalComments ?? 0 }}
+      </div>
+
+      <div class="stat-footer">User interactions</div>
     </div>
 
     <!-- Friendships -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm">Active Friendships</h2>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label"> Active Friendships </span>
 
-      <p class="text-4xl font-bold mt-3">
-        {{ stats.activeFriendships }}
-      </p>
+        <span class="stat-icon"> ♡ </span>
+      </div>
+
+      <div class="stat-value">
+        {{ stats.activeFriendships ?? 0 }}
+      </div>
+
+      <div class="stat-footer">Accepted connections</div>
     </div>
   </div>
 </div>
