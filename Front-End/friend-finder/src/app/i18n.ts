@@ -19,4 +19,42 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   people_you_may_know: { en: 'People you may know', ar: 'أشخاص ممكن تعرفهم', de: 'Leute, die du kennen könntest' },
   mutual_friends: { en: 'mutual friends', ar: 'أصدقاء مشتركين', de: 'gemeinsame Freunde' },
   add: { en: 'Add', ar: 'إضافة', de: 'Hinzufügen' },
+
+  admin_panel: {
+  en: 'Admin Panel',
+  ar: 'لوحة الإدارة',
+  de: 'Admin-Bereich'
+},
+
+admin_administration: {
+  en: 'Administration',
+  ar: 'الإدارة',
+  de: 'Administration'
+},
+
+admin_dashboard: {
+  en: 'Admin Dashboard',
+  ar: 'لوحة تحكم الإدارة',
+  de: 'Admin-Dashboard'
+},
+
+admin_dashboard_description: {
+  en: 'Overview of the platform activity and statistics.',
+  ar: 'نظرة عامة على نشاط المنصة وإحصائياتها.',
+  de: 'Übersicht über die Plattformaktivität und Statistiken.'
+},
+
+admin: { en: 'Admin', ar: 'إدارة', de: 'Admin'},
+admin_users: { en: 'Users', ar: 'المستخدمون', de: 'Benutzer'},
+admin_posts: { en: 'Posts', ar: 'المنشورات', de: 'Beiträge'},
+admin_contacts: { en: 'Contacts', ar: 'الرسائل', de: 'Nachrichten'},
+admin_total_users: { en: 'Total Users', ar: 'إجمالي المستخدمين', de: 'Benutzer gesamt'},
+admin_total_posts: { en: 'Total Posts', ar: 'إجمالي المنشورات', de: 'Beiträge gesamt'},
+admin_total_comments: { en: 'Total Comments', ar: 'إجمالي التعليقات', de: 'Kommentare gesamt'},
+admin_active_friendships: { en: 'Active Friendships', ar: 'صداقات نشطة', de: 'Aktive Freundschaften'},
+admin_registered_accounts: { en: 'Registered accounts', ar: 'حسابات مسجلة',de: 'Registrierte Konten'},
+admin_published_posts: { en: 'Published posts', ar: 'منشورات منشورة', de: 'Veröffentlichte Beiträge'},
+admin_user_interactions: { en: 'User interactions', ar: 'تفاعلات المستخدمين', de: 'Benutzerinteraktionen'},
+admin_accepted_connections: { en: 'Accepted connections', ar: 'طلبات اتصال مقبولة', de: 'Angenommene Verbindungen'},
+admin_logout: { en: 'Logout', ar: 'تسجيل الخروج', de: 'Abmelden'}
 };
