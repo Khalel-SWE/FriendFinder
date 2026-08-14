@@ -103,12 +103,15 @@ export class AdminService {
     );
   }
 
-  getContacts(): Observable<AdminContact[]> {
+  getContacts(
+  page: number = 0,
+  size: number = 10
+): Observable<PageResponse<AdminContact>> {
 
-    return this.http.get<AdminContact[]>(
-      `${this.api}/contacts`
-    );
-  }
+  return this.http.get<PageResponse<AdminContact>>(
+    `${this.api}/contacts?page=${page}&size=${size}`
+  );
+}
 
   replyToContact(
     id: number,

@@ -10,6 +10,8 @@ import com.media.friend_finder.entity.User;
 import com.media.friend_finder.repository.ContactMessageRepository;
 import com.media.friend_finder.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -66,13 +68,11 @@ public class ContactMessageService {
      * ============================
      */
 
-    public List<ContactResponse> getAllMessages() {
+    public Page<ContactResponse> getAllMessages(int page, int size) {
 
-        return contactRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-
+        return contactRepository
+                .findAllByOrderByCreatedAtDesc(PageRequest.of(page, size))
+                .map(this::mapToResponse);
     }
 
     public void reply(Long id, ReplyRequest request) {

@@ -2,7 +2,6 @@ package com.media.friend_finder.controller;
 
 import com.media.friend_finder.dto.ContactRequest;
 import com.media.friend_finder.dto.ContactResponse;
-import com.media.friend_finder.dto.ReplyRequest;
 import com.media.friend_finder.entity.User;
 import com.media.friend_finder.service.ContactMessageService;
 import com.media.friend_finder.service.UserService;
@@ -39,30 +38,6 @@ public class ContactMessageController {
         User user = userService.getCurrentUser(authentication);
 
         return contactService.getMyMessages(user);
-
-    }
-
-    // ================= ADMIN =================
-
-    @GetMapping("/admin/contact-messages")
-    public List<ContactResponse> getAllMessages() {
-
-        return contactService.getAllMessages();
-
-    }
-
-    @PatchMapping("/admin/contact-messages/{id}/reply")
-    public void replyMessage(@PathVariable Long id,
-                             @Valid @RequestBody ReplyRequest request) {
-
-        contactService.reply(id, request);
-
-    }
-
-    @PatchMapping("/admin/contact-messages/{id}/close")
-    public void closeMessage(@PathVariable Long id) {
-
-        contactService.close(id);
 
     }
 

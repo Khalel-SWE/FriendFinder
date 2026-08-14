@@ -1,0 +1,470 @@
+:host {
+  display: block;
+
+  --gold: #C9A24B;
+  --gold-soft: rgba(201, 162, 75, .18);
+
+  --page-bg: #0D0B0A;
+  --card-bg: #171214;
+
+  --border: rgba(201, 162, 75, .18);
+  --border-light: rgba(255, 255, 255, .07);
+
+  --text-main: #F5F1EC;
+  --text-muted: rgba(255, 255, 255, .48);
+
+  --green: #78C98A;
+  --yellow: #E3C76F;
+  --gray: #AAA;
+}
+
+/* =========================
+   Page
+   ========================= */
+
+.admin-contacts-page {
+  color: var(--text-main);
+}
+
+
+/* =========================
+   Header
+   ========================= */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 1.9rem;
+  font-weight: 600;
+
+  color: #fff;
+}
+
+.page-header p {
+  margin-top: .5rem;
+
+  color: var(--text-muted);
+  font-size: .9rem;
+}
+
+.total-count {
+  color: var(--text-muted);
+  font-size: .8rem;
+}
+
+
+/* =========================
+   Loading
+   ========================= */
+
+.loading-state {
+  padding: 3rem;
+
+  text-align: center;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================
+   Contacts
+   ========================= */
+
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+
+/* =========================
+   Contact Card
+   ========================= */
+
+.contact-card {
+  padding: 1.25rem;
+
+  background: var(--card-bg);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  transition:
+    border-color .2s ease,
+    transform .2s ease;
+}
+
+.contact-card:hover {
+  border-color: rgba(201, 162, 75, .32);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   Header
+   ========================= */
+
+.contact-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding-bottom: 1rem;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.contact-header h2 {
+  margin: 0;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  color: #fff;
+}
+
+.sender-email {
+  margin-top: .3rem;
+
+  color: var(--text-muted);
+
+  font-size: .75rem;
+}
+
+.contact-meta {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: .3rem;
+}
+
+.contact-type {
+  color: var(--gold);
+
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.contact-date {
+  color: rgba(255, 255, 255, .32);
+
+  font-size: .7rem;
+}
+
+
+/* =========================
+   Message
+   ========================= */
+
+.message-box {
+  margin-top: 1rem;
+
+  padding: 1rem;
+
+  background: rgba(255, 255, 255, .035);
+
+  border-radius: 10px;
+}
+
+.message-box p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, .78);
+
+  font-size: .9rem;
+
+  line-height: 1.6;
+
+  white-space: pre-line;
+}
+
+
+/* =========================
+   Reply
+   ========================= */
+
+.reply-box {
+  margin-top: 1rem;
+
+  padding: .9rem 1rem;
+
+  background: rgba(201, 162, 75, .05);
+
+  border-inline-start: 3px solid var(--gold);
+
+  border-radius: 0 10px 10px 0;
+}
+
+.reply-title {
+  margin: 0 0 .4rem;
+
+  color: var(--gold);
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: .08em;
+}
+
+.reply-text {
+  margin: 0;
+
+  color: rgba(255, 255, 255, .78);
+
+  font-size: .88rem;
+
+  line-height: 1.55;
+
+  white-space: pre-line;
+}
+
+
+/* =========================
+   Status
+   ========================= */
+
+.status-row {
+  margin-top: 1rem;
+}
+
+.status-pill {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: .3rem .7rem;
+
+  border-radius: 999px;
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  letter-spacing: .03em;
+}
+
+.status-open {
+  background: rgba(227, 199, 111, .12);
+  color: var(--yellow);
+}
+
+.status-replied {
+  background: rgba(120, 201, 138, .12);
+  color: var(--green);
+}
+
+.status-closed {
+  background: rgba(255, 255, 255, .08);
+  color: var(--gray);
+}
+
+
+/* =========================
+   Actions
+   ========================= */
+
+.contact-actions {
+  display: flex;
+
+  gap: .75rem;
+
+  margin-top: 1rem;
+}
+
+.reply-input {
+  flex: 1;
+
+  min-height: 88px;
+
+  padding: .75rem;
+
+  resize: vertical;
+
+  background: rgba(255, 255, 255, .035);
+
+  border: 1px solid var(--border-light);
+
+  border-radius: 9px;
+
+  color: #fff;
+
+  outline: none;
+
+  font-size: .82rem;
+}
+
+.reply-input::placeholder {
+  color: rgba(255, 255, 255, .28);
+}
+
+.reply-input:focus {
+  border-color: rgba(201, 162, 75, .5);
+}
+
+
+/* =========================
+   Buttons
+   ========================= */
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+
+  gap: .6rem;
+
+  min-width: 120px;
+}
+
+.reply-button,
+.close-button {
+  border: none;
+
+  border-radius: 8px;
+
+  padding: .6rem .9rem;
+
+  font-size: .76rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: filter .15s ease;
+}
+
+.reply-button {
+  background: var(--gold);
+
+  color: #17130E;
+}
+
+.reply-button:hover {
+  filter: brightness(1.08);
+}
+
+.close-button {
+  background: rgba(255, 255, 255, .08);
+
+  color: rgba(255, 255, 255, .75);
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, .14);
+}
+
+
+/* =========================
+   Empty
+   ========================= */
+
+.empty-state {
+  padding: 3rem;
+
+  text-align: center;
+
+  color: var(--text-muted);
+
+  border: 1px dashed var(--border);
+
+  border-radius: 12px;
+}
+
+
+/* =========================
+   Pagination
+   ========================= */
+
+.pagination {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  padding: .5rem .85rem;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  background: var(--card-bg);
+
+  color: rgba(255, 255, 255, .72);
+
+  font-size: .78rem;
+
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: var(--gold);
+
+  color: var(--gold);
+}
+
+.pagination button:disabled {
+  opacity: .3;
+
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--text-muted);
+
+  font-size: .8rem;
+}
+
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 700px) {
+
+  .page-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .contact-header {
+    flex-direction: column;
+  }
+
+  .contact-meta {
+    align-items: flex-start;
+  }
+
+  .contact-actions {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+  }
+
+  .action-buttons button {
+    flex: 1;
+  }
+}

@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/friend-finder/admin")
 @RequiredArgsConstructor
@@ -64,8 +62,14 @@ public class AdminController {
 //    *********************************************************************
 
     @GetMapping("/contacts")
-    public ResponseEntity<List<ContactResponse>> getAllContacts() {
-    return ResponseEntity.ok(contactMessageService.getAllMessages());
+    public ResponseEntity<Page<ContactResponse>> getAllContacts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        return ResponseEntity.ok(
+                contactMessageService.getAllMessages(page, size)
+        );
     }
 
     @PatchMapping("/contacts/{id}/reply")

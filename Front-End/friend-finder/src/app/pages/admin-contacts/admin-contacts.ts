@@ -26,6 +26,12 @@ export class AdminContacts implements OnInit {
 
   contacts: AdminContact[] = [];
 
+  currentPage = 0;
+  pageSize = 10;
+
+  totalPages = 0;
+  totalElements = 0;
+
   loading = false;
 
   replyDrafts: {
@@ -46,12 +52,15 @@ export class AdminContacts implements OnInit {
     this.loading = true;
 
     this.adminService
-      .getContacts()
+      .getContacts(this.currentPage, this.pageSize)
       .subscribe({
 
         next: (response) => {
 
-          this.contacts = response;
+          this.contacts = response.content;
+
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
 
           this.loading = false;
 
@@ -60,7 +69,10 @@ export class AdminContacts implements OnInit {
 
         error: (err) => {
 
-          console.error('Failed to load contacts', err);
+          console.error(
+            'Failed to load contacts',
+            err
+          );
 
           this.loading = false;
 
@@ -147,6 +159,26 @@ export class AdminContacts implements OnInit {
 
       default:
         return type;
+    }
+  }
+
+  nextPage(): void {
+
+    if (this.currentPage < this.totalPages - 1) {
+
+      this.currentPage++;
+
+      this.loadContacts();
+    }
+  }
+
+  previousPage(): void {
+
+    if (this.currentPage > 0) {
+
+      this.currentPage--;
+
+      this.loadContacts();
     }
   }
 }
