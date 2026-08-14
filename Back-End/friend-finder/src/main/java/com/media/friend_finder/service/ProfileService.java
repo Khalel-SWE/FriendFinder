@@ -24,7 +24,7 @@ public class ProfileService {
 
     public ProfileResponse getMyProfile(String email) {
 
-        System.out.println(email);
+//        System.out.println(email);
 
         Profile p = profileRepository.findByUserEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Profile not found"));
