@@ -40,6 +40,12 @@ public class Notification {
     }
 
     public enum NotificationType {
-        LIKE, COMMENT, FRIEND_REQUEST, ACCEPT_FRIEND_REQUEST
+        LIKE,
+        COMMENT,
+        FRIEND_REQUEST,
+        ACCEPT_FRIEND_REQUEST,
+
+        NEW_CONTACT_MESSAGE,
+        ADMIN_REPLY
     }
 }

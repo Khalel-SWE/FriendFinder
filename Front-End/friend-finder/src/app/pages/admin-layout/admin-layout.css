@@ -4,392 +4,262 @@
   --gold: #C9A24B;
   --burgundy: #5C1A2B;
 
-  --bg-main: #0D0B0A;
-  --bg-sidebar: #141014;
-  --bg-card: #1D171B;
+  --page-bg: #0D0B0A;
+  --sidebar-bg: #121012;
+  --card-bg: #171214;
 
-  --border: rgba(201, 162, 75, 0.18);
-  --border-light: rgba(255, 255, 255, 0.06);
+  --border: rgba(201, 162, 75, .18);
+  --border-light: rgba(255, 255, 255, .07);
 
   --text-main: #F5F1EC;
-  --text-muted: rgba(255, 255, 255, 0.48);
+  --text-muted: rgba(255, 255, 255, .48);
 }
-
-
-/* =========================
-   Layout
-   ========================= */
 
 .admin-layout {
-  min-height: 100vh;
+  min-height: calc(100vh - 96px);
+
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  background: var(--bg-main);
-  color: var(--text-main);
+  grid-template-columns: 240px minmax(0, 1fr);
+
+  background: var(--page-bg);
 }
 
 
-/* =========================
-   Sidebar
-   ========================= */
+/* ================================================= */
+/* SIDEBAR */
+/* ================================================= */
 
 .admin-sidebar {
   position: sticky;
-  top: 0;
+  top: 96px;
 
-  height: 100vh;
+  height: calc(100vh - 96px);
 
   display: flex;
   flex-direction: column;
 
-  background: var(--bg-sidebar);
-  border-inline-end: 1px solid var(--border-light);
+  background: var(--sidebar-bg);
 
-  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, .06);
+
+  overflow-y: auto;
 }
 
 
-/* =========================
-   Brand
-   ========================= */
+/* Brand */
 
-.brand-button {
-  width: 100%;
-
+.admin-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: .7rem;
 
-  padding: 22px 20px;
+  padding: 1.25rem 1.1rem;
 
   background: transparent;
   border: none;
 
   color: white;
 
-  text-align: start;
+  text-align: left;
+
   cursor: pointer;
-
-  border-bottom: 1px solid var(--border-light);
 }
 
-.brand-button:hover {
-  background: rgba(255, 255, 255, 0.025);
+.admin-brand:hover {
+  background: rgba(201, 162, 75, .05);
 }
 
-.brand-icon {
-  flex-shrink: 0;
+.brand-title {
+  font-family: var(--font-display, serif);
+
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  color: white;
 }
 
-.brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.brand-subtitle {
+  margin-top: .15rem;
 
-.brand-name {
-  font-size: 1rem;
+  font-size: .62rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
-}
 
-.brand-role {
-  font-size: 0.65rem;
-  color: var(--gold);
-
+  letter-spacing: .08em;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+
+  color: var(--gold);
 }
 
 
-/* =========================
-   Navigation
-   ========================= */
+/* Navigation */
 
 .admin-nav {
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  gap: .35rem;
 
-  padding: 18px 12px;
+  padding: .7rem .65rem;
 }
 
-.nav-item {
-  width: 100%;
-
+.admin-nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
 
-  padding: 11px 13px;
+  gap: .8rem;
 
-  border: 1px solid transparent;
-  border-radius: 9px;
+  padding: .75rem .85rem;
 
-  background: transparent;
+  border-radius: .55rem;
 
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, .62);
 
-  font-size: 0.86rem;
-  font-weight: 500;
+  text-decoration: none;
 
-  text-align: start;
-
-  cursor: pointer;
+  font-size: .88rem;
 
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease;
+    background .18s ease,
+    color .18s ease;
 }
 
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+.admin-nav-item:hover {
   color: white;
+  background: rgba(255, 255, 255, .05);
 }
 
-.nav-item.active {
-  background: rgba(201, 162, 75, 0.10);
-  border-color: rgba(201, 162, 75, 0.16);
-
+.admin-nav-item.active {
   color: var(--gold);
 
-  font-weight: 700;
+  background: rgba(201, 162, 75, .10);
+
+  box-shadow:
+    inset 3px 0 0 var(--burgundy);
 }
 
 .nav-icon {
-  width: 20px;
+  width: 18px;
 
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
 
-  font-size: 0.95rem;
+  color: inherit;
 }
 
 
-/* =========================
-   Bottom
-   ========================= */
+/* Bottom */
 
-.sidebar-bottom {
+.admin-sidebar-bottom {
   margin-top: auto;
 
-  padding: 16px;
+  padding: 1rem .9rem;
 
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid rgba(255, 255, 255, .06);
 
-  display: flex;
-  flex-direction: column;
-
-  gap: 14px;
+  background:
+    linear-gradient(
+      to top,
+      rgba(92, 26, 43, .12),
+      transparent
+    );
 }
-
 
 .admin-identity {
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  gap: .65rem;
+
+  margin-bottom: 1rem;
 }
 
 .admin-avatar {
-  width: 38px;
-  height: 38px;
+  width: 2.35rem;
+  height: 2.35rem;
+
+  border-radius: 50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
-
   background: var(--burgundy);
 
   color: white;
 
-  font-size: 0.7rem;
+  font-size: .7rem;
   font-weight: 800;
 
   box-shadow:
-    0 0 0 2px rgba(201, 162, 75, 0.22);
+    0 0 0 1px rgba(201, 162, 75, .25);
 }
 
-.admin-info {
-  min-width: 0;
-
+.admin-user-text {
   display: flex;
   flex-direction: column;
 
-  gap: 2px;
+  min-width: 0;
 }
 
-.admin-info strong {
-  font-size: 0.78rem;
+.admin-user-text strong {
+  font-size: .78rem;
   color: white;
 }
 
-.admin-info span {
-  font-size: 0.65rem;
+.admin-user-text span {
+  margin-top: .1rem;
+
+  font-size: .65rem;
+
   color: var(--text-muted);
 }
 
 
-/* =========================
-   Logout
-   ========================= */
-
-.logout-button {
+.admin-logout {
   width: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 8px;
+  gap: .5rem;
 
-  padding: 10px;
+  padding: .65rem;
 
-  border-radius: 8px;
+  border-radius: .5rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(92, 26, 43, .55);
 
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(92, 26, 43, .16);
 
-  color: rgba(255, 255, 255, 0.65);
+  color: #E8A0AE;
 
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: .8rem;
+  font-weight: 700;
 
   cursor: pointer;
 
   transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease;
+    background .18s ease,
+    color .18s ease;
 }
 
-.logout-button:hover {
-  background: rgba(178, 63, 63, 0.13);
-  border-color: rgba(178, 63, 63, 0.28);
-  color: #E27B7B;
+.admin-logout:hover {
+  background: var(--burgundy);
+  color: white;
 }
 
 
-/* =========================
-   Main
-   ========================= */
+/* ================================================= */
+/* MAIN PAGE */
+/* ================================================= */
 
-.admin-main {
+.admin-page {
   min-width: 0;
 
-  display: flex;
-  flex-direction: column;
+  min-height: calc(100vh - 96px);
 
-  min-height: 100vh;
-}
-
-
-/* =========================
-   Topbar
-   ========================= */
-
-.admin-topbar {
-  min-height: 78px;
-
-  display: flex;
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 0 28px;
-
-  border-bottom: 1px solid var(--border-light);
-
-  background: rgba(13, 11, 10, 0.92);
-
-  backdrop-filter: blur(10px);
-}
-
-.topbar-label {
-  margin: 0 0 5px;
-
-  color: white;
-
-  font-size: 1.15rem;
-  font-weight: 600;
-}
-
-.topbar-badge {
-  display: inline-flex;
-
-  padding: 3px 9px;
-
-  border-radius: 9999px;
-
-  background: rgba(92, 26, 43, 0.65);
-
-  color: #F1E3D8;
-
-  font-size: 0.57rem;
-  font-weight: 800;
-
-  letter-spacing: 0.12em;
-}
-
-
-/* =========================
-   Content
-   ========================= */
-
-.admin-content {
-  flex: 1;
-
-  padding: 28px;
-}
-
-
-/* =========================
-   Responsive
-   ========================= */
-
-@media (max-width: 900px) {
-
-  .admin-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-sidebar {
-    position: static;
-
-    height: auto;
-
-    border-inline-end: none;
-    border-bottom: 1px solid var(--border-light);
-  }
-
-  .admin-nav {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .sidebar-bottom {
-    margin-top: 0;
-  }
-}
-
-
-@media (max-width: 600px) {
-
-  .admin-content {
-    padding: 18px;
-  }
-
-  .admin-topbar {
-    padding: 0 18px;
-  }
-
-  .admin-nav {
-    grid-template-columns: 1fr;
-  }
+  background: var(--page-bg);
 }

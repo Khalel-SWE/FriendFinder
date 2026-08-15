@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,23 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class AdminLayout {
 
-  constructor(private router: Router) {}
-
-  goDashboard(): void {
-    this.router.navigate(['/admin/dashboard']);
-  }
-
-  goUsers(): void {
-    this.router.navigate(['/admin/users']);
-  }
-
-  goPosts(): void {
-    this.router.navigate(['/admin/posts']);
-  }
-
-  goContacts(): void {
-    this.router.navigate(['/admin/contacts']);
-  }
+  constructor(public router: Router) {}
 
   logout(): void {
     localStorage.removeItem('auth_token');

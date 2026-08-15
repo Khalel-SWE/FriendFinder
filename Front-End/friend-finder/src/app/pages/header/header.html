@@ -104,10 +104,9 @@
 
     <ng-container *ngIf="isLoggedIn">
       <app-language-menu></app-language-menu>
+      <app-notification-bell></app-notification-bell>
 
       <ng-container *ngIf="!isAdmin">
-        <app-notification-bell></app-notification-bell>
-
         <app-account-menu></app-account-menu>
       </ng-container>
     </ng-container>

@@ -3,15 +3,14 @@ package com.media.friend_finder.service;
 import com.media.friend_finder.dto.ContactRequest;
 import com.media.friend_finder.dto.ContactResponse;
 import com.media.friend_finder.dto.ReplyRequest;
-import com.media.friend_finder.entity.ContactMessage;
-import com.media.friend_finder.entity.ContactStatus;
-import com.media.friend_finder.entity.Profile;
-import com.media.friend_finder.entity.User;
+import com.media.friend_finder.entity.*;
 import com.media.friend_finder.repository.ContactMessageRepository;
 import com.media.friend_finder.repository.ProfileRepository;
+import com.media.friend_finder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +22,8 @@ public class ContactMessageService {
 
     private final ContactMessageRepository contactRepository;
     private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
 
     /*
@@ -31,17 +32,20 @@ public class ContactMessageService {
      * ============================
      */
 
+    @Transactional
     public void sendMessage(User user, ContactRequest request) {
 
         ContactMessage message = new ContactMessage();
 
         message.setUser(user);
+
         Profile profile = profileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         message.setSenderName(
                 profile.getFirstName() + " " + profile.getLastName()
         );
+
         message.setSenderEmail(user.getEmail());
 
         message.setType(request.getType());
@@ -49,10 +53,23 @@ public class ContactMessageService {
 
         message.setStatus(ContactStatus.OPEN);
 
-        contactRepository.save(message);
+        ContactMessage savedMessage = contactRepository.save(message);
 
+
+        // ============================
+        // Notification -> Admin
+        // ============================
+
+        User admin = userRepository.findFirstByRole("ADMIN")
+                .orElseThrow(() -> new RuntimeException("Admin user not found"));
+
+        notificationService.createNotification(
+                admin,
+                "New contact message from " + message.getSenderName(),
+                Notification.NotificationType.NEW_CONTACT_MESSAGE,
+                savedMessage.getId()
+        );
     }
-
     public List<ContactResponse> getMyMessages(User user) {
 
         return contactRepository.findByUserOrderByCreatedAtDesc(user)
@@ -75,6 +92,7 @@ public class ContactMessageService {
                 .map(this::mapToResponse);
     }
 
+    @Transactional
     public void reply(Long id, ReplyRequest request) {
 
         ContactMessage message = contactRepository.findById(id)
@@ -88,6 +106,17 @@ public class ContactMessageService {
 
         contactRepository.save(message);
 
+
+        // ============================
+        // Notification -> User
+        // ============================
+
+        notificationService.createNotification(
+                message.getUser(),
+                "Admin replied to your message",
+                Notification.NotificationType.ADMIN_REPLY,
+                message.getId()
+        );
     }
 
     public void close(Long id) {
