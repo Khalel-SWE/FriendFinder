@@ -1,7 +1,9 @@
 <div class="admin-layout">
   <!-- ================= SIDEBAR ================= -->
+
   <aside class="admin-sidebar">
     <!-- Brand -->
+
     <button type="button" class="admin-brand" (click)="router.navigate(['/admin/dashboard'])">
       <svg width="24" height="24" viewBox="0 0 400 400">
         <g stroke="#C9A24B" stroke-width="8" fill="none">
@@ -11,12 +13,18 @@
       </svg>
 
       <div>
-        <div class="brand-title">Friend Finder</div>
-        <div class="brand-subtitle">Admin Panel</div>
+        <div class="brand-title">
+          {{ lang.t('brand') }}
+        </div>
+
+        <div class="brand-subtitle">
+          {{ lang.t('admin_panel') }}
+        </div>
       </div>
     </button>
 
     <!-- Navigation -->
+
     <nav class="admin-nav">
       <a
         routerLink="/admin/dashboard"
@@ -25,44 +33,64 @@
         class="admin-nav-item"
       >
         <span class="nav-icon">▦</span>
-        <span>Dashboard</span>
+
+        <span>
+          {{ lang.t('admin_dashboard') }}
+        </span>
       </a>
 
       <a routerLink="/admin/users" routerLinkActive="active" class="admin-nav-item">
         <span class="nav-icon">♙</span>
-        <span>Users</span>
+
+        <span>
+          {{ lang.t('admin_users') }}
+        </span>
       </a>
 
       <a routerLink="/admin/posts" routerLinkActive="active" class="admin-nav-item">
         <span class="nav-icon">▤</span>
-        <span>Posts</span>
+
+        <span>
+          {{ lang.t('admin_posts') }}
+        </span>
       </a>
 
       <a routerLink="/admin/contacts" routerLinkActive="active" class="admin-nav-item">
         <span class="nav-icon">✉</span>
-        <span>Contacts</span>
+
+        <span>
+          {{ lang.t('admin_contacts') }}
+        </span>
       </a>
     </nav>
 
     <!-- Admin identity -->
+
     <div class="admin-sidebar-bottom">
       <div class="admin-identity">
         <div class="admin-avatar">AS</div>
 
         <div class="admin-user-text">
-          <strong>Admin System</strong>
-          <span>Administrator</span>
+          <strong> Admin System </strong>
+
+          <span>
+            {{ lang.t('admin_administrator') }}
+          </span>
         </div>
       </div>
 
       <button type="button" class="admin-logout" (click)="logout()">
         <span>↪</span>
-        <span>Logout</span>
+
+        <span>
+          {{ lang.t('admin_logout') }}
+        </span>
       </button>
     </div>
   </aside>
 
   <!-- ================= CONTENT ================= -->
+
   <main class="admin-page">
     <router-outlet></router-outlet>
   </main>

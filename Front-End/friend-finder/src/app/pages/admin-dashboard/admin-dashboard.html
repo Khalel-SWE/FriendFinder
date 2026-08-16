@@ -1,21 +1,32 @@
 <div class="dashboard-page">
   <!-- Header -->
+
   <div class="dashboard-header">
     <div>
-      <p class="dashboard-eyebrow">Friend Finder Administration</p>
+      <p class="dashboard-eyebrow">
+        {{ lang.t('admin_administration') }}
+      </p>
 
-      <h1>Admin Dashboard</h1>
+      <h1>
+        {{ lang.t('admin_dashboard') }}
+      </h1>
 
-      <p class="dashboard-description">Overview of the platform activity and statistics.</p>
+      <p class="dashboard-description">
+        {{ lang.t('admin_dashboard_description') }}
+      </p>
     </div>
   </div>
 
   <!-- Statistics -->
+
   <div class="stats-grid">
     <!-- Users -->
+
     <div class="stat-card">
       <div class="stat-top">
-        <span class="stat-label"> Total Users </span>
+        <span class="stat-label">
+          {{ lang.t('admin_total_users') }}
+        </span>
 
         <span class="stat-icon"> ♙ </span>
       </div>
@@ -24,13 +35,18 @@
         {{ stats.totalUsers ?? 0 }}
       </div>
 
-      <div class="stat-footer">Registered accounts</div>
+      <div class="stat-footer">
+        {{ lang.t('admin_registered_accounts') }}
+      </div>
     </div>
 
     <!-- Posts -->
+
     <div class="stat-card">
       <div class="stat-top">
-        <span class="stat-label"> Total Posts </span>
+        <span class="stat-label">
+          {{ lang.t('admin_total_posts') }}
+        </span>
 
         <span class="stat-icon"> ▤ </span>
       </div>
@@ -39,13 +55,18 @@
         {{ stats.totalPosts ?? 0 }}
       </div>
 
-      <div class="stat-footer">Published posts</div>
+      <div class="stat-footer">
+        {{ lang.t('admin_published_posts') }}
+      </div>
     </div>
 
     <!-- Comments -->
+
     <div class="stat-card">
       <div class="stat-top">
-        <span class="stat-label"> Total Comments </span>
+        <span class="stat-label">
+          {{ lang.t('admin_total_comments') }}
+        </span>
 
         <span class="stat-icon"> ◌ </span>
       </div>
@@ -54,13 +75,18 @@
         {{ stats.totalComments ?? 0 }}
       </div>
 
-      <div class="stat-footer">User interactions</div>
+      <div class="stat-footer">
+        {{ lang.t('admin_user_interactions') }}
+      </div>
     </div>
 
     <!-- Friendships -->
+
     <div class="stat-card">
       <div class="stat-top">
-        <span class="stat-label"> Active Friendships </span>
+        <span class="stat-label">
+          {{ lang.t('admin_active_friendships') }}
+        </span>
 
         <span class="stat-icon"> ♡ </span>
       </div>
@@ -69,7 +95,9 @@
         {{ stats.activeFriendships ?? 0 }}
       </div>
 
-      <div class="stat-footer">Accepted connections</div>
+      <div class="stat-footer">
+        {{ lang.t('admin_accepted_connections') }}
+      </div>
     </div>
   </div>
 </div>

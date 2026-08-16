@@ -1,16 +1,6 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-admin-dashboard',
-//   imports: [],
-//   templateUrl: './admin-dashboard.html',
-//   styleUrl: './admin-dashboard.css',
-// })
-// export class AdminDashboard {}
-
 import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { LanguageService } from '../../core/services/language';
 import { AdminService } from '../../core/services/admin';
 
 @Component({
@@ -26,7 +16,8 @@ export class AdminDashboard implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public lang: LanguageService
   ) {}
 
   ngOnInit(): void {

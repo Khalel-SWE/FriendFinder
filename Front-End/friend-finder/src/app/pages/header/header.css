@@ -1,0 +1,13 @@
+:host {
+  position: relative;
+  z-index: 1000;
+}
+
+nav {
+  position: relative;
+  z-index: 1000;
+}
+
+.notification-dropdown {
+  z-index: 2000;
+}

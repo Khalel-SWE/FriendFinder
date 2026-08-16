@@ -5,21 +5,31 @@
   --burgundy: #5C1A2B;
 
   --page-bg: #0D0B0A;
-  --sidebar-bg: #121012;
+
+  /*
+   * Burgundy قوي بدرجة كافية يظهر،
+   * لكن مش أحمر صريح.
+   */
+  --sidebar-bg: #1B0D13;
+
   --card-bg: #171214;
 
   --border: rgba(201, 162, 75, .18);
+
   --border-light: rgba(255, 255, 255, .07);
 
   --text-main: #F5F1EC;
+
   --text-muted: rgba(255, 255, 255, .48);
 }
 
+
+/* ================================================= */
+/* ADMIN LAYOUT */
+/* ================================================= */
+
 .admin-layout {
   min-height: calc(100vh - 96px);
-
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
 
   background: var(--page-bg);
 }
@@ -30,32 +40,52 @@
 /* ================================================= */
 
 .admin-sidebar {
-  position: sticky;
-  top: 96px;
 
-  height: calc(100vh - 96px);
+  position: fixed;
+
+  top: 96px;
+  bottom: 0;
+  left: 0;
+
+  width: 240px;
 
   display: flex;
   flex-direction: column;
 
-  background: var(--sidebar-bg);
+  background:
+    linear-gradient(
+      180deg,
+      #241019 0%,
+      #1B0D13 45%,
+      #140B10 100%
+    );
 
-  border-right: 1px solid rgba(255, 255, 255, .06);
+  border-right: 1px solid rgba(201, 162, 75, .12);
 
   overflow-y: auto;
+
+  z-index: 900;
 }
 
 
-/* Brand */
+/* ================================================= */
+/* BRAND */
+/* ================================================= */
 
 .admin-brand {
+
+  width: 100%;
+
   display: flex;
+
   align-items: center;
+
   gap: .7rem;
 
   padding: 1.25rem 1.1rem;
 
   background: transparent;
+
   border: none;
 
   color: white;
@@ -66,35 +96,49 @@
 }
 
 .admin-brand:hover {
-  background: rgba(201, 162, 75, .05);
+
+  background:
+    rgba(201, 162, 75, .06);
 }
 
+
 .brand-title {
-  font-family: var(--font-display, serif);
+
+  font-family:
+    var(--font-display, serif);
 
   font-size: 1.05rem;
+
   font-weight: 600;
 
   color: white;
 }
 
+
 .brand-subtitle {
+
   margin-top: .15rem;
 
   font-size: .62rem;
+
   font-weight: 700;
 
   letter-spacing: .08em;
+
   text-transform: uppercase;
 
   color: var(--gold);
 }
 
 
-/* Navigation */
+/* ================================================= */
+/* NAVIGATION */
+/* ================================================= */
 
 .admin-nav {
+
   display: flex;
+
   flex-direction: column;
 
   gap: .35rem;
@@ -102,8 +146,11 @@
   padding: .7rem .65rem;
 }
 
+
 .admin-nav-item {
+
   display: flex;
+
   align-items: center;
 
   gap: .8rem;
@@ -112,7 +159,7 @@
 
   border-radius: .55rem;
 
-  color: rgba(255, 255, 255, .62);
+  color: rgba(255, 255, 255, .68);
 
   text-decoration: none;
 
@@ -123,51 +170,64 @@
     color .18s ease;
 }
 
+
 .admin-nav-item:hover {
+
   color: white;
-  background: rgba(255, 255, 255, .05);
+
+  background:
+    rgba(255, 255, 255, .05);
 }
+
 
 .admin-nav-item.active {
-  color: var(--gold);
 
-  background: rgba(201, 162, 75, .10);
+  color: #F3D58E;
+
+  background:
+    rgba(92, 26, 43, .55);
 
   box-shadow:
-    inset 3px 0 0 var(--burgundy);
+    inset 3px 0 0 var(--gold);
 }
 
+
 .nav-icon {
+
   width: 18px;
 
   display: inline-flex;
 
   align-items: center;
+
   justify-content: center;
 
   color: inherit;
 }
 
 
-/* Bottom */
+/* ================================================= */
+/* BOTTOM */
+/* ================================================= */
 
 .admin-sidebar-bottom {
+
   margin-top: auto;
 
   padding: 1rem .9rem;
 
-  border-top: 1px solid rgba(255, 255, 255, .06);
+  border-top:
+    1px solid rgba(255, 255, 255, .07);
 
   background:
-    linear-gradient(
-      to top,
-      rgba(92, 26, 43, .12),
-      transparent
-    );
+    rgba(0, 0, 0, .10);
 }
 
+
 .admin-identity {
+
   display: flex;
+
   align-items: center;
 
   gap: .65rem;
@@ -175,40 +235,56 @@
   margin-bottom: 1rem;
 }
 
+
 .admin-avatar {
+
   width: 2.35rem;
+
   height: 2.35rem;
 
   border-radius: 50%;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  background: var(--burgundy);
+  background:
+    var(--burgundy);
 
   color: white;
 
   font-size: .7rem;
+
   font-weight: 800;
 
   box-shadow:
-    0 0 0 1px rgba(201, 162, 75, .25);
+    0 0 0 1px
+    rgba(201, 162, 75, .25);
 }
 
+
 .admin-user-text {
+
   display: flex;
+
   flex-direction: column;
 
   min-width: 0;
 }
 
+
 .admin-user-text strong {
+
   font-size: .78rem;
+
   color: white;
 }
 
+
 .admin-user-text span {
+
   margin-top: .1rem;
 
   font-size: .65rem;
@@ -218,10 +294,13 @@
 
 
 .admin-logout {
+
   width: 100%;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   gap: .5rem;
@@ -230,13 +309,17 @@
 
   border-radius: .5rem;
 
-  border: 1px solid rgba(92, 26, 43, .55);
+  border:
+    1px solid
+    rgba(92, 26, 43, .65);
 
-  background: rgba(92, 26, 43, .16);
+  background:
+    rgba(92, 26, 43, .30);
 
   color: #E8A0AE;
 
   font-size: .8rem;
+
   font-weight: 700;
 
   cursor: pointer;
@@ -246,20 +329,49 @@
     color .18s ease;
 }
 
+
 .admin-logout:hover {
-  background: var(--burgundy);
+
+  background:
+    var(--burgundy);
+
   color: white;
 }
 
 
 /* ================================================= */
-/* MAIN PAGE */
+/* MAIN CONTENT */
 /* ================================================= */
 
 .admin-page {
+
   min-width: 0;
 
-  min-height: calc(100vh - 96px);
+  min-height:
+    calc(100vh - 96px);
 
-  background: var(--page-bg);
+  margin-left: 240px;
+
+  padding: 0;
+
+  background:
+    var(--page-bg);
+}
+
+
+/* ================================================= */
+/* SMALL SCREENS */
+/* ================================================= */
+
+@media (max-width: 900px) {
+
+  .admin-sidebar {
+
+    width: 210px;
+  }
+
+  .admin-page {
+
+    margin-left: 210px;
+  }
 }

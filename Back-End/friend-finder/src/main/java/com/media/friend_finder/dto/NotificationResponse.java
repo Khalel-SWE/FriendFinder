@@ -8,10 +8,20 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class NotificationResponse {
+
     private Long id;
+
     private String message;
-    private NotificationType type; // غيرنا دي لـ Enum
+
+    private NotificationType type;
+
     private Long relatedId;
+
+    private String actorName;
+
+    private String actorProfilePicture;
+
     private boolean isRead;
+
     private LocalDateTime createdAt;
 }

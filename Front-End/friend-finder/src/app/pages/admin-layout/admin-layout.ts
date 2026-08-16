@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { LanguageService } from '../../core/services/language';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,12 +15,17 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class AdminLayout {
 
-  constructor(public router: Router) {}
+  constructor(
+    private router: Router,
+    public lang: LanguageService
+  ) {}
 
   logout(): void {
+
     localStorage.removeItem('auth_token');
     localStorage.removeItem('role');
 
     this.router.navigate(['/']);
+
   }
 }
