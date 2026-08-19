@@ -37,8 +37,11 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   admin_accepted_connections: { en: 'Accepted connections', ar: 'طلبات اتصال مقبولة', de: 'Angenommene Verbindungen'},
   admin_logout: { en: 'Logout', ar: 'تسجيل الخروج', de: 'Abmelden'},
   admin_notif_contact: { en: 'New contact message from', ar: 'رسالة تواصل جديدة من', de: 'Neue Kontaktanfrage von'},
-  admin_notif_reply: { en: 'Admin replied to a contact message from', ar: 'الإدارة ردت على رسالة من', de: 'Der Administrator hat auf eine Nachricht von'},
-  notif_friend_request: { en: 'sent you a friend request', ar: 'أرسل لك طلب صداقة', de: 'hat dir eine Freundschaftsanfrage gesendet'},
+  admin_notif_reply: {
+  en: 'Administration replied to your message',
+  ar: 'ردت الإدارة على رسالتك',
+  de: 'Die Administration hat auf deine Nachricht geantwortet'
+},notif_friend_request: { en: 'sent you a friend request', ar: 'أرسل لك طلب صداقة', de: 'hat dir eine Freundschaftsanfrage gesendet'},
   admin_administrator: {
   en: 'Administrator',
   ar: 'مدير النظام',
