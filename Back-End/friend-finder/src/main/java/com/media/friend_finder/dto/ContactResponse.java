@@ -17,6 +17,8 @@ public class ContactResponse {
 
     private String senderEmail;
 
+    private String profilePicture;
+
     private ContactType type;
 
     private String message;
@@ -28,5 +30,4 @@ public class ContactResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime repliedAt;
-
 }

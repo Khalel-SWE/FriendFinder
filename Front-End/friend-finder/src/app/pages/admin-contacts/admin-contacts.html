@@ -1,10 +1,9 @@
 <div class="admin-contacts-page">
   <!-- Header -->
-
   <div class="page-header">
     <div>
       <h1>
-        {{ lang.t('admin_contacts_title') }}
+        {{ lang.t('admin_contacts') }}
       </h1>
 
       <p>
@@ -12,33 +11,46 @@
       </p>
     </div>
 
-    <div class="total-count">
-      {{ lang.t('admin_contacts_title') }}:
-      {{ totalElements }}
-    </div>
+    <div class="total-count">{{ lang.t('admin_total') }}: {{ totalElements }}</div>
   </div>
 
   <!-- Loading -->
-
-  <div *ngIf="loading" class="loading-state">Loading contact messages...</div>
+  <div *ngIf="loading" class="loading-state">
+    {{ lang.t('admin_loading_contacts') }}
+  </div>
 
   <!-- Contacts -->
-
   <div *ngIf="!loading" class="contacts-list">
     <div *ngFor="let contact of contacts" class="contact-card">
       <!-- Header -->
-
       <div class="contact-header">
-        <div>
-          <h2>
-            {{ contact.senderName }}
-          </h2>
+        <div class="sender-section">
+          <!-- Avatar -->
+          <div class="contact-avatar">
+            <img
+              *ngIf="contact.profilePicture"
+              [src]="'http://localhost:9090' + contact.profilePicture"
+              [alt]="contact.senderName"
+            />
 
-          <p class="sender-email">
-            {{ contact.senderEmail }}
-          </p>
+            <span *ngIf="!contact.profilePicture">
+              {{ contact.senderName.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+
+          <!-- Sender info -->
+          <div>
+            <h2>
+              {{ contact.senderName }}
+            </h2>
+
+            <p class="sender-email">
+              {{ contact.senderEmail }}
+            </p>
+          </div>
         </div>
 
+        <!-- Metadata -->
         <div class="contact-meta">
           <span class="contact-type">
             {{ getTypeLabel(contact.type) }}
@@ -51,7 +63,6 @@
       </div>
 
       <!-- Message -->
-
       <div class="message-box">
         <p>
           {{ contact.message }}
@@ -59,10 +70,9 @@
       </div>
 
       <!-- Admin Reply -->
-
       <div *ngIf="contact.adminReply" class="reply-box">
         <p class="reply-title">
-          {{ lang.t('admin_reply_label') }}
+          {{ lang.t('admin_reply') }}
         </p>
 
         <p class="reply-text">
@@ -71,7 +81,6 @@
       </div>
 
       <!-- Status -->
-
       <div class="status-row">
         <span
           class="status-pill"
@@ -81,23 +90,16 @@
             'status-closed': contact.status === 'CLOSED',
           }"
         >
-          {{
-            contact.status === 'OPEN'
-              ? lang.t('admin_open')
-              : contact.status === 'REPLIED'
-                ? lang.t('admin_replied')
-                : lang.t('admin_closed')
-          }}
+          {{ getStatusLabel(contact.status) }}
         </span>
       </div>
 
       <!-- Actions -->
-
       <div *ngIf="contact.status === 'OPEN'" class="contact-actions">
         <textarea
           rows="3"
           [(ngModel)]="replyDrafts[contact.id]"
-          [placeholder]="lang.t('admin_write_reply')"
+          [placeholder]="lang.t('admin_reply_placeholder')"
           class="reply-input"
         ></textarea>
 
@@ -115,19 +117,22 @@
   </div>
 
   <!-- Empty -->
-
   <div *ngIf="!loading && contacts.length === 0" class="empty-state">
     {{ lang.t('admin_no_contacts') }}
   </div>
 
   <!-- Pagination -->
-
   <div *ngIf="!loading && totalPages > 0" class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">
       {{ lang.t('admin_previous') }}
     </button>
 
-    <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
+    <span>
+      {{ lang.t('admin_page') }}
+      {{ currentPage + 1 }}
+      /
+      {{ totalPages }}
+    </span>
 
     <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
       {{ lang.t('admin_next') }}

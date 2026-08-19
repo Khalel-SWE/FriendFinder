@@ -70,6 +70,8 @@ public class ContactMessageService {
                 savedMessage.getId()
         );
     }
+
+
     public List<ContactResponse> getMyMessages(User user) {
 
         return contactRepository.findByUserOrderByCreatedAtDesc(user)
@@ -78,6 +80,7 @@ public class ContactMessageService {
                 .toList();
 
     }
+
 
     /*
      * ============================
@@ -91,6 +94,7 @@ public class ContactMessageService {
                 .findAllByOrderByCreatedAtDesc(PageRequest.of(page, size))
                 .map(this::mapToResponse);
     }
+
 
     @Transactional
     public void reply(Long id, ReplyRequest request) {
@@ -119,6 +123,7 @@ public class ContactMessageService {
         );
     }
 
+
     public void close(Long id) {
 
         ContactMessage message = contactRepository.findById(id)
@@ -130,6 +135,7 @@ public class ContactMessageService {
 
     }
 
+
     /*
      * ============================
      * Mapper
@@ -138,10 +144,16 @@ public class ContactMessageService {
 
     private ContactResponse mapToResponse(ContactMessage message) {
 
+        String profilePicture = profileRepository
+                .findByUser(message.getUser())
+                .map(Profile::getProfilePicture)
+                .orElse(null);
+
         return ContactResponse.builder()
                 .id(message.getId())
                 .senderName(message.getSenderName())
                 .senderEmail(message.getSenderEmail())
+                .profilePicture(profilePicture)
                 .type(message.getType())
                 .message(message.getMessage())
                 .adminReply(message.getAdminReply())

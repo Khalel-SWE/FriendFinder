@@ -155,6 +155,24 @@ export class AdminContacts implements OnInit {
   }
 }
 
+getStatusLabel(status: AdminContact['status']): string {
+
+  switch (status) {
+
+    case 'OPEN':
+      return this.lang.t('admin_status_open');
+
+    case 'REPLIED':
+      return this.lang.t('admin_status_replied');
+
+    case 'CLOSED':
+      return this.lang.t('admin_status_closed');
+
+    default:
+      return status;
+  }
+}
+
   nextPage(): void {
 
     if (this.currentPage < this.totalPages - 1) {
