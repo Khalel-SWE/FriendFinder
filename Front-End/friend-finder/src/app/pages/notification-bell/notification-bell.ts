@@ -85,19 +85,48 @@ export class NotificationBell implements OnInit {
 
 
   getNotificationText(
-    notification: NotificationResponse
-  ): string {
+  notification: NotificationResponse
+): string {
 
-    /*
-     * حالياً الـ Backend ما زال هو المسؤول عن
-     * تكوين نص الـ notification.
-     *
-     * بعد ما نخلص مشاكل الـ UI هنفصل النص
-     * عن الـ Backend ونخليه يعتمد على i18n.
-     */
+  const actor = notification.actorName ?? '';
 
-    return notification.message;
+  switch (notification.type) {
+
+    case 'NEW_CONTACT_MESSAGE':
+
+      return `${this.lang.t('admin_notif_contact')} ${actor}`;
+
+
+    case 'ADMIN_REPLY':
+
+      return `${this.lang.t('admin_notif_reply')} ${actor}`;
+
+
+    case 'FRIEND_REQUEST':
+
+      return `${actor} ${this.lang.t('notif_friend_request')}`;
+
+
+    case 'ACCEPT_FRIEND_REQUEST':
+
+      return `${actor} ${this.lang.t('notif_friend_accept')}`;
+
+
+    case 'LIKE':
+
+      return `${actor} ${this.lang.t('notif_reacted')}`;
+
+
+    case 'COMMENT':
+
+      return `${actor} ${this.lang.t('notif_commented')}`;
+
+
+    default:
+
+      return notification.message;
   }
+}
 
 
   getActorInitial(notification: NotificationResponse): string {

@@ -237,23 +237,11 @@ admin_no_notifications: {
   de: 'Keine Benachrichtigungen'
 },
 
-// notif_friend_request: {
-//   en: 'sent you a friend request',
-//   ar: 'أرسل لك طلب صداقة',
-//   de: 'hat dir eine Freundschaftsanfrage gesendet'
-// },
-
 notif_friend_accept: {
   en: 'accepted your friend request',
   ar: 'وافق على طلب صداقتك',
   de: 'hat deine Freundschaftsanfrage angenommen'
 },
-
-// notif_reacted: {
-//   en: 'reacted to your post',
-//   ar: 'تفاعل مع منشورك',
-//   de: 'hat auf deinen Beitrag reagiert'
-// },
 
 notif_commented: {
   en: 'commented on your post',
@@ -289,5 +277,5 @@ contact_other: {
   en: 'Other',
   ar: 'أخرى',
   de: 'Sonstiges'
-}
+},
 };
