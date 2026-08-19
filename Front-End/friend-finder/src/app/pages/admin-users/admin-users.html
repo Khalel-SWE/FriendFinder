@@ -1,78 +1,118 @@
 <div class="admin-page">
   <!-- Header -->
+
   <div class="page-header">
     <div>
-      <h1>Users</h1>
-      <p>Manage registered users and account access.</p>
+      <h1>
+        {{ lang.t('admin_users_title') }}
+      </h1>
+
+      <p>
+        {{ lang.t('admin_users_description') }}
+      </p>
     </div>
 
-    <div class="total-users">Total: {{ totalElements }}</div>
+    <div class="total-users">
+      {{ lang.t('admin_total_users') }}:
+      {{ totalElements }}
+    </div>
   </div>
 
   <!-- Loading -->
+
   <div *ngIf="loading" class="loading-state">Loading users...</div>
 
   <!-- Table -->
+
   <div *ngIf="!loading" class="users-card">
     <div class="table-wrapper">
       <table class="users-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Joined</th>
-            <th class="action-column">Action</th>
+            <th>
+              {{ lang.t('admin_name') }}
+            </th>
+
+            <th>
+              {{ lang.t('admin_email') }}
+            </th>
+
+            <th>
+              {{ lang.t('admin_role') }}
+            </th>
+
+            <th>
+              {{ lang.t('admin_status') }}
+            </th>
+
+            <th>
+              {{ lang.t('admin_joined') }}
+            </th>
+
+            <th class="action-column">
+              {{ lang.t('admin_action') }}
+            </th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let user of users">
             <!-- Name -->
+
             <td class="name-cell">
               <div class="user-name">
                 <div class="user-avatar">
-                  {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                  {{ user.firstName.charAt(0) }}
+                  {{ user.lastName.charAt(0) }}
                 </div>
 
                 <div>
-                  <span class="full-name"> {{ user.firstName }} {{ user.lastName }} </span>
+                  <span class="full-name">
+                    {{ user.firstName }}
+                    {{ user.lastName }}
+                  </span>
                 </div>
               </div>
             </td>
 
             <!-- Email -->
+
             <td class="email-cell">
               {{ user.email }}
             </td>
 
             <!-- Role -->
+
             <td>
               <span class="role-badge" [class.admin-role]="user.role === 'ADMIN'">
-                {{ user.role }}
+                {{ user.role === 'ADMIN' ? lang.t('admin_role_admin') : lang.t('admin_role_user') }}
               </span>
             </td>
 
             <!-- Status -->
+
             <td>
               <span
                 *ngIf="user.role !== 'ADMIN'"
                 class="status-badge"
                 [class.banned]="!user.enabled"
               >
-                {{ getStatusLabel(user) }}
+                {{ user.enabled ? lang.t('admin_active') : lang.t('admin_banned') }}
               </span>
 
-              <span *ngIf="user.role === 'ADMIN'" class="protected-badge"> Protected </span>
+              <span *ngIf="user.role === 'ADMIN'" class="protected-badge">
+                {{ lang.t('admin_protected') }}
+              </span>
             </td>
 
             <!-- Joined -->
+
             <td class="joined-cell">
               {{ user.joinedAt | date: 'medium' }}
             </td>
 
             <!-- Action -->
+
             <td class="action-cell">
               <button
                 *ngIf="user.role !== 'ADMIN'"
@@ -81,10 +121,12 @@
                 [class.unban]="!user.enabled"
                 (click)="toggleUser(user)"
               >
-                {{ user.enabled ? 'Ban User' : 'Unban User' }}
+                {{ user.enabled ? lang.t('admin_ban_user') : lang.t('admin_unban_user') }}
               </button>
 
-              <span *ngIf="user.role === 'ADMIN'" class="protected-text"> Admin account </span>
+              <span *ngIf="user.role === 'ADMIN'" class="protected-text">
+                {{ lang.t('admin_account') }}
+              </span>
             </td>
           </tr>
         </tbody>
@@ -93,13 +135,16 @@
   </div>
 
   <!-- Pagination -->
+
   <div class="pagination">
-    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">
+      {{ lang.t('admin_previous') }}
+    </button>
 
     <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
 
     <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-      Next
+      {{ lang.t('admin_next') }}
     </button>
   </div>
 </div>

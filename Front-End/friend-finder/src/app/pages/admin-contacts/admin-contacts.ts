@@ -1,16 +1,8 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import {
-  AdminService,
-  AdminContact
-} from '../../core/services/admin';
+import { AdminService, AdminContact } from '../../core/services/admin';
+import { LanguageService } from '../../core/services/language';
 
 @Component({
   selector: 'app-admin-contacts',
@@ -40,7 +32,8 @@ export class AdminContacts implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public lang: LanguageService
   ) {}
 
   ngOnInit(): void {
@@ -143,24 +136,24 @@ export class AdminContacts implements OnInit {
 
   getTypeLabel(type: AdminContact['type']): string {
 
-    switch (type) {
+  switch (type) {
 
-      case 'COMPLAINT':
-        return 'Complaint';
+    case 'COMPLAINT':
+      return this.lang.t('contact_complaint');
 
-      case 'SUGGESTION':
-        return 'Suggestion';
+    case 'SUGGESTION':
+      return this.lang.t('contact_suggestion');
 
-      case 'BUG':
-        return 'Bug';
+    case 'BUG':
+      return this.lang.t('contact_bug');
 
-      case 'OTHER':
-        return 'Other';
+    case 'OTHER':
+      return this.lang.t('contact_other');
 
-      default:
-        return type;
-    }
+    default:
+      return type;
   }
+}
 
   nextPage(): void {
 

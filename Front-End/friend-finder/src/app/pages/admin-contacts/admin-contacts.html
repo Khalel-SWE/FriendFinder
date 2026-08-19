@@ -1,22 +1,33 @@
 <div class="admin-contacts-page">
   <!-- Header -->
+
   <div class="page-header">
     <div>
-      <h1>Contact Messages</h1>
+      <h1>
+        {{ lang.t('admin_contacts_title') }}
+      </h1>
 
-      <p>Review messages sent by users.</p>
+      <p>
+        {{ lang.t('admin_contacts_description') }}
+      </p>
     </div>
 
-    <div class="total-count">Total: {{ totalElements }}</div>
+    <div class="total-count">
+      {{ lang.t('admin_contacts_title') }}:
+      {{ totalElements }}
+    </div>
   </div>
 
   <!-- Loading -->
+
   <div *ngIf="loading" class="loading-state">Loading contact messages...</div>
 
   <!-- Contacts -->
+
   <div *ngIf="!loading" class="contacts-list">
     <div *ngFor="let contact of contacts" class="contact-card">
       <!-- Header -->
+
       <div class="contact-header">
         <div>
           <h2>
@@ -40,6 +51,7 @@
       </div>
 
       <!-- Message -->
+
       <div class="message-box">
         <p>
           {{ contact.message }}
@@ -47,8 +59,11 @@
       </div>
 
       <!-- Admin Reply -->
+
       <div *ngIf="contact.adminReply" class="reply-box">
-        <p class="reply-title">Admin Reply</p>
+        <p class="reply-title">
+          {{ lang.t('admin_reply_label') }}
+        </p>
 
         <p class="reply-text">
           {{ contact.adminReply }}
@@ -56,6 +71,7 @@
       </div>
 
       <!-- Status -->
+
       <div class="status-row">
         <span
           class="status-pill"
@@ -65,43 +81,56 @@
             'status-closed': contact.status === 'CLOSED',
           }"
         >
-          {{ contact.status }}
+          {{
+            contact.status === 'OPEN'
+              ? lang.t('admin_open')
+              : contact.status === 'REPLIED'
+                ? lang.t('admin_replied')
+                : lang.t('admin_closed')
+          }}
         </span>
       </div>
 
       <!-- Actions -->
+
       <div *ngIf="contact.status === 'OPEN'" class="contact-actions">
         <textarea
           rows="3"
           [(ngModel)]="replyDrafts[contact.id]"
-          placeholder="Write your reply..."
+          [placeholder]="lang.t('admin_write_reply')"
           class="reply-input"
         ></textarea>
 
         <div class="action-buttons">
           <button type="button" class="reply-button" (click)="sendReply(contact)">
-            Send Reply
+            {{ lang.t('admin_send_reply') }}
           </button>
 
-          <button type="button" class="close-button" (click)="closeContact(contact)">Close</button>
+          <button type="button" class="close-button" (click)="closeContact(contact)">
+            {{ lang.t('admin_close') }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Empty -->
+
   <div *ngIf="!loading && contacts.length === 0" class="empty-state">
-    No contact messages found.
+    {{ lang.t('admin_no_contacts') }}
   </div>
 
   <!-- Pagination -->
+
   <div *ngIf="!loading && totalPages > 0" class="pagination">
-    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+    <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">
+      {{ lang.t('admin_previous') }}
+    </button>
 
     <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
 
     <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-      Next
+      {{ lang.t('admin_next') }}
     </button>
   </div>
 </div>

@@ -259,5 +259,35 @@ notif_commented: {
   en: 'commented on your post',
   ar: 'علّق على منشورك',
   de: 'hat deinen Beitrag kommentiert'
+},
+
+admin_reply_label: {
+  en: 'Admin Reply',
+  ar: 'رد الإدارة',
+  de: 'Antwort der Administration'
+},
+
+contact_complaint: {
+  en: 'Complaint',
+  ar: 'شكوى',
+  de: 'Beschwerde'
+},
+
+contact_suggestion: {
+  en: 'Suggestion',
+  ar: 'اقتراح',
+  de: 'Vorschlag'
+},
+
+contact_bug: {
+  en: 'Bug',
+  ar: 'مشكلة',
+  de: 'Fehler'
+},
+
+contact_other: {
+  en: 'Other',
+  ar: 'أخرى',
+  de: 'Sonstiges'
 }
 };

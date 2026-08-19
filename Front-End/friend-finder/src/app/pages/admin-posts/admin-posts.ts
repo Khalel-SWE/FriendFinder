@@ -1,15 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import {
-  AdminService,
-  AdminPost
-} from '../../core/services/admin';
+import { AdminService, AdminPost } from '../../core/services/admin';
+import { LanguageService } from '../../core/services/language';
 
 @Component({
   selector: 'app-admin-posts',
@@ -31,7 +23,8 @@ export class AdminPosts implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public lang: LanguageService
   ) {}
 
   ngOnInit(): void {
