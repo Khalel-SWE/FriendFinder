@@ -19,6 +19,8 @@ public class AdminUserResponse {
 
     private String lastName;
 
+    private String profilePicture;
+
     private LocalDateTime joinedAt;
 
     private boolean enabled;

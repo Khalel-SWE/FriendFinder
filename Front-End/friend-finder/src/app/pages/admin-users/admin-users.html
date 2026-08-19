@@ -62,8 +62,15 @@
             <td class="name-cell">
               <div class="user-name">
                 <div class="user-avatar">
-                  {{ user.firstName.charAt(0) }}
-                  {{ user.lastName.charAt(0) }}
+                  <img
+                    *ngIf="user.profilePicture"
+                    [src]="'http://localhost:9090' + user.profilePicture"
+                    [alt]="user.firstName + ' ' + user.lastName"
+                  />
+
+                  <span *ngIf="!user.profilePicture">
+                    {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                  </span>
                 </div>
 
                 <div>

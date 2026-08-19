@@ -35,6 +35,7 @@ public class AdminService {
                 .role(profile.getUser().getRole())
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
+                .profilePicture(profile.getProfilePicture())
                 .joinedAt(profile.getUser().getCreatedAt())
                 .enabled(profile.getUser().isEnabled())
                 .build());

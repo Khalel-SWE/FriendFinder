@@ -2,12 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// export interface AdminUser {
+//   userId: number;
+//   email: string;
+//   role: string;
+//   firstName: string;
+//   lastName: string;
+//   joinedAt: string;
+//   enabled: boolean;
+// }
+
 export interface AdminUser {
   userId: number;
   email: string;
   role: string;
   firstName: string;
   lastName: string;
+  profilePicture: string | null;
   joinedAt: string;
   enabled: boolean;
 }
