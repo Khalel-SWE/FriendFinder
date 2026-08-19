@@ -79,51 +79,12 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   contact_suggestion: { en: 'Suggestion', ar: 'اقتراح', de: 'Vorschlag'},
   contact_bug: { en: 'Bug', ar: 'مشكلة', de: 'Fehler'},
   contact_other: { en: 'Other', ar: 'أخرى', de: 'Sonstiges'},
-admin_total: {
-  en: 'Total',
-  ar: 'الإجمالي',
-  de: 'Gesamt'
-},
-
-admin_loading_contacts: {
-  en: 'Loading contact messages...',
-  ar: 'جارٍ تحميل رسائل التواصل...',
-  de: 'Kontaktnachrichten werden geladen...'
-},
-
-admin_reply: {
-  en: 'Admin Reply',
-  ar: 'رد الإدارة',
-  de: 'Antwort der Administration'
-},
-
-admin_reply_placeholder: {
-  en: 'Write your reply...',
-  ar: 'اكتب ردك...',
-  de: 'Antwort schreiben...'
-},
-
-admin_page: {
-  en: 'Page',
-  ar: 'صفحة',
-  de: 'Seite'
-},
-
-admin_status_open: {
-  en: 'OPEN',
-  ar: 'مفتوحة',
-  de: 'OFFEN'
-},
-
-admin_status_replied: {
-  en: 'REPLIED',
-  ar: 'تم الرد',
-  de: 'BEANTWORTET'
-},
-
-admin_status_closed: {
-  en: 'CLOSED',
-  ar: 'مغلقة',
-  de: 'GESCHLOSSEN'
-}
+  admin_total: { en: 'Total', ar: 'الإجمالي', de: 'Gesamt'},
+  admin_loading_contacts: { en: 'Loading contact messages...', ar: 'جارٍ تحميل رسائل التواصل...', de: 'Kontaktnachrichten werden geladen...'},
+  admin_reply: { en: 'Admin Reply', ar: 'رد الإدارة', de: 'Antwort der Administration'},
+  admin_reply_placeholder: { en: 'Write your reply...', ar: 'اكتب ردك...', de: 'Antwort schreiben...'},
+  admin_page: { en: 'Page', ar: 'صفحة', de: 'Seite'},
+  admin_status_open: { en: 'OPEN', ar: 'مفتوحة', de: 'OFFEN'},
+  admin_status_replied: { en: 'REPLIED', ar: 'تم الرد', de: 'BEANTWORTET'},
+  admin_status_closed: { en: 'CLOSED', ar: 'مغلقة', de: 'GESCHLOSSEN'}
 };
