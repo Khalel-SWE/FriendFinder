@@ -20,12 +20,15 @@ export class AdminLayout {
     public lang: LanguageService
   ) {}
 
+  goToDashboard(): void {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
   logout(): void {
 
     localStorage.removeItem('auth_token');
     localStorage.removeItem('role');
 
     this.router.navigate(['/']);
-
   }
 }

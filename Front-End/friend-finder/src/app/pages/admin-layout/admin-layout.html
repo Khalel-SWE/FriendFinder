@@ -3,8 +3,7 @@
 
   <aside class="admin-sidebar">
     <!-- Brand -->
-
-    <button type="button" class="admin-brand" (click)="router.navigate(['/admin/dashboard'])">
+    <button type="button" class="admin-brand" (click)="goToDashboard()">
       <svg width="24" height="24" viewBox="0 0 400 400">
         <g stroke="#C9A24B" stroke-width="8" fill="none">
           <circle cx="200" cy="200" r="150" />
@@ -24,7 +23,6 @@
     </button>
 
     <!-- Navigation -->
-
     <nav class="admin-nav">
       <a
         routerLink="/admin/dashboard"
@@ -64,8 +62,7 @@
       </a>
     </nav>
 
-    <!-- Admin identity -->
-
+    <!-- Admin Identity -->
     <div class="admin-sidebar-bottom">
       <div class="admin-identity">
         <div class="admin-avatar">AS</div>

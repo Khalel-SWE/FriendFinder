@@ -5,33 +5,30 @@
   --burgundy: #5C1A2B;
 
   --page-bg: #0D0B0A;
-
-  /*
-   * Burgundy قوي بدرجة كافية يظهر،
-   * لكن مش أحمر صريح.
-   */
   --sidebar-bg: #1B0D13;
-
   --card-bg: #171214;
 
   --border: rgba(201, 162, 75, .18);
-
   --border-light: rgba(255, 255, 255, .07);
 
   --text-main: #F5F1EC;
-
   --text-muted: rgba(255, 255, 255, .48);
+
+  --admin-header-height: 96px;
+  --admin-sidebar-width: 240px;
 }
 
 
 /* ================================================= */
-/* ADMIN LAYOUT */
+/* LAYOUT */
 /* ================================================= */
 
 .admin-layout {
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - var(--admin-header-height));
 
   background: var(--page-bg);
+
+  position: relative;
 }
 
 
@@ -40,14 +37,13 @@
 /* ================================================= */
 
 .admin-sidebar {
-
   position: fixed;
 
-  top: 96px;
+  top: var(--admin-header-height);
   bottom: 0;
   left: 0;
 
-  width: 240px;
+  width: var(--admin-sidebar-width);
 
   display: flex;
   flex-direction: column;
@@ -69,15 +65,26 @@
 
 
 /* ================================================= */
+/* RTL SIDEBAR */
+/* ================================================= */
+
+:host-context([dir="rtl"]) .admin-sidebar {
+  left: auto;
+  right: 0;
+
+  border-right: none;
+  border-left: 1px solid rgba(201, 162, 75, .12);
+}
+
+
+/* ================================================= */
 /* BRAND */
 /* ================================================= */
 
 .admin-brand {
-
   width: 100%;
 
   display: flex;
-
   align-items: center;
 
   gap: .7rem;
@@ -85,7 +92,6 @@
   padding: 1.25rem 1.1rem;
 
   background: transparent;
-
   border: none;
 
   color: white;
@@ -96,19 +102,14 @@
 }
 
 .admin-brand:hover {
-
-  background:
-    rgba(201, 162, 75, .06);
+  background: rgba(201, 162, 75, .06);
 }
 
 
 .brand-title {
-
-  font-family:
-    var(--font-display, serif);
+  font-family: var(--font-display, serif);
 
   font-size: 1.05rem;
-
   font-weight: 600;
 
   color: white;
@@ -116,15 +117,12 @@
 
 
 .brand-subtitle {
-
   margin-top: .15rem;
 
   font-size: .62rem;
-
   font-weight: 700;
 
   letter-spacing: .08em;
-
   text-transform: uppercase;
 
   color: var(--gold);
@@ -136,9 +134,7 @@
 /* ================================================= */
 
 .admin-nav {
-
   display: flex;
-
   flex-direction: column;
 
   gap: .35rem;
@@ -148,9 +144,7 @@
 
 
 .admin-nav-item {
-
   display: flex;
-
   align-items: center;
 
   gap: .8rem;
@@ -172,34 +166,35 @@
 
 
 .admin-nav-item:hover {
-
   color: white;
-
-  background:
-    rgba(255, 255, 255, .05);
+  background: rgba(255, 255, 255, .05);
 }
 
 
 .admin-nav-item.active {
-
   color: #F3D58E;
 
-  background:
-    rgba(92, 26, 43, .55);
+  background: rgba(92, 26, 43, .55);
 
   box-shadow:
     inset 3px 0 0 var(--gold);
 }
 
 
-.nav-icon {
+/* RTL active indicator */
 
+:host-context([dir="rtl"]) .admin-nav-item.active {
+  box-shadow:
+    inset -3px 0 0 var(--gold);
+}
+
+
+.nav-icon {
   width: 18px;
 
   display: inline-flex;
 
   align-items: center;
-
   justify-content: center;
 
   color: inherit;
@@ -207,27 +202,22 @@
 
 
 /* ================================================= */
-/* BOTTOM */
+/* SIDEBAR BOTTOM */
 /* ================================================= */
 
 .admin-sidebar-bottom {
-
   margin-top: auto;
 
   padding: 1rem .9rem;
 
-  border-top:
-    1px solid rgba(255, 255, 255, .07);
+  border-top: 1px solid rgba(255, 255, 255, .07);
 
-  background:
-    rgba(0, 0, 0, .10);
+  background: rgba(0, 0, 0, .10);
 }
 
 
 .admin-identity {
-
   display: flex;
-
   align-items: center;
 
   gap: .65rem;
@@ -237,38 +227,29 @@
 
 
 .admin-avatar {
-
   width: 2.35rem;
-
   height: 2.35rem;
 
   border-radius: 50%;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  background:
-    var(--burgundy);
+  background: var(--burgundy);
 
   color: white;
 
   font-size: .7rem;
-
   font-weight: 800;
 
   box-shadow:
-    0 0 0 1px
-    rgba(201, 162, 75, .25);
+    0 0 0 1px rgba(201, 162, 75, .25);
 }
 
 
 .admin-user-text {
-
   display: flex;
-
   flex-direction: column;
 
   min-width: 0;
@@ -276,15 +257,12 @@
 
 
 .admin-user-text strong {
-
   font-size: .78rem;
-
   color: white;
 }
 
 
 .admin-user-text span {
-
   margin-top: .1rem;
 
   font-size: .65rem;
@@ -294,13 +272,10 @@
 
 
 .admin-logout {
-
   width: 100%;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: .5rem;
@@ -309,17 +284,13 @@
 
   border-radius: .5rem;
 
-  border:
-    1px solid
-    rgba(92, 26, 43, .65);
+  border: 1px solid rgba(92, 26, 43, .65);
 
-  background:
-    rgba(92, 26, 43, .30);
+  background: rgba(92, 26, 43, .30);
 
   color: #E8A0AE;
 
   font-size: .8rem;
-
   font-weight: 700;
 
   cursor: pointer;
@@ -331,31 +302,33 @@
 
 
 .admin-logout:hover {
-
-  background:
-    var(--burgundy);
-
+  background: var(--burgundy);
   color: white;
 }
 
 
 /* ================================================= */
-/* MAIN CONTENT */
+/* MAIN PAGE */
 /* ================================================= */
 
 .admin-page {
-
   min-width: 0;
 
-  min-height:
-    calc(100vh - 96px);
+  min-height: calc(100vh - var(--admin-header-height));
 
-  margin-left: 240px;
+  margin-left: var(--admin-sidebar-width);
 
   padding: 0;
 
-  background:
-    var(--page-bg);
+  background: var(--page-bg);
+}
+
+
+/* RTL MAIN */
+
+:host-context([dir="rtl"]) .admin-page {
+  margin-left: 0;
+  margin-right: var(--admin-sidebar-width);
 }
 
 
@@ -366,12 +339,15 @@
 @media (max-width: 900px) {
 
   .admin-sidebar {
-
     width: 210px;
   }
 
   .admin-page {
-
     margin-left: 210px;
+  }
+
+  :host-context([dir="rtl"]) .admin-page {
+    margin-left: 0;
+    margin-right: 210px;
   }
 }
