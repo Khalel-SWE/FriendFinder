@@ -30,17 +30,17 @@
         @for (item of notifications(); track item.id) {
           <div class="bell-item">
             <!-- ================= AVATAR ================= -->
-
-            <div class="bell-avatar from-burgundy">
-              @if (getActorImage(item)) {
-                <img [src]="getActorImage(item)" [alt]="item.actorName || 'User'" />
-              } @else {
-                <span>
-                  {{ getActorInitial(item) }}
-                </span>
-              }
-            </div>
-
+            @if (item.type !== 'ADMIN_REPLY') {
+              <div class="bell-avatar from-burgundy">
+                @if (getActorImage(item)) {
+                  <img [src]="getActorImage(item)" [alt]="item.actorName || 'User'" />
+                } @else {
+                  <span>
+                    {{ getActorInitial(item) }}
+                  </span>
+                }
+              </div>
+            }
             <!-- ================= TEXT ================= -->
 
             <div class="bell-text">

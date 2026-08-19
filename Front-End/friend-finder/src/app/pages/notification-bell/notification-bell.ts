@@ -99,7 +99,7 @@ export class NotificationBell implements OnInit {
 
     case 'ADMIN_REPLY':
 
-      return `${this.lang.t('admin_notif_reply')} ${actor}`;
+  return this.lang.t('admin_notif_reply');
 
 
     case 'FRIEND_REQUEST':
