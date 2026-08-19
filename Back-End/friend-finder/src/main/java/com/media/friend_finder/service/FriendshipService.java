@@ -24,39 +24,57 @@ public class FriendshipService {
 
     // 1. إرسال طلب صداقة
     public String sendFriendRequest(String requesterEmail, String addresseeEmail) {
+
         if (requesterEmail.equals(addresseeEmail)) {
-            // TODO: Replace with custom ResourceNotFoundException / BadRequestException
             throw new RuntimeException("You cannot send a friend request to yourself");
         }
 
         User requester = userRepository.findByEmail(requesterEmail)
                 .orElseThrow(() -> new RuntimeException("Sender not found"));
+
         User addressee = userRepository.findByEmail(addresseeEmail)
                 .orElseThrow(() -> new RuntimeException("Receiver not found"));
 
+        // ============================
+        // ADMIN PROTECTION
+        // ============================
+
+        if ("ADMIN".equals(addressee.getRole())) {
+            throw new RuntimeException("You cannot send a friend request to an Admin");
+        }
+
+        // ============================
+        // EXISTING FRIENDSHIP CHECK
+        // ============================
+
         friendshipRepository.findFriendshipBetweenUsers(requester, addressee)
                 .ifPresent(f -> {
-                    throw new RuntimeException("A friend request or friendship already exists between these users");
+                    throw new RuntimeException(
+                            "A friend request or friendship already exists between these users"
+                    );
                 });
 
         Friendship friendship = new Friendship();
+
         friendship.setRequester(requester);
         friendship.setAddressee(addressee);
-        friendship.setStatus(FriendshipStatus.PENDING.name()); // استخدام الـ Enum
+        friendship.setStatus(FriendshipStatus.PENDING.name());
 
         friendshipRepository.save(friendship);
 
-        // إرسال إشعار للمستقبل
+        // ============================
+        // NOTIFICATION
+        // ============================
+
         notificationService.createNotification(
                 addressee,
-                "You have a new friend request from " + requester.getEmail(), // ممكن تستبدل Email بالاسم لو متاح في الـ User Entity
+                "You have a new friend request from " + requester.getEmail(),
                 Notification.NotificationType.FRIEND_REQUEST,
                 friendship.getId()
         );
 
         return "Friend request sent successfully to " + addresseeEmail;
     }
-
     // 2. عرض طلبات الصداقة المعلقة لليوزر الحالي
     public List<FriendRequestResponse> getPendingRequests(String email) {
         User user = userRepository.findByEmail(email)
