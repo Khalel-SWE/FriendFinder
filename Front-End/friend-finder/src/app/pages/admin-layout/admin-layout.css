@@ -25,12 +25,6 @@
 .admin-layout {
   min-height: calc(100vh - 96px);
 
-  display: grid;
-
-  grid-template-columns: 240px minmax(0, 1fr);
-
-  align-items: stretch;
-
   background: var(--page-bg);
 }
 
@@ -40,9 +34,14 @@
 /* ================================================= */
 
 .admin-sidebar {
-  position: relative;
+  position: fixed;
 
-  min-height: calc(100vh - 96px);
+  top: 96px;
+  bottom: 0;
+
+  inset-inline-start: 0;
+
+  width: 240px;
 
   display: flex;
   flex-direction: column;
@@ -55,11 +54,11 @@
       #140B10 100%
     );
 
-  border-right: 1px solid rgba(201, 162, 75, .12);
+  border-inline-end: 1px solid rgba(201, 162, 75, .12);
 
   overflow: hidden;
 
-  z-index: 10;
+  z-index: 900;
 }
 
 
@@ -83,7 +82,7 @@
 
   color: white;
 
-  text-align: left;
+  text-align: start;
 
   cursor: pointer;
 }
@@ -176,7 +175,7 @@
 
 
 /* ================================================= */
-/* BOTTOM */
+/* BOTTOM AREA */
 /* ================================================= */
 
 .admin-sidebar-bottom {
@@ -184,9 +183,11 @@
 
   padding: 1rem .9rem;
 
-  border-top: 1px solid rgba(255, 255, 255, .07);
+  border-top:
+    1px solid rgba(255, 255, 255, .07);
 
-  background: rgba(0, 0, 0, .10);
+  background:
+    rgba(0, 0, 0, .10);
 }
 
 .admin-identity {
@@ -256,9 +257,12 @@
 
   border-radius: .5rem;
 
-  border: 1px solid rgba(92, 26, 43, .65);
+  border:
+    1px solid
+    rgba(92, 26, 43, .65);
 
-  background: rgba(92, 26, 43, .30);
+  background:
+    rgba(92, 26, 43, .30);
 
   color: #E8A0AE;
 
@@ -288,7 +292,9 @@
 
   min-height: calc(100vh - 96px);
 
-  padding: 1.5rem;
+  margin-inline-start: 240px;
+
+  padding: 1.75rem;
 
   background: var(--page-bg);
 
@@ -302,34 +308,45 @@
 
 @media (max-width: 900px) {
 
-  .admin-layout {
-    grid-template-columns: 210px minmax(0, 1fr);
-  }
-
   .admin-sidebar {
-    min-height: calc(100vh - 96px);
+    width: 210px;
   }
 
   .admin-page {
+    margin-inline-start: 210px;
+
     padding: 1.25rem;
   }
 }
 
+
+/* ================================================= */
+/* MOBILE */
+/* ================================================= */
+
 @media (max-width: 700px) {
 
-  .admin-layout {
-    grid-template-columns: 1fr;
+  .admin-sidebar {
+    position: relative;
+
+    top: auto;
+    bottom: auto;
+
+    width: 100%;
+
+    border-inline-end: none;
+
+    border-bottom:
+      1px solid rgba(201, 162, 75, .12);
   }
 
-  .admin-sidebar {
-    min-height: auto;
+  .admin-page {
+    margin-inline-start: 0;
+
+    padding: 1rem;
   }
 
   .admin-sidebar-bottom {
     margin-top: 1rem;
-  }
-
-  .admin-page {
-    padding: 1rem;
   }
 }

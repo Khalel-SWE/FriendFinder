@@ -1,8 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminService, AdminContact } from '../../core/services/admin';
+
+import {
+  AdminService,
+  AdminContact
+} from '../../core/services/admin';
+
 import { LanguageService } from '../../core/services/language';
+
 
 @Component({
   selector: 'app-admin-contacts',
@@ -30,15 +41,18 @@ export class AdminContacts implements OnInit {
     [id: number]: string;
   } = {};
 
+
   constructor(
     private adminService: AdminService,
     private cdr: ChangeDetectorRef,
     public lang: LanguageService
   ) {}
 
+
   ngOnInit(): void {
     this.loadContacts();
   }
+
 
   loadContacts(): void {
 
@@ -53,6 +67,7 @@ export class AdminContacts implements OnInit {
           this.contacts = response.content;
 
           this.totalPages = response.totalPages;
+
           this.totalElements = response.totalElements;
 
           this.loading = false;
@@ -75,9 +90,11 @@ export class AdminContacts implements OnInit {
       });
   }
 
+
   sendReply(contact: AdminContact): void {
 
-    const reply = this.replyDrafts[contact.id]?.trim();
+    const reply =
+      this.replyDrafts[contact.id]?.trim();
 
     if (!reply) {
       return;
@@ -95,7 +112,6 @@ export class AdminContacts implements OnInit {
           this.replyDrafts[contact.id] = '';
 
           this.loadContacts();
-
         },
 
         error: (err) => {
@@ -110,6 +126,7 @@ export class AdminContacts implements OnInit {
       });
   }
 
+
   closeContact(contact: AdminContact): void {
 
     this.adminService
@@ -119,7 +136,6 @@ export class AdminContacts implements OnInit {
         next: () => {
 
           this.loadContacts();
-
         },
 
         error: (err) => {
@@ -134,54 +150,89 @@ export class AdminContacts implements OnInit {
       });
   }
 
-  getTypeLabel(type: AdminContact['type']): string {
 
-  switch (type) {
+  getInitials(name: string): string {
 
-    case 'COMPLAINT':
-      return this.lang.t('contact_complaint');
+    if (!name) {
+      return '?';
+    }
 
-    case 'SUGGESTION':
-      return this.lang.t('contact_suggestion');
+    const parts = name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
 
-    case 'BUG':
-      return this.lang.t('contact_bug');
+    if (parts.length === 1) {
+      return parts[0]
+        .charAt(0)
+        .toUpperCase();
+    }
 
-    case 'OTHER':
-      return this.lang.t('contact_other');
-
-    default:
-      return type;
+    return (
+      parts[0].charAt(0) +
+      parts[parts.length - 1].charAt(0)
+    ).toUpperCase();
   }
-}
 
-getStatusLabel(status: AdminContact['status']): string {
 
-  switch (status) {
+  getTypeLabel(
+    type: AdminContact['type']
+  ): string {
 
-    case 'OPEN':
-      return this.lang.t('admin_status_open');
+    switch (type) {
 
-    case 'REPLIED':
-      return this.lang.t('admin_status_replied');
+      case 'COMPLAINT':
+        return this.lang.t('contact_complaint');
 
-    case 'CLOSED':
-      return this.lang.t('admin_status_closed');
+      case 'SUGGESTION':
+        return this.lang.t('contact_suggestion');
 
-    default:
-      return status;
+      case 'BUG':
+        return this.lang.t('contact_bug');
+
+      case 'OTHER':
+        return this.lang.t('contact_other');
+
+      default:
+        return type;
+    }
   }
-}
+
+
+  getStatusLabel(
+    status: AdminContact['status']
+  ): string {
+
+    switch (status) {
+
+      case 'OPEN':
+        return this.lang.t('admin_status_open');
+
+      case 'REPLIED':
+        return this.lang.t('admin_status_replied');
+
+      case 'CLOSED':
+        return this.lang.t('admin_status_closed');
+
+      default:
+        return status;
+    }
+  }
+
 
   nextPage(): void {
 
-    if (this.currentPage < this.totalPages - 1) {
+    if (
+      this.currentPage <
+      this.totalPages - 1
+    ) {
 
       this.currentPage++;
 
       this.loadContacts();
     }
   }
+
 
   previousPage(): void {
 
@@ -192,4 +243,5 @@ getStatusLabel(status: AdminContact['status']): string {
       this.loadContacts();
     }
   }
+
 }
