@@ -14,21 +14,24 @@
   --text-main: #F5F1EC;
   --text-muted: rgba(255, 255, 255, .48);
 
-  --admin-header-height: 96px;
-  --admin-sidebar-width: 240px;
+  min-height: 100vh;
 }
 
 
 /* ================================================= */
-/* LAYOUT */
+/* ADMIN LAYOUT */
 /* ================================================= */
 
 .admin-layout {
-  min-height: calc(100vh - var(--admin-header-height));
+  min-height: calc(100vh - 96px);
+
+  display: grid;
+
+  grid-template-columns: 240px minmax(0, 1fr);
+
+  align-items: stretch;
 
   background: var(--page-bg);
-
-  position: relative;
 }
 
 
@@ -37,13 +40,9 @@
 /* ================================================= */
 
 .admin-sidebar {
-  position: fixed;
+  position: relative;
 
-  top: var(--admin-header-height);
-  bottom: 0;
-  left: 0;
-
-  width: var(--admin-sidebar-width);
+  min-height: calc(100vh - 96px);
 
   display: flex;
   flex-direction: column;
@@ -58,22 +57,9 @@
 
   border-right: 1px solid rgba(201, 162, 75, .12);
 
-  overflow-y: auto;
+  overflow: hidden;
 
-  z-index: 900;
-}
-
-
-/* ================================================= */
-/* RTL SIDEBAR */
-/* ================================================= */
-
-:host-context([dir="rtl"]) .admin-sidebar {
-  left: auto;
-  right: 0;
-
-  border-right: none;
-  border-left: 1px solid rgba(201, 162, 75, .12);
+  z-index: 10;
 }
 
 
@@ -92,6 +78,7 @@
   padding: 1.25rem 1.1rem;
 
   background: transparent;
+
   border: none;
 
   color: white;
@@ -105,7 +92,6 @@
   background: rgba(201, 162, 75, .06);
 }
 
-
 .brand-title {
   font-family: var(--font-display, serif);
 
@@ -114,7 +100,6 @@
 
   color: white;
 }
-
 
 .brand-subtitle {
   margin-top: .15rem;
@@ -142,7 +127,6 @@
   padding: .7rem .65rem;
 }
 
-
 .admin-nav-item {
   display: flex;
   align-items: center;
@@ -164,12 +148,11 @@
     color .18s ease;
 }
 
-
 .admin-nav-item:hover {
   color: white;
+
   background: rgba(255, 255, 255, .05);
 }
-
 
 .admin-nav-item.active {
   color: #F3D58E;
@@ -179,15 +162,6 @@
   box-shadow:
     inset 3px 0 0 var(--gold);
 }
-
-
-/* RTL active indicator */
-
-:host-context([dir="rtl"]) .admin-nav-item.active {
-  box-shadow:
-    inset -3px 0 0 var(--gold);
-}
-
 
 .nav-icon {
   width: 18px;
@@ -202,7 +176,7 @@
 
 
 /* ================================================= */
-/* SIDEBAR BOTTOM */
+/* BOTTOM */
 /* ================================================= */
 
 .admin-sidebar-bottom {
@@ -215,7 +189,6 @@
   background: rgba(0, 0, 0, .10);
 }
 
-
 .admin-identity {
   display: flex;
   align-items: center;
@@ -225,10 +198,11 @@
   margin-bottom: 1rem;
 }
 
-
 .admin-avatar {
   width: 2.35rem;
   height: 2.35rem;
+
+  flex-shrink: 0;
 
   border-radius: 50%;
 
@@ -247,7 +221,6 @@
     0 0 0 1px rgba(201, 162, 75, .25);
 }
 
-
 .admin-user-text {
   display: flex;
   flex-direction: column;
@@ -255,12 +228,11 @@
   min-width: 0;
 }
 
-
 .admin-user-text strong {
   font-size: .78rem;
+
   color: white;
 }
-
 
 .admin-user-text span {
   margin-top: .1rem;
@@ -300,35 +272,27 @@
     color .18s ease;
 }
 
-
 .admin-logout:hover {
   background: var(--burgundy);
+
   color: white;
 }
 
 
 /* ================================================= */
-/* MAIN PAGE */
+/* MAIN CONTENT */
 /* ================================================= */
 
 .admin-page {
   min-width: 0;
 
-  min-height: calc(100vh - var(--admin-header-height));
+  min-height: calc(100vh - 96px);
 
-  margin-left: var(--admin-sidebar-width);
-
-  padding: 0;
+  padding: 1.5rem;
 
   background: var(--page-bg);
-}
 
-
-/* RTL MAIN */
-
-:host-context([dir="rtl"]) .admin-page {
-  margin-left: 0;
-  margin-right: var(--admin-sidebar-width);
+  overflow-x: hidden;
 }
 
 
@@ -338,16 +302,34 @@
 
 @media (max-width: 900px) {
 
+  .admin-layout {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
   .admin-sidebar {
-    width: 210px;
+    min-height: calc(100vh - 96px);
   }
 
   .admin-page {
-    margin-left: 210px;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .admin-layout {
+    grid-template-columns: 1fr;
   }
 
-  :host-context([dir="rtl"]) .admin-page {
-    margin-left: 0;
-    margin-right: 210px;
+  .admin-sidebar {
+    min-height: auto;
+  }
+
+  .admin-sidebar-bottom {
+    margin-top: 1rem;
+  }
+
+  .admin-page {
+    padding: 1rem;
   }
 }
