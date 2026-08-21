@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 
 import { ProfileService } from '../../core/services/profile';
+import { FriendshipService } from '../../core/services/friendship';
+
 import { FriendSuggestionResponse } from '../../core/models/post-model';
 import { LanguageService } from '../../core/services/language';
 import { SearchService } from '../../core/services/search';
@@ -23,11 +25,9 @@ export class FriendSuggestions implements OnInit {
   suggestions = signal<FriendSuggestionResponse[]>([]);
 
   private profileService = inject(ProfileService);
-
+  private friendshipService = inject(FriendshipService);
   public lang = inject(LanguageService);
-
   private searchService = inject(SearchService);
-
 
   filteredSuggestions = computed(() => {
 
@@ -44,16 +44,11 @@ export class FriendSuggestions implements OnInit {
       user.firstName.toLowerCase().includes(q) ||
       user.lastName.toLowerCase().includes(q)
     );
-
   });
 
-
   ngOnInit(): void {
-
     this.loadSuggestions();
-
   }
-
 
   private loadSuggestions(): void {
 
@@ -61,10 +56,9 @@ export class FriendSuggestions implements OnInit {
       .getFriendSuggestions()
       .subscribe({
 
-        next: (res) => {
+        next: (res: FriendSuggestionResponse[]) => {
 
           this.suggestions.set(res);
-
         },
 
         error: (err: unknown) => {
@@ -73,32 +67,46 @@ export class FriendSuggestions implements OnInit {
             'Error fetching suggestions',
             err
           );
-
         }
 
       });
-
   }
 
-
   addFriend(id: number): void {
-
-    /*
-     * هذه الدالة كانت مرتبطة بـ FriendshipService.
-     *
-     * لكن FriendshipService تم فصلها من هذا component
-     * لأننا لم نعد نعرض Pending Requests هنا.
-     *
-     * سنعيد ربط زر Add Friend بالخدمة الصحيحة
-     * بعد التأكد من اسم الـ Angular Friendship Service
-     * الموجود فعليًا في المشروع.
-     */
 
     console.log(
       'Friend request target user id:',
       id
     );
 
-  }
+    this.friendshipService
+      .sendFriendRequest(id)
+      .subscribe({
 
+        next: (response: string) => {
+
+          console.log(
+            'Friend request sent successfully:',
+            response
+          );
+
+          // نشيل الشخص من المقترحات بعد إرسال الطلب
+          this.suggestions.update(
+            list =>
+              list.filter(
+                user => user.id !== id
+              )
+          );
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Error sending friend request:',
+            err
+          );
+        }
+
+      });
+  }
 }
