@@ -94,6 +94,7 @@
 
     <span>
       {{ post().commentsCount }}
+
       {{ lang.t('comments_label') }}
     </span>
   </div>
@@ -101,23 +102,44 @@
   <!-- ================= ACTIONS ================= -->
 
   <div class="post-actions">
-    @for (k of reactionKeys; track k) {
+    <!-- Reaction Picker -->
+
+    <div class="reaction-picker-wrap">
       <button
         type="button"
-        class="reaction-btn"
-        [class.active]="post().currentUserReaction === k"
-        (click)="reactionClicked.emit(k)"
-        [title]="k"
+        class="reaction-main-btn"
+        [class.active]="post().currentUserReaction"
+        (click)="toggleReactionPicker()"
       >
-        <span>
-          {{ reactionIcons[k] }}
+        <span class="reaction-main-icon">
+          {{ getCurrentReactionIcon() }}
         </span>
 
-        <span class="count">
-          {{ post().reactions[k] }}
+        <span class="reaction-main-label">
+          {{ getCurrentReactionLabel() }}
         </span>
       </button>
-    }
+
+      @if (reactionPickerOpen()) {
+        <div class="reaction-picker">
+          @for (k of reactionKeys; track k) {
+            <button
+              type="button"
+              class="reaction-option"
+              [class.selected]="post().currentUserReaction === k"
+              [title]="getCurrentReactionLabel()"
+              (click)="selectReaction(k)"
+            >
+              <span class="reaction-option-icon">
+                {{ reactionIcons[k] }}
+              </span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Comments -->
 
     <button type="button" class="comment-btn" (click)="toggleComments()">
       <svg
@@ -184,6 +206,7 @@
               <div class="comment-top">
                 <p class="comment-user">
                   {{ c.userFirstName }}
+
                   {{ c.userLastName }}
                 </p>
 

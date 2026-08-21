@@ -1,33 +1,24 @@
 .post-card {
-
   background: #fff;
-
-  border:
-    1px solid
-    var(--ivory-2);
-
+  border: 1px solid var(--ivory-2);
   border-radius: 10px;
-
   padding: 1.25rem;
-
 }
 
 
+/* =====================================================
+   POST HEADER
+   ===================================================== */
+
 .post-head {
-
   display: flex;
-
   align-items: center;
-
   gap: .75rem;
-
   margin-bottom: .9rem;
-
 }
 
 
 .post-avatar {
-
   width: 40px;
   height: 40px;
 
@@ -50,32 +41,25 @@
     0 0 0 2px var(--gold);
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   font-size: .7rem;
-
   font-weight: 700;
-
 }
 
 
 .post-avatar img {
-
   width: 100%;
   height: 100%;
 
   display: block;
 
   object-fit: cover;
-
 }
 
 
 .post-author {
-
   font-family: var(--font-display);
 
   font-size: 1rem;
@@ -85,12 +69,10 @@
   margin: 0;
 
   line-height: 1;
-
 }
 
 
 .post-time {
-
   font-size: .65rem;
 
   letter-spacing: .1em;
@@ -100,12 +82,14 @@
   color: var(--muted);
 
   margin: .35rem 0 0;
-
 }
 
 
-.post-text {
+/* =====================================================
+   POST TEXT
+   ===================================================== */
 
+.post-text {
   color: var(--text);
 
   line-height: 1.6;
@@ -113,12 +97,14 @@
   margin: 0 0 1rem;
 
   font-size: .95rem;
-
 }
 
 
-.post-media {
+/* =====================================================
+   MEDIA
+   ===================================================== */
 
+.post-media {
   border-radius: 8px;
 
   overflow: hidden;
@@ -126,13 +112,11 @@
   margin-bottom: 1rem;
 
   background: var(--ivory);
-
 }
 
 
 .post-media img,
 .post-media video {
-
   width: 100%;
 
   max-height: 500px;
@@ -142,18 +126,15 @@
   display: block;
 
   background: #000;
-
 }
 
 
 .media-placeholder {
-
   height: 220px;
 
   display: flex;
 
   align-items: center;
-
   justify-content: center;
 
   color: var(--gold);
@@ -164,12 +145,10 @@
       #F1EADA,
       #E7DCC0
     );
-
 }
 
 
 .media-placeholder.video {
-
   background:
     linear-gradient(
       135deg,
@@ -178,12 +157,14 @@
     );
 
   color: var(--gold-soft);
-
 }
 
 
-.post-summary {
+/* =====================================================
+   SUMMARY
+   ===================================================== */
 
+.post-summary {
   display: flex;
 
   align-items: center;
@@ -201,50 +182,53 @@
     var(--ivory-2);
 
   margin-bottom: .5rem;
-
 }
 
 
 .reactions-summary {
-
   display: flex;
 
   align-items: center;
 
   gap: 3px;
-
 }
 
 
 .summary-count {
-
   margin-inline-start: 4px;
-
 }
 
+
+/* =====================================================
+   ACTIONS
+   ===================================================== */
 
 .post-actions {
-
   display: flex;
 
   align-items: center;
 
-  flex-wrap: wrap;
-
-  gap: .35rem;
+  gap: .5rem;
 
   padding-top: .3rem;
-
 }
 
 
-.reaction-btn {
+/* =====================================================
+   REACTION PICKER
+   ===================================================== */
 
+.reaction-picker-wrap {
+  position: relative;
+}
+
+
+.reaction-main-btn {
   display: flex;
 
   align-items: center;
 
-  gap: 4px;
+  gap: .4rem;
 
   background: var(--ivory);
 
@@ -254,7 +238,7 @@
 
   border-radius: 9999px;
 
-  padding: .35rem .7rem;
+  padding: .4rem .8rem;
 
   cursor: pointer;
 
@@ -266,42 +250,152 @@
     border-color .15s ease,
     background .15s ease,
     transform .15s ease;
-
 }
 
 
-.reaction-btn:hover {
-
+.reaction-main-btn:hover {
   border-color: var(--gold);
 
   background: #fff;
-
 }
 
 
-.reaction-btn.active {
-
+.reaction-main-btn.active {
   border-color: var(--gold);
 
   background:
     rgba(201, 162, 75, .16);
 
-  transform: translateY(-1px);
+  color: #8d651e;
+}
+
+
+.reaction-main-icon {
+  font-size: 1rem;
+
+  line-height: 1;
+}
+
+
+.reaction-main-label {
+  font-size: .75rem;
+
+  font-weight: 600;
+}
+
+
+.reaction-picker {
+  position: absolute;
+
+  bottom:
+    calc(100% + .55rem);
+
+  inset-inline-start: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .25rem;
+
+  padding: .45rem .55rem;
+
+  background: #fff;
+
+  border:
+    1px solid
+    var(--ivory-2);
+
+  border-radius: 9999px;
+
+  box-shadow:
+    0 12px 30px
+    rgba(0, 0, 0, .18);
+
+  z-index: 30;
+
+  animation:
+    reactionPickerIn
+    .15s ease;
+}
+
+
+.reaction-option {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 9999px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    transform .12s ease,
+    background .12s ease;
+}
+
+
+.reaction-option:hover {
+  background:
+    rgba(201, 162, 75, .10);
+
+  transform:
+    translateY(-4px)
+    scale(1.12);
+}
+
+
+.reaction-option.selected {
+  background:
+    rgba(201, 162, 75, .18);
+
+  transform:
+    translateY(-2px)
+    scale(1.05);
+}
+
+
+.reaction-option-icon {
+  font-size: 1.35rem;
+
+  line-height: 1;
+}
+
+
+@keyframes reactionPickerIn {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(5px)
+      scale(.95);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
 
 }
 
 
-.reaction-btn .count {
-
-  font-size: .72rem;
-
-  color: var(--muted);
-
-}
-
+/* =====================================================
+   COMMENT BUTTON
+   ===================================================== */
 
 .comment-btn {
-
   display: flex;
 
   align-items: center;
@@ -322,20 +416,21 @@
 
   margin-inline-start: auto;
 
-  transition: color .15s ease;
-
+  transition:
+    color .15s ease;
 }
 
 
 .comment-btn:hover {
-
   color: var(--gold);
-
 }
 
 
-.comments-section {
+/* =====================================================
+   COMMENTS
+   ===================================================== */
 
+.comments-section {
   margin-top: 1rem;
 
   padding-top: 1rem;
@@ -343,23 +438,19 @@
   border-top:
     1px solid
     var(--ivory-2);
-
 }
 
 
 .comment-composer {
-
   display: flex;
 
   gap: .5rem;
 
   margin-bottom: 1rem;
-
 }
 
 
 .comment-composer input {
-
   flex: 1;
 
   background: var(--ivory);
@@ -375,21 +466,17 @@
   font-size: .85rem;
 
   color: var(--text);
-
 }
 
 
 .comment-composer input:focus {
-
   outline:
     1px solid
     var(--gold);
-
 }
 
 
 .comment-item {
-
   display: flex;
 
   gap: .65rem;
@@ -397,12 +484,10 @@
   margin-bottom: .75rem;
 
   align-items: flex-start;
-
 }
 
 
 .comment-avatar {
-
   width: 32px;
   height: 32px;
 
@@ -428,26 +513,21 @@
   display: flex;
 
   align-items: center;
-
   justify-content: center;
-
 }
 
 
 .comment-avatar img {
-
   width: 100%;
   height: 100%;
 
   display: block;
 
   object-fit: cover;
-
 }
 
 
 .comment-content-box {
-
   background: var(--ivory);
 
   border-radius: 14px;
@@ -457,12 +537,10 @@
   max-width: 85%;
 
   min-width: 0;
-
 }
 
 
 .comment-top {
-
   display: flex;
 
   align-items: center;
@@ -470,34 +548,28 @@
   justify-content: space-between;
 
   gap: .75rem;
-
 }
 
 
 .comment-user {
-
   font-size: .8rem;
 
   font-weight: 700;
 
   margin: 0;
-
 }
 
 
 .comment-actions {
-
   display: flex;
 
   align-items: center;
 
   gap: .35rem;
-
 }
 
 
 .comment-action {
-
   border: none;
 
   background: none;
@@ -509,26 +581,20 @@
   font-weight: 700;
 
   padding: .15rem .25rem;
-
 }
 
 
 .comment-action.edit {
-
   color: var(--gold);
-
 }
 
 
 .comment-action.delete {
-
   color: #b94a48;
-
 }
 
 
 .comment-text {
-
   font-size: .85rem;
 
   margin: .15rem 0 0;
@@ -536,19 +602,15 @@
   color: var(--text);
 
   white-space: pre-line;
-
 }
 
 
 .comment-edit-box {
-
   margin-top: .4rem;
-
 }
 
 
 .comment-edit-box input {
-
   width: 100%;
 
   box-sizing: border-box;
@@ -568,31 +630,25 @@
   color: var(--text);
 
   outline: none;
-
 }
 
 
 .comment-edit-box input:focus {
-
   border-color: var(--gold);
-
 }
 
 
 .comment-edit-actions {
-
   display: flex;
 
   gap: .35rem;
 
   margin-top: .4rem;
-
 }
 
 
 .edit-save,
 .edit-cancel {
-
   border: none;
 
   border-radius: 9999px;
@@ -604,40 +660,45 @@
   font-weight: 700;
 
   cursor: pointer;
-
 }
 
 
 .edit-save {
-
   background: var(--gold);
 
   color: #17130E;
-
 }
 
 
 .edit-cancel {
-
-  background: rgba(0,0,0,.08);
+  background:
+    rgba(0,0,0,.08);
 
   color: var(--text);
-
 }
 
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
 
 @media (max-width: 600px) {
 
   .comment-content-box {
-
     max-width: 100%;
-
   }
 
   .comment-top {
-
     align-items: flex-start;
+  }
 
+  .reaction-picker {
+    inset-inline-start: 0;
+
+    max-width:
+      calc(100vw - 2rem);
+
+    overflow-x: auto;
   }
 
 }

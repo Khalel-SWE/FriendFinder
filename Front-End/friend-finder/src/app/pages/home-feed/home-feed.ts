@@ -19,6 +19,7 @@ import { PostService } from '../../core/services/post';
 import { InteractionService } from '../../core/services/interaction';
 import { SearchService } from '../../core/services/search';
 
+
 @Component({
   selector: 'app-home-feed',
   standalone: true,
@@ -34,29 +35,36 @@ export class HomeFeed implements OnInit {
 
   allPosts = signal<Post[]>([]);
 
+
   posts = computed(() => {
 
-    const q = this.searchService
-      .query()
-      .toLowerCase()
-      .trim();
+    const q =
+      this.searchService
+        .query()
+        .toLowerCase()
+        .trim();
 
     if (!q) {
       return this.allPosts();
     }
 
     return this.allPosts().filter(post =>
+
       post.authorName
         .toLowerCase()
         .includes(q)
+
       ||
+
       (
         post.text &&
         post.text
           .toLowerCase()
           .includes(q)
       )
+
       ||
+
       (
         post.comments &&
         post.comments.some(
@@ -69,15 +77,20 @@ export class HomeFeed implements OnInit {
     );
   });
 
+
   constructor(
     private postService: PostService,
     private interactionService: InteractionService,
     private searchService: SearchService
   ) {}
 
+
   ngOnInit(): void {
+
     this.loadFeed();
+
   }
+
 
   loadFeed(): void {
 
@@ -85,13 +98,16 @@ export class HomeFeed implements OnInit {
       .getFeed()
       .subscribe({
 
-        next: (responses: PostResponse[]) => {
+        next: (
+          responses: PostResponse[]
+        ) => {
 
           responses.sort(
             (a, b) =>
               new Date(b.createdAt).getTime() -
               new Date(a.createdAt).getTime()
           );
+
 
           const mappedPosts: Post[] =
             responses.map(res => ({
@@ -108,7 +124,7 @@ export class HomeFeed implements OnInit {
                 ).toUpperCase(),
 
               profilePicture:
-                res.profilePicture ?? null,
+                res.profilePicture,
 
               timeLabel:
                 this.calculateTimeAgo(
@@ -127,6 +143,7 @@ export class HomeFeed implements OnInit {
                 this.getMediaType(
                   res.mediaType
                 ),
+
 
               reactions: {
 
@@ -150,10 +167,12 @@ export class HomeFeed implements OnInit {
 
               },
 
+
               currentUserReaction:
                 res.currentUserReaction
                   ? res.currentUserReaction.toLowerCase() as ReactionType
                   : null,
+
 
               commentsCount:
                 res.commentsCount || 0,
@@ -163,12 +182,13 @@ export class HomeFeed implements OnInit {
 
             }));
 
-          this.allPosts.set(
-            mappedPosts
-          );
+
+          this.allPosts.set(mappedPosts);
+
         },
 
-        error: (err) => {
+
+        error: (err: unknown) => {
 
           console.error(
             'Error fetching feed',
@@ -178,7 +198,9 @@ export class HomeFeed implements OnInit {
         }
 
       });
+
   }
+
 
   getMediaType(
     mimeType?: string
@@ -195,6 +217,7 @@ export class HomeFeed implements OnInit {
       : 'image';
   }
 
+
   calculateTimeAgo(
     dateString: string
   ): string {
@@ -209,6 +232,7 @@ export class HomeFeed implements OnInit {
     const now =
       new Date();
 
+
     const diffInSeconds =
       Math.floor(
         (
@@ -217,39 +241,49 @@ export class HomeFeed implements OnInit {
         ) / 1000
       );
 
+
     if (diffInSeconds < 60) {
       return 'Just now';
     }
+
 
     const diffInMinutes =
       Math.floor(
         diffInSeconds / 60
       );
 
+
     if (diffInMinutes < 60) {
       return `${diffInMinutes}m`;
     }
+
 
     const diffInHours =
       Math.floor(
         diffInMinutes / 60
       );
 
+
     if (diffInHours < 24) {
       return `${diffInHours}h`;
     }
+
 
     const diffInDays =
       Math.floor(
         diffInHours / 24
       );
 
+
     if (diffInDays < 7) {
       return `${diffInDays}d`;
     }
 
+
     return postDate.toLocaleDateString();
+
   }
+
 
   onPostCreated(
     newPostData: {
@@ -266,10 +300,12 @@ export class HomeFeed implements OnInit {
       .subscribe({
 
         next: () => {
+
           this.loadFeed();
+
         },
 
-        error: (err) => {
+        error: (err: unknown) => {
 
           console.error(
             'Error creating post',
@@ -279,18 +315,39 @@ export class HomeFeed implements OnInit {
         }
 
       });
+
   }
+
 
   onReaction(
     post: Post,
     type: ReactionType
   ): void {
 
+    /*
+     * الحالة القديمة قبل الضغط.
+     *
+     * مثال:
+     * previous = 'like'
+     * type = 'love'
+     */
     const previous =
       post.currentUserReaction;
 
+
     /*
-     * Remove the old reaction
+     * الحالة القديمة للأرقام.
+     *
+     * بنحتفظ بيها لأننا محتاجين
+     * نرجعها لو الـ backend فشل.
+     */
+    const previousCount =
+      post.reactions[type];
+
+
+    /*
+     * لو كان عنده reaction قديم
+     * نشيله أولاً.
      */
     if (previous) {
 
@@ -299,28 +356,48 @@ export class HomeFeed implements OnInit {
           0,
           post.reactions[previous] - 1
         );
+
     }
 
+
     /*
-     * Same reaction = remove it
+     * ضغط نفس الـ reaction:
+     *
+     * LIKE -> LIKE
+     *
+     * معناها إزالة الـ reaction.
      */
     if (previous === type) {
 
       post.currentUserReaction =
         null;
 
-    } else {
+    }
+
+    /*
+     * ضغط reaction مختلف.
+     */
+    else {
 
       post.currentUserReaction =
         type;
 
       post.reactions[type]++;
+
     }
 
+
+    /*
+     * تحديث Angular UI
+     */
     this.allPosts.update(
       list => [...list]
     );
 
+
+    /*
+     * إرسال العملية للـ backend.
+     */
     this.interactionService
       .reactToPost(
         post.id,
@@ -328,41 +405,92 @@ export class HomeFeed implements OnInit {
       )
       .subscribe({
 
-        error: (err) => {
+        next: () => {
+
+          /*
+           * العملية نجحت.
+           * لا نحتاج أي شيء إضافي.
+           */
+
+        },
+
+
+        error: (err: unknown) => {
 
           console.error(
             'Error reacting',
             err
           );
 
+
           /*
-           * Rollback current state
+           * Rollback
+           *
+           * نرجع الحالة القديمة بالضبط.
            */
 
-          if (post.currentUserReaction) {
+          if (previous === type) {
 
-            post.reactions[
-              post.currentUserReaction
-            ] = Math.max(
-              0,
+            /*
+             * كنا بنحذف نفس الـ reaction.
+             * إذن نرجعه.
+             */
+            post.reactions[type] =
+              previousCount + 1;
+
+            post.currentUserReaction =
+              previous;
+
+          }
+
+          else {
+
+            /*
+             * كان عندنا reaction قديم.
+             *
+             * نشيل الـ reaction الجديد.
+             */
+            if (post.currentUserReaction) {
+
               post.reactions[
                 post.currentUserReaction
-              ] - 1
-            );
+              ] =
+                Math.max(
+                  0,
+                  post.reactions[
+                    post.currentUserReaction
+                  ] - 1
+                );
+
+            }
+
+
+            /*
+             * نرجع الـ reaction القديم.
+             */
+            if (previous) {
+
+              post.reactions[previous]++;
+
+            }
+
+            post.currentUserReaction =
+              previous;
+
           }
 
-          if (previous) {
-            post.reactions[previous]++;
-          }
 
-          post.currentUserReaction =
-            previous;
-
+          /*
+           * تحديث الواجهة بعد الـ rollback.
+           */
           this.allPosts.update(
             list => [...list]
           );
+
         }
 
       });
+
   }
+
 }

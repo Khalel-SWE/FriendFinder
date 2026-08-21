@@ -20,6 +20,7 @@ import {
 import { InteractionService } from '../../core/services/interaction';
 import { ProfileService } from '../../core/services/profile';
 
+
 @Component({
   selector: 'app-post-card',
   standalone: true,
@@ -29,28 +30,44 @@ import { ProfileService } from '../../core/services/profile';
 })
 export class PostCard implements OnInit {
 
-  post = input.required<Post>();
+  post =
+    input.required<Post>();
+
 
   reactionClicked =
     output<ReactionType>();
 
+
   showComments =
     signal(false);
+
 
   comments =
     signal<CommentResponse[]>([]);
 
+
   newCommentText =
     signal('');
+
 
   currentUserEmail =
     signal<string>('');
 
+
   editingCommentId =
     signal<number | null>(null);
 
+
   editingCommentText =
     signal<string>('');
+
+
+  /*
+   * Reaction picker
+   */
+  reactionPickerOpen =
+    signal(false);
+
 
   reactionIcons:
     Record<ReactionType, string> = {
@@ -69,6 +86,7 @@ export class PostCard implements OnInit {
 
     };
 
+
   reactionKeys:
     ReactionType[] = [
 
@@ -86,15 +104,19 @@ export class PostCard implements OnInit {
 
     ];
 
+
   private interactionService =
     inject(InteractionService);
+
 
   private profileService =
     inject(ProfileService);
 
+
   constructor(
     public lang: LanguageService
   ) {}
+
 
   // =====================================================
   // INIT
@@ -124,7 +146,9 @@ export class PostCard implements OnInit {
         }
 
       });
+
   }
+
 
   // =====================================================
   // REACTIONS
@@ -139,14 +163,70 @@ export class PostCard implements OnInit {
         total + value,
       0
     );
+
   }
+
+
+  toggleReactionPicker(): void {
+
+    this.reactionPickerOpen.update(
+      value => !value
+    );
+
+  }
+
+
+  selectReaction(
+    type: ReactionType
+  ): void {
+
+    this.reactionPickerOpen.set(
+      false
+    );
+
+    this.reactionClicked.emit(
+      type
+    );
+
+  }
+
+
+  getCurrentReactionIcon(): string {
+
+    const current =
+      this.post().currentUserReaction;
+
+    if (!current) {
+      return '👍';
+    }
+
+    return this.reactionIcons[current];
+
+  }
+
+
+  getCurrentReactionLabel(): string {
+
+    const current =
+      this.post().currentUserReaction;
+
+    if (!current) {
+      return this.lang.t('like');
+    }
+
+    return this.lang.t(
+      `reaction_${current}`
+    );
+
+  }
+
 
   // =====================================================
   // PROFILE IMAGE
   // =====================================================
 
   getProfileImageUrl(
-    picture?: string | null
+    picture?: string
   ): string | null {
 
     if (!picture) {
@@ -156,7 +236,9 @@ export class PostCard implements OnInit {
     return picture.startsWith('http')
       ? picture
       : `http://localhost:9090${picture}`;
+
   }
+
 
   // =====================================================
   // INITIALS
@@ -180,7 +262,9 @@ export class PostCard implements OnInit {
     return (
       first + last
     ).toUpperCase();
+
   }
+
 
   // =====================================================
   // COMMENTS
@@ -195,7 +279,9 @@ export class PostCard implements OnInit {
     if (this.showComments()) {
       this.loadComments();
     }
+
   }
+
 
   loadComments(): void {
 
@@ -205,7 +291,9 @@ export class PostCard implements OnInit {
       )
       .subscribe({
 
-        next: (res: CommentResponse[]) => {
+        next: (
+          res: CommentResponse[]
+        ) => {
 
           this.comments.set(res);
 
@@ -221,7 +309,9 @@ export class PostCard implements OnInit {
         }
 
       });
+
   }
+
 
   submitComment(): void {
 
@@ -232,6 +322,7 @@ export class PostCard implements OnInit {
     if (!text) {
       return;
     }
+
 
     this.interactionService
       .addComment(
@@ -251,9 +342,14 @@ export class PostCard implements OnInit {
             ]
           );
 
-          this.newCommentText.set('');
 
-          this.post().commentsCount++;
+          this.newCommentText
+            .set('');
+
+
+          this.post()
+            .commentsCount++;
+
         },
 
         error: (err: unknown) => {
@@ -266,7 +362,9 @@ export class PostCard implements OnInit {
         }
 
       });
+
   }
+
 
   // =====================================================
   // COMMENT EDIT
@@ -280,45 +378,60 @@ export class PostCard implements OnInit {
       comment.userEmail !==
       this.currentUserEmail()
     ) {
+
       return false;
+
     }
+
 
     const created =
       new Date(
         comment.createdAt
       );
 
+
     const difference =
       Date.now() -
       created.getTime();
 
+
     const twentyFourHours =
-      24 * 60 * 60 * 1000;
+      24 *
+      60 *
+      60 *
+      1000;
+
 
     return difference <=
       twentyFourHours;
+
   }
+
 
   startEditing(
     comment: CommentResponse
   ): void {
 
     if (
-      !this.canEditComment(
-        comment
-      )
+      !this.canEditComment(comment)
     ) {
+
       return;
+
     }
+
 
     this.editingCommentId.set(
       comment.id
     );
 
+
     this.editingCommentText.set(
       comment.content
     );
+
   }
+
 
   cancelEditing(): void {
 
@@ -329,7 +442,9 @@ export class PostCard implements OnInit {
     this.editingCommentText.set(
       ''
     );
+
   }
+
 
   saveEditedComment(
     comment: CommentResponse
@@ -339,9 +454,11 @@ export class PostCard implements OnInit {
       this.editingCommentText()
         .trim();
 
+
     if (!newContent) {
       return;
     }
+
 
     this.interactionService
       .updateComment(
@@ -358,13 +475,16 @@ export class PostCard implements OnInit {
             list =>
               list.map(
                 item =>
-                  item.id === updated.id
+                  item.id ===
+                  updated.id
                     ? updated
                     : item
               )
           );
 
+
           this.cancelEditing();
+
         },
 
         error: (err: unknown) => {
@@ -377,7 +497,9 @@ export class PostCard implements OnInit {
         }
 
       });
+
   }
+
 
   // =====================================================
   // COMMENT DELETE
@@ -391,33 +513,40 @@ export class PostCard implements OnInit {
       comment.userEmail ===
       this.currentUserEmail();
 
+
     const isPostOwner =
       this.post().authorName ===
       this.getCurrentPostOwnerName();
+
 
     return (
       isCommentOwner ||
       isPostOwner
     );
+
   }
+
 
   private getCurrentPostOwnerName(): string {
 
     return this.post()
       .authorName;
+
   }
+
 
   deleteComment(
     comment: CommentResponse
   ): void {
 
     if (
-      !this.canDeleteComment(
-        comment
-      )
+      !this.canDeleteComment(comment)
     ) {
+
       return;
+
     }
+
 
     const confirmed =
       confirm(
@@ -426,9 +555,11 @@ export class PostCard implements OnInit {
         )
       );
 
+
     if (!confirmed) {
       return;
     }
+
 
     this.interactionService
       .deleteComment(
@@ -446,6 +577,7 @@ export class PostCard implements OnInit {
                   comment.id
               )
           );
+
 
           this.post().commentsCount =
             Math.max(
@@ -465,5 +597,7 @@ export class PostCard implements OnInit {
         }
 
       });
+
   }
+
 }
