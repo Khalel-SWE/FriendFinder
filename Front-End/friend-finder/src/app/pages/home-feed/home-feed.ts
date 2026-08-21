@@ -16,9 +16,7 @@ import {
 } from '../../core/models/post-model';
 
 import { PostService } from '../../core/services/post';
-
 import { InteractionService } from '../../core/services/interaction';
-
 import { SearchService } from '../../core/services/search';
 
 @Component({
@@ -36,38 +34,29 @@ export class HomeFeed implements OnInit {
 
   allPosts = signal<Post[]>([]);
 
-
   posts = computed(() => {
 
-    const q =
-      this.searchService
-        .query()
-        .toLowerCase()
-        .trim();
-
+    const q = this.searchService
+      .query()
+      .toLowerCase()
+      .trim();
 
     if (!q) {
       return this.allPosts();
     }
 
-
     return this.allPosts().filter(post =>
-
       post.authorName
         .toLowerCase()
         .includes(q)
-
       ||
-
       (
         post.text &&
         post.text
           .toLowerCase()
           .includes(q)
       )
-
       ||
-
       (
         post.comments &&
         post.comments.some(
@@ -77,11 +66,8 @@ export class HomeFeed implements OnInit {
               .includes(q)
         )
       )
-
     );
-
   });
-
 
   constructor(
     private postService: PostService,
@@ -89,13 +75,9 @@ export class HomeFeed implements OnInit {
     private searchService: SearchService
   ) {}
 
-
   ngOnInit(): void {
-
     this.loadFeed();
-
   }
-
 
   loadFeed(): void {
 
@@ -103,16 +85,13 @@ export class HomeFeed implements OnInit {
       .getFeed()
       .subscribe({
 
-        next: (
-          responses: PostResponse[]
-        ) => {
+        next: (responses: PostResponse[]) => {
 
           responses.sort(
             (a, b) =>
               new Date(b.createdAt).getTime() -
               new Date(a.createdAt).getTime()
           );
-
 
           const mappedPosts: Post[] =
             responses.map(res => ({
@@ -129,7 +108,7 @@ export class HomeFeed implements OnInit {
                 ).toUpperCase(),
 
               profilePicture:
-                res.profilePicture,
+                res.profilePicture ?? null,
 
               timeLabel:
                 this.calculateTimeAgo(
@@ -149,17 +128,19 @@ export class HomeFeed implements OnInit {
                   res.mediaType
                 ),
 
-
               reactions: {
 
                 like:
                   res.reactionsCount?.['LIKE'] || 0,
 
+                love:
+                  res.reactionsCount?.['LOVE'] || 0,
+
                 haha:
                   res.reactionsCount?.['HAHA'] || 0,
 
-                love:
-                  res.reactionsCount?.['LOVE'] || 0,
+                wow:
+                  res.reactionsCount?.['WOW'] || 0,
 
                 sad:
                   res.reactionsCount?.['SAD'] || 0,
@@ -169,12 +150,10 @@ export class HomeFeed implements OnInit {
 
               },
 
-
               currentUserReaction:
                 res.currentUserReaction
                   ? res.currentUserReaction.toLowerCase() as ReactionType
                   : null,
-
 
               commentsCount:
                 res.commentsCount || 0,
@@ -184,13 +163,10 @@ export class HomeFeed implements OnInit {
 
             }));
 
-
           this.allPosts.set(
             mappedPosts
           );
-
         },
-
 
         error: (err) => {
 
@@ -202,9 +178,7 @@ export class HomeFeed implements OnInit {
         }
 
       });
-
   }
-
 
   getMediaType(
     mimeType?: string
@@ -214,15 +188,12 @@ export class HomeFeed implements OnInit {
       return undefined;
     }
 
-
     return mimeType
       .toLowerCase()
       .includes('video')
       ? 'video'
       : 'image';
-
   }
-
 
   calculateTimeAgo(
     dateString: string
@@ -232,13 +203,11 @@ export class HomeFeed implements OnInit {
       return '';
     }
 
-
     const postDate =
       new Date(dateString);
 
     const now =
       new Date();
-
 
     const diffInSeconds =
       Math.floor(
@@ -248,49 +217,39 @@ export class HomeFeed implements OnInit {
         ) / 1000
       );
 
-
     if (diffInSeconds < 60) {
       return 'Just now';
     }
-
 
     const diffInMinutes =
       Math.floor(
         diffInSeconds / 60
       );
 
-
     if (diffInMinutes < 60) {
       return `${diffInMinutes}m`;
     }
-
 
     const diffInHours =
       Math.floor(
         diffInMinutes / 60
       );
 
-
     if (diffInHours < 24) {
       return `${diffInHours}h`;
     }
-
 
     const diffInDays =
       Math.floor(
         diffInHours / 24
       );
 
-
     if (diffInDays < 7) {
       return `${diffInDays}d`;
     }
 
-
     return postDate.toLocaleDateString();
-
   }
-
 
   onPostCreated(
     newPostData: {
@@ -307,9 +266,7 @@ export class HomeFeed implements OnInit {
       .subscribe({
 
         next: () => {
-
           this.loadFeed();
-
         },
 
         error: (err) => {
@@ -322,9 +279,7 @@ export class HomeFeed implements OnInit {
         }
 
       });
-
   }
-
 
   onReaction(
     post: Post,
@@ -334,9 +289,8 @@ export class HomeFeed implements OnInit {
     const previous =
       post.currentUserReaction;
 
-
     /*
-     * Remove old reaction
+     * Remove the old reaction
      */
     if (previous) {
 
@@ -345,12 +299,10 @@ export class HomeFeed implements OnInit {
           0,
           post.reactions[previous] - 1
         );
-
     }
 
-
     /*
-     * Clicking same reaction = remove it
+     * Same reaction = remove it
      */
     if (previous === type) {
 
@@ -363,14 +315,11 @@ export class HomeFeed implements OnInit {
         type;
 
       post.reactions[type]++;
-
     }
-
 
     this.allPosts.update(
       list => [...list]
     );
-
 
     this.interactionService
       .reactToPost(
@@ -386,31 +335,25 @@ export class HomeFeed implements OnInit {
             err
           );
 
-
           /*
-           * Rollback
+           * Rollback current state
            */
+
           if (post.currentUserReaction) {
 
             post.reactions[
               post.currentUserReaction
-            ] =
-              Math.max(
-                0,
-                post.reactions[
-                  post.currentUserReaction
-                ] - 1
-              );
-
+            ] = Math.max(
+              0,
+              post.reactions[
+                post.currentUserReaction
+              ] - 1
+            );
           }
-
 
           if (previous) {
-
             post.reactions[previous]++;
-
           }
-
 
           post.currentUserReaction =
             previous;
@@ -418,11 +361,8 @@ export class HomeFeed implements OnInit {
           this.allPosts.update(
             list => [...list]
           );
-
         }
 
       });
-
   }
-
 }

@@ -18,9 +18,7 @@ import {
 } from '../../core/models/post-model';
 
 import { InteractionService } from '../../core/services/interaction';
-
 import { ProfileService } from '../../core/services/profile';
-
 
 @Component({
   selector: 'app-post-card',
@@ -36,7 +34,6 @@ export class PostCard implements OnInit {
   reactionClicked =
     output<ReactionType>();
 
-
   showComments =
     signal(false);
 
@@ -49,22 +46,22 @@ export class PostCard implements OnInit {
   currentUserEmail =
     signal<string>('');
 
-
   editingCommentId =
     signal<number | null>(null);
 
   editingCommentText =
     signal<string>('');
 
-
   reactionIcons:
     Record<ReactionType, string> = {
 
       like: '👍',
 
+      love: '❤️',
+
       haha: '😆',
 
-      love: '❤️',
+      wow: '😮',
 
       sad: '😢',
 
@@ -72,16 +69,22 @@ export class PostCard implements OnInit {
 
     };
 
-
   reactionKeys:
     ReactionType[] = [
-      'like',
-      'haha',
-      'love',
-      'sad',
-      'angry'
-    ];
 
+      'like',
+
+      'love',
+
+      'haha',
+
+      'wow',
+
+      'sad',
+
+      'angry'
+
+    ];
 
   private interactionService =
     inject(InteractionService);
@@ -89,11 +92,9 @@ export class PostCard implements OnInit {
   private profileService =
     inject(ProfileService);
 
-
   constructor(
     public lang: LanguageService
   ) {}
-
 
   // =====================================================
   // INIT
@@ -123,9 +124,7 @@ export class PostCard implements OnInit {
         }
 
       });
-
   }
-
 
   // =====================================================
   // REACTIONS
@@ -140,16 +139,14 @@ export class PostCard implements OnInit {
         total + value,
       0
     );
-
   }
-
 
   // =====================================================
   // PROFILE IMAGE
   // =====================================================
 
   getProfileImageUrl(
-    picture?: string
+    picture?: string | null
   ): string | null {
 
     if (!picture) {
@@ -159,9 +156,7 @@ export class PostCard implements OnInit {
     return picture.startsWith('http')
       ? picture
       : `http://localhost:9090${picture}`;
-
   }
-
 
   // =====================================================
   // INITIALS
@@ -185,9 +180,7 @@ export class PostCard implements OnInit {
     return (
       first + last
     ).toUpperCase();
-
   }
-
 
   // =====================================================
   // COMMENTS
@@ -202,9 +195,7 @@ export class PostCard implements OnInit {
     if (this.showComments()) {
       this.loadComments();
     }
-
   }
-
 
   loadComments(): void {
 
@@ -230,9 +221,7 @@ export class PostCard implements OnInit {
         }
 
       });
-
   }
-
 
   submitComment(): void {
 
@@ -265,7 +254,6 @@ export class PostCard implements OnInit {
           this.newCommentText.set('');
 
           this.post().commentsCount++;
-
         },
 
         error: (err: unknown) => {
@@ -278,9 +266,7 @@ export class PostCard implements OnInit {
         }
 
       });
-
   }
-
 
   // =====================================================
   // COMMENT EDIT
@@ -294,9 +280,7 @@ export class PostCard implements OnInit {
       comment.userEmail !==
       this.currentUserEmail()
     ) {
-
       return false;
-
     }
 
     const created =
@@ -313,9 +297,7 @@ export class PostCard implements OnInit {
 
     return difference <=
       twentyFourHours;
-
   }
-
 
   startEditing(
     comment: CommentResponse
@@ -326,9 +308,7 @@ export class PostCard implements OnInit {
         comment
       )
     ) {
-
       return;
-
     }
 
     this.editingCommentId.set(
@@ -338,9 +318,7 @@ export class PostCard implements OnInit {
     this.editingCommentText.set(
       comment.content
     );
-
   }
-
 
   cancelEditing(): void {
 
@@ -351,9 +329,7 @@ export class PostCard implements OnInit {
     this.editingCommentText.set(
       ''
     );
-
   }
-
 
   saveEditedComment(
     comment: CommentResponse
@@ -389,7 +365,6 @@ export class PostCard implements OnInit {
           );
 
           this.cancelEditing();
-
         },
 
         error: (err: unknown) => {
@@ -402,9 +377,7 @@ export class PostCard implements OnInit {
         }
 
       });
-
   }
-
 
   // =====================================================
   // COMMENT DELETE
@@ -426,17 +399,13 @@ export class PostCard implements OnInit {
       isCommentOwner ||
       isPostOwner
     );
-
   }
-
 
   private getCurrentPostOwnerName(): string {
 
     return this.post()
       .authorName;
-
   }
-
 
   deleteComment(
     comment: CommentResponse
@@ -447,9 +416,7 @@ export class PostCard implements OnInit {
         comment
       )
     ) {
-
       return;
-
     }
 
     const confirmed =
@@ -498,7 +465,5 @@ export class PostCard implements OnInit {
         }
 
       });
-
   }
-
 }

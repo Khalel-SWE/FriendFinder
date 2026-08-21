@@ -1,92 +1,278 @@
-import { Component, OnInit, signal, inject, Input } from '@angular/core'; // 👈 ضفنا Input هنا
-import { PostComposer } from '../post-composer/post-composer'; 
-import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel'; 
-import { Post, PostResponse } from '../../core/models/post-model'; 
+import {
+  Component,
+  OnInit,
+  signal,
+  inject,
+  Input
+} from '@angular/core';
+
+import { PostComposer } from '../post-composer/post-composer';
+import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel';
+
+import {
+  Post,
+  PostResponse,
+  ReactionType
+} from '../../core/models/post-model';
+
 import { PostService } from '../../core/services/post';
 
 @Component({
   selector: 'app-profile-timeline-tab',
   standalone: true,
-  imports: [PostComposer, RecentActivityPanel],
+  imports: [
+    PostComposer,
+    RecentActivityPanel
+  ],
   templateUrl: './profile-timeline-tab.html',
   styleUrl: './profile-timeline-tab.css'
 })
 export class ProfileTimelineTab implements OnInit {
-  // سيجنال عشان نشيل البوستات الحقيقية
+
   posts = signal<Post[]>([]);
-  
-  // 👈 استقبلنا الـ userId 
+
   @Input() userId?: number;
+
   @Input() isMyProfile: boolean = false;
-  
+
   private postService = inject(PostService);
 
-  ngOnInit() {
-    this.loadPosts(); // 👈 هننادي على الدالة الموحدة أول ما الصفحة تفتح
+  ngOnInit(): void {
+    this.loadPosts();
   }
 
-  // 👇 دالة موحدة بتجيب البوستات سواء للفيد أو لليوزر وتعملها Mapping 👇
-  loadPosts() {
-    // نحدد هنكلم أي API بناءً على وجود userId
-    const request$ = this.userId 
-      ? this.postService.getUserPosts(this.userId) 
+  loadPosts(): void {
+
+    /*
+     * لو عندنا userId:
+     * نجيب بوستات اليوزر المحدد.
+     *
+     * لو مفيش:
+     * نجيب الـ feed الحالي.
+     */
+    const request$ = this.userId
+      ? this.postService.getUserPosts(this.userId)
       : this.postService.getFeed();
 
     request$.subscribe({
-      next: (responses: PostResponse[]) => {
-        // ترتيب البوستات من الأحدث للأقدم
-        responses.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        
-        // تحويل الداتا اللي جاية من السيرفر للشكل اللي الأنجولار بيفهمه
-        const mappedPosts: Post[] = responses.map(res => ({
-          id: res.id,
-          authorName: `${res.userFirstName} ${res.userLastName}`,
-          authorInitials: (res.userFirstName.charAt(0) + res.userLastName.charAt(0)).toUpperCase(),
-          timeLabel: this.calculateTimeAgo(res.createdAt),
-          text: res.content,
-          mediaUrl: res.mediaUrl ? `http://localhost:9090${res.mediaUrl}` : undefined,
-          mediaType: res.mediaType?.toLowerCase().includes('video') ? 'video' : 'image',
-          reactions: {
-            like: res.reactionsCount?.['LIKE'] || 0,
-            haha: res.reactionsCount?.['HAHA'] || 0,
-            love: res.reactionsCount?.['LOVE'] || 0,
-            sad: res.reactionsCount?.['SAD'] || 0,
-            angry: res.reactionsCount?.['ANGRY'] || 0
-          },
-          commentsCount: res.commentsCount || 0,
-          comments: res.comments || []
-        }));
-        
+
+      next: (
+        responses: PostResponse[]
+      ) => {
+
+        /*
+         * ترتيب البوستات:
+         * الأحدث أولاً.
+         */
+        responses.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() -
+            new Date(a.createdAt).getTime()
+        );
+
+        /*
+         * تحويل PostResponse
+         * إلى Post المستخدم في الـ UI.
+         */
+        const mappedPosts: Post[] =
+          responses.map(
+            res => ({
+
+              id: res.id,
+
+              authorName:
+                `${res.userFirstName} ${res.userLastName}`,
+
+              authorInitials:
+                (
+                  res.userFirstName.charAt(0) +
+                  res.userLastName.charAt(0)
+                ).toUpperCase(),
+
+              /*
+               * صورة صاحب البوست.
+               */
+              profilePicture:
+                res.profilePicture,
+
+              timeLabel:
+                this.calculateTimeAgo(
+                  res.createdAt
+                ),
+
+              text:
+                res.content,
+
+              mediaUrl:
+                res.mediaUrl
+                  ? `http://localhost:9090${res.mediaUrl}`
+                  : undefined,
+
+              mediaType:
+                res.mediaType
+                  ?.toLowerCase()
+                  .includes('video')
+                  ? 'video'
+                  : 'image',
+
+              /*
+               * كل أنواع الـ reactions.
+               *
+               * WOW كانت ناقصة هنا.
+               */
+              reactions: {
+
+                like:
+                  res.reactionsCount?.['LIKE'] || 0,
+
+                love:
+                  res.reactionsCount?.['LOVE'] || 0,
+
+                haha:
+                  res.reactionsCount?.['HAHA'] || 0,
+
+                wow:
+                  res.reactionsCount?.['WOW'] || 0,
+
+                sad:
+                  res.reactionsCount?.['SAD'] || 0,
+
+                angry:
+                  res.reactionsCount?.['ANGRY'] || 0
+
+              },
+
+              /*
+               * الـ reaction الحالي للمستخدم.
+               *
+               * Backend -> "LIKE"
+               * Frontend -> "like"
+               */
+              currentUserReaction:
+                res.currentUserReaction
+                  ? res.currentUserReaction.toLowerCase() as ReactionType
+                  : null,
+
+              commentsCount:
+                res.commentsCount || 0,
+
+              comments:
+                res.comments || []
+
+            })
+          );
+
         this.posts.set(mappedPosts);
       },
-      error: (err) => console.error('Error fetching timeline posts', err)
+
+      error: (
+        err: unknown
+      ) => {
+
+        console.error(
+          'Error fetching timeline posts',
+          err
+        );
+
+      }
+
     });
   }
 
-  calculateTimeAgo(dateString: string): string {
-    if (!dateString) return '';
-    const postDate = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+  calculateTimeAgo(
+    dateString: string
+  ): string {
 
-    if (diffInSeconds < 60) return 'Just now';
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes}m`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d`;
+    if (!dateString) {
+      return '';
+    }
+
+    const postDate =
+      new Date(dateString);
+
+    const now =
+      new Date();
+
+    const diffInSeconds =
+      Math.floor(
+        (
+          now.getTime() -
+          postDate.getTime()
+        ) / 1000
+      );
+
+    if (diffInSeconds < 60) {
+      return 'Just now';
+    }
+
+    const diffInMinutes =
+      Math.floor(
+        diffInSeconds / 60
+      );
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m`;
+    }
+
+    const diffInHours =
+      Math.floor(
+        diffInMinutes / 60
+      );
+
+    if (diffInHours < 24) {
+      return `${diffInHours}h`;
+    }
+
+    const diffInDays =
+      Math.floor(
+        diffInHours / 24
+      );
+
+    if (diffInDays < 7) {
+      return `${diffInDays}d`;
+    }
 
     return postDate.toLocaleDateString();
   }
 
-  onPosted(payload: { text?: string; file?: File }): void {
-    // لو النص مش موجود هنبعته كـ string فاضي، والملف هنبعته زي ما هو
-    this.postService.createPost(payload.text || '', payload.file).subscribe({
-      next: () => {
-        this.loadPosts(); // ده هيعمل ريفريش للبوستات فوراً بعد النشر
-      },
-      error: (err) => console.error('Error creating post in profile', err)
-    });
+  onPosted(
+    payload: {
+      text?: string;
+      file?: File;
+    }
+  ): void {
+
+    /*
+     * إنشاء بوست جديد.
+     */
+    this.postService
+      .createPost(
+        payload.text || '',
+        payload.file
+      )
+      .subscribe({
+
+        next: () => {
+
+          /*
+           * تحديث الـ timeline
+           * بعد إنشاء البوست.
+           */
+          this.loadPosts();
+
+        },
+
+        error: (
+          err: unknown
+        ) => {
+
+          console.error(
+            'Error creating post in profile',
+            err
+          );
+
+        }
+
+      });
   }
 }
