@@ -86,5 +86,15 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   admin_page: { en: 'Page', ar: 'صفحة', de: 'Seite'},
   admin_status_open: { en: 'OPEN', ar: 'مفتوحة', de: 'OFFEN'},
   admin_status_replied: { en: 'REPLIED', ar: 'تم الرد', de: 'BEANTWORTET'},
-  admin_status_closed: { en: 'CLOSED', ar: 'مغلقة', de: 'GESCHLOSSEN'}
+  admin_status_closed: { en: 'CLOSED', ar: 'مغلقة', de: 'GESCHLOSSEN'},
+  suggestions_title: {
+  en: 'People You May Know',
+  ar: 'أشخاص قد تعرفهم',
+  de: 'Personen, die du vielleicht kennst'
+},
+admin_no_suggestions: {
+  en: 'No new suggestions at the moment.',
+  ar: 'لا توجد اقتراحات جديدة حاليًا.',
+  de: 'Derzeit keine neuen Vorschläge.'
+},
 };

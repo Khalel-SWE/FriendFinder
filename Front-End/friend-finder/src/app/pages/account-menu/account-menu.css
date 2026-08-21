@@ -1,43 +1,139 @@
-.acct-wrap { position: relative; }
+.acct-wrap {
+  position: relative;
+}
+
+
+/* =========================
+   Account Avatar
+   ========================= */
 
 .acct-avatar {
 
-  width: 36px; height: 36px; border-radius: 9999px; border: none; cursor: pointer;
+  width: 36px;
+  height: 36px;
 
-  background: linear-gradient(135deg, #B4893A, #D9B769);
+  border-radius: 9999px;
 
-  box-shadow: 0 0 0 2px var(--gold);
+  border: none;
 
-  font-size: .7rem; font-weight: 700; color: #17130E;
+  overflow: hidden;
 
-  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      #B4893A,
+      #D9B769
+    );
+
+  box-shadow:
+    0 0 0 2px var(--gold);
+
+  font-size: .7rem;
+
+  font-weight: 700;
+
+  color: #17130E;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.acct-avatar img {
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
 
 }
+
+
+/* =========================
+   Account Menu
+   ========================= */
 
 .acct-menu {
 
-  position: absolute; inset-inline-end: 0; margin-top: .5rem;
+  position: absolute;
 
-  width: 210px; background: #fff; color: var(--text);
+  inset-inline-end: 0;
 
-  border: 1px solid var(--ivory-2); border-radius: 10px;
+  margin-top: .5rem;
 
-  box-shadow: 0 15px 30px rgba(0,0,0,.2); overflow: hidden; z-index: 50;
+  width: 210px;
 
+  background: #fff;
+
+  color: var(--text);
+
+  border:
+    1px solid
+    var(--ivory-2);
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 15px 30px
+    rgba(0, 0, 0, .2);
+
+  overflow: hidden;
+
+  z-index: 50;
 }
+
 
 .acct-item {
 
-  display: block; width: 100%; text-align: start;
+  display: block;
 
-  background: none; border: none; cursor: pointer;
+  width: 100%;
 
-  padding: .65rem 1rem; font-size: .85rem; color: var(--text);
+  text-align: start;
+
+  background: none;
+
+  border: none;
+
+  cursor: pointer;
+
+  padding: .65rem 1rem;
+
+  font-size: .85rem;
+
+  color: var(--text);
+}
+
+
+.acct-item:hover {
+
+  background: var(--ivory);
 
 }
 
-.acct-item:hover { background: var(--ivory); }
 
-.acct-divider { border-top: 1px solid var(--ivory-2); }
+.acct-divider {
 
-.acct-logout { color: var(--burgundy); font-weight: 600; }
+  border-top:
+    1px solid
+    var(--ivory-2);
+
+}
+
+
+.acct-logout {
+
+  color: var(--burgundy);
+
+  font-weight: 600;
+
+}
