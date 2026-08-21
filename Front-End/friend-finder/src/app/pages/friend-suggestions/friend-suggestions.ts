@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 
 import { ProfileService } from '../../core/services/profile';
-import { FriendshipService } from '../../core/services/friendship';
 import { FriendSuggestionResponse } from '../../core/models/post-model';
 import { LanguageService } from '../../core/services/language';
 import { SearchService } from '../../core/services/search';
@@ -23,11 +22,7 @@ export class FriendSuggestions implements OnInit {
 
   suggestions = signal<FriendSuggestionResponse[]>([]);
 
-  pendingRequests = signal<any[]>([]);
-
   private profileService = inject(ProfileService);
-
-  private friendshipService = inject(FriendshipService);
 
   public lang = inject(LanguageService);
 
@@ -45,15 +40,22 @@ export class FriendSuggestions implements OnInit {
       return this.suggestions();
     }
 
-    return this.suggestions().filter(s =>
-      s.firstName.toLowerCase().includes(q) ||
-      s.lastName.toLowerCase().includes(q)
+    return this.suggestions().filter(user =>
+      user.firstName.toLowerCase().includes(q) ||
+      user.lastName.toLowerCase().includes(q)
     );
 
   });
 
 
   ngOnInit(): void {
+
+    this.loadSuggestions();
+
+  }
+
+
+  private loadSuggestions(): void {
 
     this.profileService
       .getFriendSuggestions()
@@ -65,52 +67,10 @@ export class FriendSuggestions implements OnInit {
 
         },
 
-        error: (err) => {
+        error: (err: unknown) => {
 
           console.error(
             'Error fetching suggestions',
-            err
-          );
-
-        }
-
-      });
-
-
-    /*
-     * الطلبات المعلقة ما زالت يتم تحميلها
-     * لأن الـ functionality نفسها ما اتلغتش.
-     *
-     * لكننا لم نعد نعرضها داخل الـ Feed.
-     *
-     * هنربطها لاحقًا بالـ Notifications.
-     */
-    this.loadPendingRequests();
-
-  }
-
-
-  loadPendingRequests(): void {
-
-    this.friendshipService
-      .getPendingRequests()
-      .subscribe({
-
-        next: (requests) => {
-
-          this.pendingRequests.set(requests);
-
-          console.log(
-            'Pending requests loaded:',
-            requests
-          );
-
-        },
-
-        error: (err) => {
-
-          console.error(
-            'Error fetching pending requests',
             err
           );
 
@@ -123,76 +83,21 @@ export class FriendSuggestions implements OnInit {
 
   addFriend(id: number): void {
 
-    this.friendshipService
-      .sendFriendRequest(id)
-      .subscribe({
+    /*
+     * هذه الدالة كانت مرتبطة بـ FriendshipService.
+     *
+     * لكن FriendshipService تم فصلها من هذا component
+     * لأننا لم نعد نعرض Pending Requests هنا.
+     *
+     * سنعيد ربط زر Add Friend بالخدمة الصحيحة
+     * بعد التأكد من اسم الـ Angular Friendship Service
+     * الموجود فعليًا في المشروع.
+     */
 
-        next: (res) => {
-
-          console.log(res);
-
-          this.suggestions.update(
-            list =>
-              list.filter(
-                user => user.id !== id
-              )
-          );
-
-        },
-
-        error: (err) => {
-
-          console.error(
-            'Error sending request',
-            err
-          );
-
-        }
-
-      });
-
-  }
-
-
-  respondToRequest(
-    requestId: number,
-    status: 'ACCEPTED' | 'REJECTED'
-  ): void {
-
-    this.friendshipService
-      .respondToRequest(
-        requestId,
-        status
-      )
-      .subscribe({
-
-        next: (res) => {
-
-          console.log(
-            `Request ${status}:`,
-            res
-          );
-
-          this.pendingRequests.update(
-            list =>
-              list.filter(
-                req =>
-                  req.requestId !== requestId
-              )
-          );
-
-        },
-
-        error: (err) => {
-
-          console.error(
-            'Error responding to request',
-            err
-          );
-
-        }
-
-      });
+    console.log(
+      'Friend request target user id:',
+      id
+    );
 
   }
 

@@ -11,17 +11,45 @@ export interface CommentResponse {
   updatedAt: string;
 }
 
+// export interface Post {
+//   id: number;
+//   authorName: string;
+//   authorInitials: string;
+//   timeLabel: string;
+//   text?: string;
+//   mediaType?: 'image' | 'video';
+//   mediaUrl?: string;
+//   reactions: Record<ReactionType, number>;
+//   commentsCount: number;
+//   comments?: CommentResponse[]; // 👈 السطر ده اللي كان ناقص
+// }
+
 export interface Post {
+
   id: number;
+
   authorName: string;
+
   authorInitials: string;
+
+  profilePicture?: string;
+
   timeLabel: string;
+
   text?: string;
+
   mediaType?: 'image' | 'video';
+
   mediaUrl?: string;
+
   reactions: Record<ReactionType, number>;
+
+  currentUserReaction?: ReactionType | null;
+
   commentsCount: number;
-  comments?: CommentResponse[]; // 👈 السطر ده اللي كان ناقص
+
+  comments?: CommentResponse[];
+
 }
 
 export interface FriendSuggestion {
@@ -46,19 +74,48 @@ export interface FriendSuggestion {
 // }
 
 // مطابق للـ PostResponse اللي في الجافا
+// export interface PostResponse {
+//   id: number;
+//   userEmail: string;
+//   userFirstName: string;
+//   userLastName: string;
+//   content?: string;
+//   mediaUrl?: string;
+//   mediaType?: string;
+//   createdAt: string;
+//   reactionsCount?: Record<string, number>; // 👈 السطر ده اللي كان ناقص
+//   currentUserReaction?: string;            // 👈 السطر ده اللي كان ناقص
+//   commentsCount?: number;                  // 👈 السطر ده اللي كان ناقص
+//   comments?: CommentResponse[];            // 👈 السطر ده اللي كان ناقص
+// }
+
 export interface PostResponse {
+
   id: number;
+
   userEmail: string;
+
   userFirstName: string;
+
   userLastName: string;
+
+  profilePicture?: string;
+
   content?: string;
+
   mediaUrl?: string;
+
   mediaType?: string;
+
   createdAt: string;
-  reactionsCount?: Record<string, number>; // 👈 السطر ده اللي كان ناقص
-  currentUserReaction?: string;            // 👈 السطر ده اللي كان ناقص
-  commentsCount?: number;                  // 👈 السطر ده اللي كان ناقص
-  comments?: CommentResponse[];            // 👈 السطر ده اللي كان ناقص
+
+  reactionsCount?: Record<string, number>;
+
+  currentUserReaction?: string;
+
+  commentsCount?: number;
+
+  comments?: CommentResponse[];
 }
 
 export interface FriendSuggestionResponse {

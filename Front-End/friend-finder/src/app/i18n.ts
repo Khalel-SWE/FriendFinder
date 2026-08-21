@@ -97,4 +97,45 @@ admin_no_suggestions: {
   ar: 'لا توجد اقتراحات جديدة حاليًا.',
   de: 'Derzeit keine neuen Vorschläge.'
 },
+  edit: {
+    en: 'Edit',
+    ar: 'تعديل',
+    de: 'Bearbeiten'
+  },
+
+  delete: {
+    en: 'Delete',
+    ar: 'حذف',
+    de: 'Löschen'
+  },
+
+  save: {
+    en: 'Save',
+    ar: 'حفظ',
+    de: 'Speichern'
+  },
+
+  cancel: {
+    en: 'Cancel',
+    ar: 'إلغاء',
+    de: 'Abbrechen'
+  },
+
+  send: {
+    en: 'Send',
+    ar: 'إرسال',
+    de: 'Senden'
+  },
+
+  no_comments: {
+    en: 'No comments yet. Be the first!',
+    ar: 'لا توجد تعليقات بعد. كن أول من يعلق!',
+    de: 'Noch keine Kommentare. Sei der Erste!'
+  },
+
+  confirm_delete_comment: {
+    en: 'Are you sure you want to delete this comment?',
+    ar: 'هل أنت متأكد أنك تريد حذف هذا التعليق؟',
+    de: 'Möchtest du diesen Kommentar wirklich löschen?'
+  }
 };

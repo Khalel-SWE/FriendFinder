@@ -1,7 +1,7 @@
 package com.media.friend_finder.service;
 
-import com.media.friend_finder.dto.PostResponse;
 import com.media.friend_finder.dto.CommentResponse;
+import com.media.friend_finder.dto.PostResponse;
 import com.media.friend_finder.entity.*;
 import com.media.friend_finder.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -32,44 +32,111 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final ActivityService activityService;
 
-    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/posts/";
+    private final String UPLOAD_DIR =
+            System.getProperty("user.dir") + "/uploads/posts/";
 
-    public PostResponse createPost(String email, String content, MultipartFile file) throws IOException {
-        boolean hasText = (content != null && !content.trim().isEmpty());
-        boolean hasFile = (file != null && !file.isEmpty());
+
+    public PostResponse createPost(
+            String email,
+            String content,
+            MultipartFile file
+    ) throws IOException {
+
+        boolean hasText =
+                content != null &&
+                        !content.trim().isEmpty();
+
+        boolean hasFile =
+                file != null &&
+                        !file.isEmpty();
 
         if (!hasText && !hasFile) {
-            throw new RuntimeException("Post cannot be empty. Please provide text or a media file.");
+
+            throw new RuntimeException(
+                    "Post cannot be empty. Please provide text or a media file."
+            );
+
         }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found")
+                );
+
 
         Post post = new Post();
+
         post.setUser(user);
+
         post.setContent(content);
 
+
         if (hasFile) {
-            String contentType = file.getContentType();
-            if (contentType == null || !(contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/jpg") || contentType.equals("video/mp4"))) {
-                throw new RuntimeException("Invalid file type. Only JPG, PNG, and MP4 are allowed.");
+
+            String contentType =
+                    file.getContentType();
+
+            if (
+                    contentType == null ||
+                            !(
+                                    contentType.equals("image/jpeg") ||
+                                            contentType.equals("image/png") ||
+                                            contentType.equals("image/jpg") ||
+                                            contentType.equals("video/mp4")
+                            )
+            ) {
+
+                throw new RuntimeException(
+                        "Invalid file type. Only JPG, PNG, and MP4 are allowed."
+                );
+
             }
 
-            File directory = new File(UPLOAD_DIR);
+
+            File directory =
+                    new File(UPLOAD_DIR);
+
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
 
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            String fileName =
+                    UUID.randomUUID() +
+                            "_" +
+                            file.getOriginalFilename();
 
-            post.setMediaUrl("/uploads/posts/" + fileName);
-            post.setMediaType(contentType.startsWith("video") ? "VIDEO" : "IMAGE");
+
+            Path filePath =
+                    Paths.get(
+                            UPLOAD_DIR + fileName
+                    );
+
+
+            Files.copy(
+                    file.getInputStream(),
+                    filePath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+
+            post.setMediaUrl(
+                    "/uploads/posts/" + fileName
+            );
+
+            post.setMediaType(
+                    contentType.startsWith("video")
+                            ? "VIDEO"
+                            : "IMAGE"
+            );
+
         }
 
+
         postRepository.save(post);
+
 
         activityService.saveActivity(
                 user,
@@ -77,181 +144,718 @@ public class PostService {
                 post.getId()
         );
 
-        Profile profile = profileRepository.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        Profile profile =
+                profileRepository
+                        .findByUserEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Profile not found"
+                                )
+                        );
+
 
         return PostResponse.builder()
+
                 .id(post.getId())
+
                 .userEmail(user.getEmail())
+
                 .userFirstName(profile.getFirstName())
+
                 .userLastName(profile.getLastName())
+
+                .profilePicture(
+                        profile.getProfilePicture()
+                )
+
                 .content(post.getContent())
+
                 .mediaUrl(post.getMediaUrl())
+
                 .mediaType(post.getMediaType())
+
                 .createdAt(post.getCreatedAt())
+
                 .reactionsCount(Map.of())
+
                 .currentUserReaction(null)
+
                 .commentsCount(0)
+
                 .comments(new ArrayList<>())
+
                 .build();
     }
 
-    public List<PostResponse> getFeed(String email) {
-        User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<User> feedUsers = new ArrayList<>();
+    public List<PostResponse> getFeed(
+            String email
+    ) {
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
+
+
+        List<User> feedUsers =
+                new ArrayList<>();
+
         feedUsers.add(currentUser);
 
-        List<Friendship> friends = friendshipRepository.findAcceptedFriendships(currentUser);
+
+        List<Friendship> friends =
+                friendshipRepository
+                        .findAcceptedFriendships(
+                                currentUser
+                        );
+
+
         for (Friendship f : friends) {
-            if (f.getRequester().equals(currentUser)) {
-                feedUsers.add(f.getAddressee());
+
+            if (
+                    f.getRequester()
+                            .equals(currentUser)
+            ) {
+
+                feedUsers.add(
+                        f.getAddressee()
+                );
+
             } else {
-                feedUsers.add(f.getRequester());
+
+                feedUsers.add(
+                        f.getRequester()
+                );
+
             }
+
         }
 
-        List<Post> posts = postRepository.findByUserInOrderByCreatedAtDesc(feedUsers);
+
+        List<Post> posts =
+                postRepository
+                        .findByUserInOrderByCreatedAtDesc(
+                                feedUsers
+                        );
+
+
         if (posts.isEmpty()) {
             return new ArrayList<>();
         }
 
-        List<Profile> profiles = profileRepository.findByUserIn(feedUsers);
-        Map<String, Profile> profileMap = profiles.stream()
-                .collect(Collectors.toMap(p -> p.getUser().getEmail(), p -> p));
 
-        List<Comment> allComments = commentRepository.findByPostIn(posts);
-        Map<Long, List<Comment>> commentsByPostMap = allComments.stream()
-                .collect(Collectors.groupingBy(c -> c.getPost().getId()));
+        /*
+         * ==============================
+         * Comments
+         * ==============================
+         */
 
-        List<Reaction> allReactions = reactionRepository.findByPostIn(posts);
-        Map<Long, Map<String, Integer>> reactionsByPostMap = allReactions.stream()
-                .collect(Collectors.groupingBy(
-                        r -> r.getPost().getId(),
-                        Collectors.groupingBy(
-                                r -> r.getType().name(),
-                                Collectors.summingInt(r -> 1)
-                        )
-                ));
+        List<Comment> allComments =
+                commentRepository
+                        .findByPostIn(posts);
 
-        List<Reaction> currentUserReactions = reactionRepository.findByUserAndPostIn(currentUser, posts);
-        Map<Long, String> currentUserReactionMap = currentUserReactions.stream()
-                .collect(Collectors.toMap(
-                        r -> r.getPost().getId(),
-                        r -> r.getType().name(),
-                        (existing, replacement) -> existing
-                ));
 
-        return posts.stream().map(post -> {
-            Profile profile = profileMap.get(post.getUser().getEmail());
-            Map<String, Integer> postReactions = reactionsByPostMap.getOrDefault(post.getId(), Map.of());
-            String userReactionType = currentUserReactionMap.get(post.getId());
+        /*
+         * نجمع كل المستخدمين:
+         *
+         * أصحاب البوستات
+         * +
+         * أصحاب التعليقات
+         *
+         * عشان نجيب صورهم وأسمائهم.
+         */
 
-            List<Comment> postComments = commentsByPostMap.getOrDefault(post.getId(), new ArrayList<>());
-            List<CommentResponse> mappedComments = postComments.stream().map(c -> {
-                Profile commentUserProfile = profileMap.get(c.getUser().getEmail());
-                CommentResponse dto = new CommentResponse();
-                dto.setId(c.getId());
-                dto.setContent(c.getContent());
-                dto.setUserFirstName(commentUserProfile != null ? commentUserProfile.getFirstName() : "User");
-                dto.setUserLastName(commentUserProfile != null ? commentUserProfile.getLastName() : "");
-                dto.setCreatedAt(c.getCreatedAt());
-                return dto;
-            }).collect(Collectors.toList());
+        List<User> usersToFetchProfiles =
+                new ArrayList<>(
+                        feedUsers
+                );
 
-            return PostResponse.builder()
-                    .id(post.getId())
-                    .userEmail(post.getUser().getEmail())
-                    .userFirstName(profile.getFirstName())
-                    .userLastName(profile.getLastName())
-                    .content(post.getContent())
-                    .mediaUrl(post.getMediaUrl())
-                    .mediaType(post.getMediaType())
-                    .createdAt(post.getCreatedAt())
-                    .reactionsCount(postReactions)
-                    .currentUserReaction(userReactionType)
-                    .commentsCount(mappedComments.size())
-                    .comments(mappedComments)
-                    .build();
-        }).collect(Collectors.toList());
+
+        allComments.forEach(comment -> {
+
+            if (
+                    !usersToFetchProfiles
+                            .contains(comment.getUser())
+            ) {
+
+                usersToFetchProfiles.add(
+                        comment.getUser()
+                );
+
+            }
+
+        });
+
+
+        List<Profile> profiles =
+                profileRepository
+                        .findByUserIn(
+                                usersToFetchProfiles
+                        );
+
+
+        Map<String, Profile> profileMap =
+                profiles.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        p ->
+                                                p.getUser()
+                                                        .getEmail(),
+                                        p -> p
+                                )
+                        );
+
+
+        Map<Long, List<Comment>>
+                commentsByPostMap =
+                allComments.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        c ->
+                                                c.getPost()
+                                                        .getId()
+                                )
+                        );
+
+
+        /*
+         * ==============================
+         * Reactions
+         * ==============================
+         */
+
+        List<Reaction> allReactions =
+                reactionRepository
+                        .findByPostIn(posts);
+
+
+        Map<Long, Map<String, Integer>>
+                reactionsByPostMap =
+                allReactions.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        r ->
+                                                r.getPost()
+                                                        .getId(),
+
+                                        Collectors.groupingBy(
+                                                r ->
+                                                        r.getType()
+                                                                .name(),
+
+                                                Collectors.summingInt(
+                                                        r -> 1
+                                                )
+                                        )
+                                )
+                        );
+
+
+        List<Reaction>
+                currentUserReactions =
+                reactionRepository
+                        .findByUserAndPostIn(
+                                currentUser,
+                                posts
+                        );
+
+
+        Map<Long, String>
+                currentUserReactionMap =
+                currentUserReactions.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        r ->
+                                                r.getPost()
+                                                        .getId(),
+
+                                        r ->
+                                                r.getType()
+                                                        .name(),
+
+                                        (existing, replacement) ->
+                                                existing
+                                )
+                        );
+
+
+        /*
+         * ==============================
+         * Build Response
+         * ==============================
+         */
+
+        return posts.stream()
+
+                .map(post -> {
+
+                    Profile profile =
+                            profileMap.get(
+                                    post.getUser()
+                                            .getEmail()
+                            );
+
+
+                    Map<String, Integer>
+                            postReactions =
+                            reactionsByPostMap
+                                    .getOrDefault(
+                                            post.getId(),
+                                            Map.of()
+                                    );
+
+
+                    String userReactionType =
+                            currentUserReactionMap
+                                    .get(post.getId());
+
+
+                    List<Comment>
+                            postComments =
+                            commentsByPostMap
+                                    .getOrDefault(
+                                            post.getId(),
+                                            new ArrayList<>()
+                                    );
+
+
+                    List<CommentResponse>
+                            mappedComments =
+                            postComments.stream()
+                                    .map(comment -> {
+
+                                        Profile commentProfile =
+                                                profileMap.get(
+                                                        comment.getUser()
+                                                                .getEmail()
+                                                );
+
+
+                                        CommentResponse dto =
+                                                new CommentResponse();
+
+                                        dto.setId(
+                                                comment.getId()
+                                        );
+
+                                        dto.setContent(
+                                                comment.getContent()
+                                        );
+
+                                        dto.setUserEmail(
+                                                comment.getUser()
+                                                        .getEmail()
+                                        );
+
+                                        dto.setUserFirstName(
+                                                commentProfile != null
+                                                        ? commentProfile.getFirstName()
+                                                        : "User"
+                                        );
+
+                                        dto.setUserLastName(
+                                                commentProfile != null
+                                                        ? commentProfile.getLastName()
+                                                        : ""
+                                        );
+
+                                        dto.setProfilePictureUrl(
+                                                commentProfile != null
+                                                        ? commentProfile.getProfilePicture()
+                                                        : null
+                                        );
+
+                                        dto.setCreatedAt(
+                                                comment.getCreatedAt()
+                                        );
+
+                                        dto.setUpdatedAt(
+                                                comment.getUpdatedAt()
+                                        );
+
+                                        return dto;
+
+                                    })
+                                    .toList();
+
+
+                    return PostResponse.builder()
+
+                            .id(post.getId())
+
+                            .userEmail(
+                                    post.getUser()
+                                            .getEmail()
+                            )
+
+                            .userFirstName(
+                                    profile.getFirstName()
+                            )
+
+                            .userLastName(
+                                    profile.getLastName()
+                            )
+
+                            .profilePicture(
+                                    profile.getProfilePicture()
+                            )
+
+                            .content(
+                                    post.getContent()
+                            )
+
+                            .mediaUrl(
+                                    post.getMediaUrl()
+                            )
+
+                            .mediaType(
+                                    post.getMediaType()
+                            )
+
+                            .createdAt(
+                                    post.getCreatedAt()
+                            )
+
+                            .reactionsCount(
+                                    postReactions
+                            )
+
+                            .currentUserReaction(
+                                    userReactionType
+                            )
+
+                            .commentsCount(
+                                    mappedComments.size()
+                            )
+
+                            .comments(
+                                    mappedComments
+                            )
+
+                            .build();
+
+                })
+
+                .toList();
+
     }
 
-    // 👈 الدالة الجديدة لجلب بوستات البروفايل الخاص بيوزر محدد
-    public List<PostResponse> getUserPosts(Long targetUserId, String currentUserEmail) {
-        User currentUser = userRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
 
-        List<Post> posts = postRepository.findByUserIdOrderByCreatedAtDesc(targetUserId);
+    public List<PostResponse> getUserPosts(
+            Long targetUserId,
+            String currentUserEmail
+    ) {
+
+        User currentUser =
+                userRepository
+                        .findByEmail(currentUserEmail)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Current user not found"
+                                )
+                        );
+
+
+        List<Post> posts =
+                postRepository
+                        .findByUserIdOrderByCreatedAtDesc(
+                                targetUserId
+                        );
+
+
         if (posts.isEmpty()) {
             return new ArrayList<>();
         }
 
-        User targetUser = userRepository.findById(targetUserId)
-                .orElseThrow(() -> new RuntimeException("Target user not found"));
-        Profile targetProfile = profileRepository.findByUserEmail(targetUser.getEmail())
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        List<Comment> allComments = commentRepository.findByPostIn(posts);
-        Map<Long, List<Comment>> commentsByPostMap = allComments.stream()
-                .collect(Collectors.groupingBy(c -> c.getPost().getId()));
+        User targetUser =
+                userRepository
+                        .findById(targetUserId)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Target user not found"
+                                )
+                        );
 
-        List<Reaction> allReactions = reactionRepository.findByPostIn(posts);
-        Map<Long, Map<String, Integer>> reactionsByPostMap = allReactions.stream()
-                .collect(Collectors.groupingBy(
-                        r -> r.getPost().getId(),
-                        Collectors.groupingBy(
-                                r -> r.getType().name(),
-                                Collectors.summingInt(r -> 1)
+
+        Profile targetProfile =
+                profileRepository
+                        .findByUserEmail(
+                                targetUser.getEmail()
                         )
-                ));
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Profile not found"
+                                )
+                        );
 
-        List<Reaction> currentUserReactions = reactionRepository.findByUserAndPostIn(currentUser, posts);
-        Map<Long, String> currentUserReactionMap = currentUserReactions.stream()
-                .collect(Collectors.toMap(
-                        r -> r.getPost().getId(),
-                        r -> r.getType().name(),
-                        (existing, replacement) -> existing
-                ));
 
-        List<User> usersToFetchProfiles = new ArrayList<>();
-        usersToFetchProfiles.add(targetUser);
-        allComments.forEach(c -> usersToFetchProfiles.add(c.getUser()));
+        List<Comment> allComments =
+                commentRepository
+                        .findByPostIn(posts);
 
-        List<Profile> profiles = profileRepository.findByUserIn(usersToFetchProfiles);
-        Map<String, Profile> profileMap = profiles.stream()
-                .collect(Collectors.toMap(p -> p.getUser().getEmail(), p -> p));
 
-        return posts.stream().map(post -> {
-            Map<String, Integer> postReactions = reactionsByPostMap.getOrDefault(post.getId(), Map.of());
-            String userReactionType = currentUserReactionMap.get(post.getId());
+        List<Reaction> allReactions =
+                reactionRepository
+                        .findByPostIn(posts);
 
-            List<Comment> postComments = commentsByPostMap.getOrDefault(post.getId(), new ArrayList<>());
-            List<CommentResponse> mappedComments = postComments.stream().map(c -> {
-                Profile commentUserProfile = profileMap.get(c.getUser().getEmail());
-                CommentResponse dto = new CommentResponse();
-                dto.setId(c.getId());
-                dto.setContent(c.getContent());
-                dto.setUserFirstName(commentUserProfile != null ? commentUserProfile.getFirstName() : "User");
-                dto.setUserLastName(commentUserProfile != null ? commentUserProfile.getLastName() : "");
-                dto.setCreatedAt(c.getCreatedAt());
-                return dto;
-            }).collect(Collectors.toList());
 
-            return PostResponse.builder()
-                    .id(post.getId())
-                    .userEmail(post.getUser().getEmail())
-                    .userFirstName(targetProfile.getFirstName())
-                    .userLastName(targetProfile.getLastName())
-                    .content(post.getContent())
-                    .mediaUrl(post.getMediaUrl())
-                    .mediaType(post.getMediaType())
-                    .createdAt(post.getCreatedAt())
-                    .reactionsCount(postReactions)
-                    .currentUserReaction(userReactionType)
-                    .commentsCount(mappedComments.size())
-                    .comments(mappedComments)
-                    .build();
-        }).collect(Collectors.toList());
+        Map<Long, List<Comment>>
+                commentsByPostMap =
+                allComments.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        c ->
+                                                c.getPost()
+                                                        .getId()
+                                )
+                        );
+
+
+        Map<Long, Map<String, Integer>>
+                reactionsByPostMap =
+                allReactions.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        r ->
+                                                r.getPost()
+                                                        .getId(),
+
+                                        Collectors.groupingBy(
+                                                r ->
+                                                        r.getType()
+                                                                .name(),
+
+                                                Collectors.summingInt(
+                                                        r -> 1
+                                                )
+                                        )
+                                )
+                        );
+
+
+        List<Reaction>
+                currentUserReactions =
+                reactionRepository
+                        .findByUserAndPostIn(
+                                currentUser,
+                                posts
+                        );
+
+
+        Map<Long, String>
+                currentUserReactionMap =
+                currentUserReactions.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        r ->
+                                                r.getPost()
+                                                        .getId(),
+
+                                        r ->
+                                                r.getType()
+                                                        .name(),
+
+                                        (existing, replacement) ->
+                                                existing
+                                )
+                        );
+
+
+        List<User> usersToFetchProfiles =
+                new ArrayList<>();
+
+        usersToFetchProfiles.add(
+                targetUser
+        );
+
+
+        allComments.forEach(comment -> {
+
+            if (
+                    !usersToFetchProfiles
+                            .contains(comment.getUser())
+            ) {
+
+                usersToFetchProfiles.add(
+                        comment.getUser()
+                );
+
+            }
+
+        });
+
+
+        List<Profile> profiles =
+                profileRepository
+                        .findByUserIn(
+                                usersToFetchProfiles
+                        );
+
+
+        Map<String, Profile> profileMap =
+                profiles.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        p ->
+                                                p.getUser()
+                                                        .getEmail(),
+                                        p -> p
+                                )
+                        );
+
+
+        return posts.stream()
+
+                .map(post -> {
+
+                    Map<String, Integer>
+                            postReactions =
+                            reactionsByPostMap
+                                    .getOrDefault(
+                                            post.getId(),
+                                            Map.of()
+                                    );
+
+
+                    String userReactionType =
+                            currentUserReactionMap
+                                    .get(post.getId());
+
+
+                    List<Comment>
+                            postComments =
+                            commentsByPostMap
+                                    .getOrDefault(
+                                            post.getId(),
+                                            new ArrayList<>()
+                                    );
+
+
+                    List<CommentResponse>
+                            mappedComments =
+                            postComments.stream()
+                                    .map(comment -> {
+
+                                        Profile commentProfile =
+                                                profileMap.get(
+                                                        comment.getUser()
+                                                                .getEmail()
+                                                );
+
+
+                                        CommentResponse dto =
+                                                new CommentResponse();
+
+                                        dto.setId(
+                                                comment.getId()
+                                        );
+
+                                        dto.setContent(
+                                                comment.getContent()
+                                        );
+
+                                        dto.setUserEmail(
+                                                comment.getUser()
+                                                        .getEmail()
+                                        );
+
+                                        dto.setUserFirstName(
+                                                commentProfile != null
+                                                        ? commentProfile.getFirstName()
+                                                        : "User"
+                                        );
+
+                                        dto.setUserLastName(
+                                                commentProfile != null
+                                                        ? commentProfile.getLastName()
+                                                        : ""
+                                        );
+
+                                        dto.setProfilePictureUrl(
+                                                commentProfile != null
+                                                        ? commentProfile.getProfilePicture()
+                                                        : null
+                                        );
+
+                                        dto.setCreatedAt(
+                                                comment.getCreatedAt()
+                                        );
+
+                                        dto.setUpdatedAt(
+                                                comment.getUpdatedAt()
+                                        );
+
+                                        return dto;
+
+                                    })
+                                    .toList();
+
+
+                    return PostResponse.builder()
+
+                            .id(post.getId())
+
+                            .userEmail(
+                                    targetUser.getEmail()
+                            )
+
+                            .userFirstName(
+                                    targetProfile.getFirstName()
+                            )
+
+                            .userLastName(
+                                    targetProfile.getLastName()
+                            )
+
+                            .profilePicture(
+                                    targetProfile.getProfilePicture()
+                            )
+
+                            .content(
+                                    post.getContent()
+                            )
+
+                            .mediaUrl(
+                                    post.getMediaUrl()
+                            )
+
+                            .mediaType(
+                                    post.getMediaType()
+                            )
+
+                            .createdAt(
+                                    post.getCreatedAt()
+                            )
+
+                            .reactionsCount(
+                                    postReactions
+                            )
+
+                            .currentUserReaction(
+                                    userReactionType
+                            )
+
+                            .commentsCount(
+                                    mappedComments.size()
+                            )
+
+                            .comments(
+                                    mappedComments
+                            )
+
+                            .build();
+
+                })
+
+                .toList();
+
     }
+
 }

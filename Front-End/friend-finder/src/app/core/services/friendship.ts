@@ -1,37 +1,140 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FriendItem } from '../models/profile-model'; 
+
+export interface FriendRequestResponse {
+  requestId: number;
+  requesterEmail: string;
+  requesterFirstName: string;
+  requesterLastName: string;
+  status: string;
+}
+
+export interface FriendResponse {
+  id: number;
+  name: string;
+  initials: string;
+  gradient: 'from-burgundy' | 'from-gold';
+  mutualCount: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendshipService {
-  private apiUrl = 'http://localhost:9090/friend-finder/friends';
-  private http = inject(HttpClient);
 
-  // إرسال طلب صداقة (بنستقبل text لأن الباك إند بيرجع String)
-  sendFriendRequest(receiverId: number): Observable<string> {
-    return this.http.post(`${this.apiUrl}/request/${receiverId}`, {}, { responseType: 'text' });
+  private apiUrl =
+    'http://localhost:9090/friend-finder/friends';
+
+  constructor(
+    private http: HttpClient
+  ) {}
+
+
+  // =====================================================
+  // SEND FRIEND REQUEST BY USER ID
+  // =====================================================
+
+  sendFriendRequest(
+    receiverId: number
+  ): Observable<string> {
+
+    return this.http.post(
+      `${this.apiUrl}/request/${receiverId}`,
+      {},
+      {
+        responseType: 'text'
+      }
+    );
+
   }
 
-  // جلب قائمة الأصدقاء الفعليين
-  getMyFriends(): Observable<FriendItem[]> {
-    return this.http.get<FriendItem[]>(`${this.apiUrl}/my-friends`);
+
+  // =====================================================
+  // SEND FRIEND REQUEST BY EMAIL
+  // =====================================================
+
+  sendFriendRequestByEmail(
+    email: string
+  ): Observable<string> {
+
+    return this.http.post(
+      `${this.apiUrl}/request`,
+      null,
+      {
+        params: {
+          toEmail: email
+        },
+        responseType: 'text'
+      }
+    );
+
   }
 
-  // مسح صديق
-  removeFriend(friendId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/remove/${friendId}`);
+
+  // =====================================================
+  // GET PENDING REQUESTS
+  // =====================================================
+
+  getPendingRequests():
+    Observable<FriendRequestResponse[]> {
+
+    return this.http.get<FriendRequestResponse[]>(
+      `${this.apiUrl}/requests/pending`
+    );
+
   }
 
-  // جلب طلبات الصداقة المعلقة
-  getPendingRequests(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/requests/pending`);
+
+  // =====================================================
+  // ACCEPT / REJECT REQUEST
+  // =====================================================
+
+  respondToRequest(
+    requestId: number,
+    status: 'ACCEPTED' | 'REJECTED'
+  ): Observable<string> {
+
+    return this.http.put(
+      `${this.apiUrl}/requests/${requestId}`,
+      null,
+      {
+        params: {
+          status
+        },
+        responseType: 'text'
+      }
+    );
+
   }
 
-  // قبول أو رفض الطلب (ACCEPTED أو REJECTED)
-  respondToRequest(requestId: number, status: 'ACCEPTED' | 'REJECTED'): Observable<string> {
-    return this.http.put(`${this.apiUrl}/requests/${requestId}?status=${status}`, {}, { responseType: 'text' });
+
+  // =====================================================
+  // GET MY FRIENDS
+  // =====================================================
+
+  getMyFriends():
+    Observable<FriendResponse[]> {
+
+    return this.http.get<FriendResponse[]>(
+      `${this.apiUrl}/my-friends`
+    );
+
   }
+
+
+  // =====================================================
+  // REMOVE FRIEND
+  // =====================================================
+
+  removeFriend(
+    friendId: number
+  ): Observable<void> {
+
+    return this.http.delete<void>(
+      `${this.apiUrl}/remove/${friendId}`
+    );
+
+  }
+
 }

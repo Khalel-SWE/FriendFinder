@@ -1,22 +1,43 @@
 <article class="post-card">
+  <!-- ================= POST HEADER ================= -->
+
   <div class="post-head">
-    <div class="post-avatar">{{ post().authorInitials }}</div>
+    <div class="post-avatar">
+      @if (getProfileImageUrl(post().profilePicture)) {
+        <img [src]="getProfileImageUrl(post().profilePicture)!" [alt]="post().authorName" />
+      } @else {
+        <span>
+          {{ post().authorInitials }}
+        </span>
+      }
+    </div>
 
     <div>
-      <p class="post-author">{{ post().authorName }}</p>
-      <p class="post-time">{{ post().timeLabel }}</p>
+      <p class="post-author">
+        {{ post().authorName }}
+      </p>
+
+      <p class="post-time">
+        {{ post().timeLabel }}
+      </p>
     </div>
   </div>
 
+  <!-- ================= TEXT ================= -->
+
   @if (post().text) {
-    <p class="post-text">{{ post().text }}</p>
+    <p class="post-text">
+      {{ post().text }}
+    </p>
   }
+
+  <!-- ================= MEDIA ================= -->
 
   @if (post().mediaType) {
     <div class="post-media">
       @if (post().mediaUrl) {
         @if (post().mediaType === 'image') {
-          <img [src]="post().mediaUrl" alt="" />
+          <img [src]="post().mediaUrl" alt="Post image" />
         } @else {
           <video [src]="post().mediaUrl" controls></video>
         }
@@ -32,7 +53,9 @@
               stroke-width="1.4"
             >
               <rect x="3" y="3" width="18" height="18" rx="2" />
+
               <circle cx="8.5" cy="8.5" r="1.5" />
+
               <path d="M21 15l-5-5L5 21" />
             </svg>
           } @else {
@@ -52,24 +75,47 @@
     </div>
   }
 
+  <!-- ================= SUMMARY ================= -->
+
   <div class="post-summary">
     <span class="reactions-summary">
       @for (k of reactionKeys; track k) {
         @if (post().reactions[k] > 0) {
-          <span>{{ reactionIcons[k] }}</span>
+          <span>
+            {{ reactionIcons[k] }}
+          </span>
         }
       }
-      <span class="summary-count">{{ totalReactions() }}</span>
+
+      <span class="summary-count">
+        {{ totalReactions() }}
+      </span>
     </span>
 
-    <span>{{ post().commentsCount }} {{ lang.t('comments_label') }}</span>
+    <span>
+      {{ post().commentsCount }}
+      {{ lang.t('comments_label') }}
+    </span>
   </div>
+
+  <!-- ================= ACTIONS ================= -->
 
   <div class="post-actions">
     @for (k of reactionKeys; track k) {
-      <button type="button" class="reaction-btn" (click)="reactionClicked.emit(k)" [title]="k">
-        <span>{{ reactionIcons[k] }}</span>
-        <span class="count">{{ post().reactions[k] }}</span>
+      <button
+        type="button"
+        class="reaction-btn"
+        [class.active]="post().currentUserReaction === k"
+        (click)="reactionClicked.emit(k)"
+        [title]="k"
+      >
+        <span>
+          {{ reactionIcons[k] }}
+        </span>
+
+        <span class="count">
+          {{ post().reactions[k] }}
+        </span>
       </button>
     }
 
@@ -84,35 +130,107 @@
       >
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
+
       {{ post().commentsCount }}
     </button>
   </div>
 
+  <!-- ================= COMMENTS ================= -->
+
   @if (showComments()) {
     <div class="comments-section">
+      <!-- Add comment -->
+
       <div class="comment-composer">
         <input
           type="text"
           [(ngModel)]="newCommentText"
-          [placeholder]="lang.t('write_comment_ph') || 'Write a comment...'"
+          [placeholder]="lang.t('write_comment_ph')"
           (keyup.enter)="submitComment()"
         />
-        <button class="gold-btn px-4 py-1 rounded-full text-xs" (click)="submitComment()">
-          Send
+
+        <button
+          type="button"
+          class="gold-btn px-4 py-1 rounded-full text-xs"
+          (click)="submitComment()"
+        >
+          {{ lang.t('send') }}
         </button>
       </div>
+
+      <!-- Comment list -->
 
       <div class="comments-list">
         @for (c of comments(); track c.id) {
           <div class="comment-item">
-            <div class="comment-avatar">{{ getInitials(c.userFirstName, c.userLastName) }}</div>
+            <!-- Comment Avatar -->
+
+            <div class="comment-avatar">
+              @if (getProfileImageUrl(c.profilePictureUrl)) {
+                <img
+                  [src]="getProfileImageUrl(c.profilePictureUrl)!"
+                  [alt]="c.userFirstName + ' ' + c.userLastName"
+                />
+              } @else {
+                <span>
+                  {{ getInitials(c.userFirstName, c.userLastName) }}
+                </span>
+              }
+            </div>
+
+            <!-- Comment Content -->
+
             <div class="comment-content-box">
-              <p class="comment-user">{{ c.userFirstName }} {{ c.userLastName }}</p>
-              <p class="comment-text">{{ c.content }}</p>
+              <div class="comment-top">
+                <p class="comment-user">
+                  {{ c.userFirstName }}
+                  {{ c.userLastName }}
+                </p>
+
+                <div class="comment-actions">
+                  @if (canEditComment(c) && editingCommentId() !== c.id) {
+                    <button type="button" class="comment-action edit" (click)="startEditing(c)">
+                      {{ lang.t('edit') }}
+                    </button>
+                  }
+
+                  @if (canDeleteComment(c)) {
+                    <button type="button" class="comment-action delete" (click)="deleteComment(c)">
+                      {{ lang.t('delete') }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              @if (editingCommentId() === c.id) {
+                <div class="comment-edit-box">
+                  <input
+                    type="text"
+                    [(ngModel)]="editingCommentText"
+                    (keyup.enter)="saveEditedComment(c)"
+                  />
+
+                  <div class="comment-edit-actions">
+                    <button type="button" class="edit-save" (click)="saveEditedComment(c)">
+                      {{ lang.t('save') }}
+                    </button>
+
+                    <button type="button" class="edit-cancel" (click)="cancelEditing()">
+                      {{ lang.t('cancel') }}
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <p class="comment-text">
+                  {{ c.content }}
+                </p>
+              }
             </div>
           </div>
         } @empty {
-          <p class="text-xs text-center text-muted py-2">No comments yet. Be the first!</p>
+          <p class="text-xs text-center text-muted py-2">
+            {{ lang.t('no_comments') }}
+          </p>
         }
       </div>
     </div>

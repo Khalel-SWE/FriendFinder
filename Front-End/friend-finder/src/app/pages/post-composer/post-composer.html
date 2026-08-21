@@ -1,6 +1,14 @@
 <div class="composer">
   <div class="composer-row">
-    <div class="composer-avatar">{{ initials() }}</div>
+    <div class="composer-avatar">
+      @if (getProfileImageUrl()) {
+        <img [src]="getProfileImageUrl()!" [alt]="lang.t('my_profile')" />
+      } @else {
+        <span>
+          {{ initials() }}
+        </span>
+      }
+    </div>
 
     <textarea
       rows="2"
@@ -13,16 +21,14 @@
   @if (attachedPreviewUrl()) {
     <div class="composer-preview">
       @if (attachedType() === 'image') {
-        <img [src]="attachedPreviewUrl()" alt="" />
+        <img [src]="attachedPreviewUrl()!" alt="" />
       } @else {
-        <video [src]="attachedPreviewUrl()" controls></video>
+        <video [src]="attachedPreviewUrl()!" controls></video>
       }
 
       <button type="button" class="remove-attachment" (click)="removeAttachment()">✕</button>
     </div>
   }
-
-  <!-- <input #fileInput type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" /> -->
 
   <input
     #fileInput
@@ -43,7 +49,9 @@
         stroke-width="1.6"
       >
         <rect x="3" y="3" width="18" height="18" rx="2" />
+
         <circle cx="8.5" cy="8.5" r="1.5" />
+
         <path d="M21 15l-5-5L5 21" />
       </svg>
 
