@@ -137,5 +137,40 @@ admin_no_suggestions: {
     en: 'Are you sure you want to delete this comment?',
     ar: 'هل أنت متأكد أنك تريد حذف هذا التعليق؟',
     de: 'Möchtest du diesen Kommentar wirklich löschen?'
-  }
+  },
+  reaction_like: {
+  en: 'Like',
+  ar: 'إعجاب',
+  de: 'Gefällt mir'
+},
+
+reaction_love: {
+  en: 'Love',
+  ar: 'أحببته',
+  de: 'Liebe'
+},
+
+reaction_haha: {
+  en: 'Haha',
+  ar: 'هاها',
+  de: 'Haha'
+},
+
+reaction_wow: {
+  en: 'Wow',
+  ar: 'واو',
+  de: 'Wow'
+},
+
+reaction_sad: {
+  en: 'Sad',
+  ar: 'حزين',
+  de: 'Traurig'
+},
+
+reaction_angry: {
+  en: 'Angry',
+  ar: 'غاضب',
+  de: 'Wütend'
+}
 };

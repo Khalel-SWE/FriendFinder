@@ -1,9 +1,11 @@
 <div class="acct-wrap">
-  <button
-    class="flex items-center gap-2 hover:bg-white/5 p-1 pr-3 rounded-full transition"
-    (click)="toggle()"
-    type="button"
-  >
+  <!-- =====================================================
+       ACCOUNT BUTTON
+       ===================================================== -->
+
+  <button type="button" class="account-trigger" (click)="toggle()">
+    <!-- Avatar -->
+
     <div class="acct-avatar">
       @if (getProfileImageUrl()) {
         <img [src]="getProfileImageUrl()!" [alt]="fullName()" />
@@ -14,10 +16,16 @@
       }
     </div>
 
-    <span class="text-white/90 text-sm font-medium tracking-wide">
+    <!-- Name -->
+
+    <span class="acct-name">
       {{ fullName() }}
     </span>
   </button>
+
+  <!-- =====================================================
+       ACCOUNT MENU
+       ===================================================== -->
 
   @if (open()) {
     <div class="acct-menu">

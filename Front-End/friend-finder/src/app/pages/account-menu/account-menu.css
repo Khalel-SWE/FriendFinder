@@ -3,24 +3,62 @@
 }
 
 
-/* =========================
-   Account Avatar
-   ========================= */
+/* =====================================================
+   ACCOUNT BUTTON
+   ===================================================== */
+
+.account-trigger {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .55rem;
+
+  padding: .25rem .7rem .25rem .25rem;
+
+  border: none;
+
+  border-radius: 9999px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease;
+}
+
+
+.account-trigger:hover {
+
+  background:
+    rgba(255, 255, 255, .05);
+
+}
+
+
+/* =====================================================
+   AVATAR
+   ===================================================== */
 
 .acct-avatar {
 
   width: 36px;
+
   height: 36px;
-
-  border-radius: 9999px;
-
-  border: none;
-
-  overflow: hidden;
 
   flex-shrink: 0;
 
-  cursor: pointer;
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
 
   background:
     linear-gradient(
@@ -29,26 +67,22 @@
       #D9B769
     );
 
-  box-shadow:
-    0 0 0 2px var(--gold);
+  color: #17130E;
 
   font-size: .7rem;
 
   font-weight: 700;
 
-  color: #17130E;
+  box-shadow:
+    0 0 0 2px var(--gold);
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
 }
 
 
 .acct-avatar img {
 
   width: 100%;
+
   height: 100%;
 
   display: block;
@@ -58,9 +92,33 @@
 }
 
 
-/* =========================
-   Account Menu
-   ========================= */
+/* =====================================================
+   NAME
+   ===================================================== */
+
+.acct-name {
+
+  color:
+    rgba(255, 255, 255, .90);
+
+  font-size: .85rem;
+
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  max-width: 140px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+
+/* =====================================================
+   DROPDOWN
+   ===================================================== */
 
 .acct-menu {
 
@@ -68,7 +126,7 @@
 
   inset-inline-end: 0;
 
-  margin-top: .5rem;
+  top: calc(100% + .5rem);
 
   width: 210px;
 
@@ -77,20 +135,23 @@
   color: var(--text);
 
   border:
-    1px solid
-    var(--ivory-2);
+    1px solid var(--ivory-2);
 
   border-radius: 10px;
 
   box-shadow:
     0 15px 30px
-    rgba(0, 0, 0, .2);
+    rgba(0, 0, 0, .20);
 
   overflow: hidden;
 
-  z-index: 50;
+  z-index: 2000;
 }
 
+
+/* =====================================================
+   ITEMS
+   ===================================================== */
 
 .acct-item {
 
@@ -106,20 +167,30 @@
 
   cursor: pointer;
 
-  padding: .65rem 1rem;
+  padding:
+    .65rem
+    1rem;
 
   font-size: .85rem;
 
   color: var(--text);
+
+  transition:
+    background .15s ease;
 }
 
 
 .acct-item:hover {
 
-  background: var(--ivory);
+  background:
+    var(--ivory);
 
 }
 
+
+/* =====================================================
+   DIVIDER
+   ===================================================== */
 
 .acct-divider {
 
@@ -130,10 +201,23 @@
 }
 
 
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
 .acct-logout {
 
-  color: var(--burgundy);
+  color:
+    var(--burgundy);
 
   font-weight: 600;
+
+}
+
+
+.acct-logout:hover {
+
+  background:
+    rgba(92, 26, 43, .06);
 
 }

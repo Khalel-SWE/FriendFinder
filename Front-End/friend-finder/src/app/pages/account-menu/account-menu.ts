@@ -1,5 +1,19 @@
-import { Component, OnInit, signal, HostListener, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  signal,
+  HostListener,
+  ElementRef
+} from '@angular/core';
+
+import {
+  Router,
+  NavigationEnd
+} from '@angular/router';
+
+import { filter, Subscription } from 'rxjs';
+
 import { LanguageService } from '../../core/services/language';
 import { ProfileService } from '../../core/services/profile';
 
@@ -10,7 +24,7 @@ import { ProfileService } from '../../core/services/profile';
   templateUrl: './account-menu.html',
   styleUrl: './account-menu.css'
 })
-export class AccountMenu implements OnInit {
+export class AccountMenu implements OnInit, OnDestroy {
 
   open = signal(false);
 
@@ -19,6 +33,8 @@ export class AccountMenu implements OnInit {
   initials = signal<string>('..');
 
   profilePicture = signal<string | null>(null);
+
+  private routerEventsSubscription?: Subscription;
 
 
   constructor(
@@ -31,41 +47,97 @@ export class AccountMenu implements OnInit {
 
   ngOnInit(): void {
 
-    this.profileService.getMyProfile().subscribe({
+    /*
+     * تحميل البروفايل أول مرة
+     */
+    this.loadProfile();
 
-      next: (res) => {
 
-        this.fullName.set(
-          `${res.firstName} ${res.lastName}`
-        );
+    /*
+     * كل Navigation جديد:
+     *
+     * مثال:
+     * Edit Profile
+     *     ↓
+     * Save
+     *     ↓
+     * Profile
+     *
+     * نعيد تحميل الداتا
+     * عشان الصورة الجديدة تظهر في الـ Header.
+     */
+    this.routerEventsSubscription =
+      this.router.events
+        .pipe(
+          filter(
+            event => event instanceof NavigationEnd
+          )
+        )
+        .subscribe(() => {
 
-        this.initials.set(
-          (
-            res.firstName.charAt(0) +
-            res.lastName.charAt(0)
-          ).toUpperCase()
-        );
+          this.loadProfile();
 
-        this.profilePicture.set(
-          res.profilePicture ?? null
-        );
+        });
+  }
 
-      },
 
-      error: (err) => {
+  ngOnDestroy(): void {
 
-        console.error(
-          'Failed to load current user profile',
-          err
-        );
-
-      }
-
-    });
+    this.routerEventsSubscription?.unsubscribe();
 
   }
 
 
+  /*
+   * =====================================================
+   * LOAD PROFILE
+   * =====================================================
+   */
+  private loadProfile(): void {
+
+    this.profileService
+      .getMyProfile()
+      .subscribe({
+
+        next: (res) => {
+
+          this.fullName.set(
+            `${res.firstName} ${res.lastName}`
+          );
+
+
+          this.initials.set(
+            (
+              (res.firstName?.charAt(0) || '') +
+              (res.lastName?.charAt(0) || '')
+            ).toUpperCase()
+          );
+
+
+          this.profilePicture.set(
+            res.profilePicture || null
+          );
+
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Failed to load account profile',
+            err
+          );
+
+        }
+
+      });
+  }
+
+
+  /*
+   * =====================================================
+   * PROFILE IMAGE URL
+   * =====================================================
+   */
   getProfileImageUrl(): string | null {
 
     const picture = this.profilePicture();
@@ -74,12 +146,19 @@ export class AccountMenu implements OnInit {
       return null;
     }
 
-    return picture.startsWith('http')
-      ? picture
-      : 'http://localhost:9090' + picture;
+    if (picture.startsWith('http')) {
+      return picture;
+    }
+
+    return `http://localhost:9090${picture}`;
   }
 
 
+  /*
+   * =====================================================
+   * MENU
+   * =====================================================
+   */
   toggle(): void {
 
     this.open.update(
@@ -96,6 +175,11 @@ export class AccountMenu implements OnInit {
   }
 
 
+  /*
+   * =====================================================
+   * NAVIGATION
+   * =====================================================
+   */
   goTo(path: string): void {
 
     this.router.navigateByUrl(path);
@@ -105,38 +189,9 @@ export class AccountMenu implements OnInit {
   }
 
 
-  logout(): void {
-
-    localStorage.removeItem('auth_token');
-
-    localStorage.removeItem('role');
-
-    this.router.navigateByUrl('/login');
-
-    this.close();
-
-  }
-
-
-  @HostListener('document:click', ['$event'])
-  clickout(event: Event): void {
-
-    if (
-      !this.eRef.nativeElement.contains(
-        event.target
-      )
-    ) {
-
-      this.close();
-
-    }
-
-  }
-
-
   goToEditProfile(): void {
 
-    this.open.set(false);
+    this.close();
 
     this.router.navigate([
       '/edit-profile'
@@ -144,4 +199,49 @@ export class AccountMenu implements OnInit {
 
   }
 
+
+  /*
+   * =====================================================
+   * LOGOUT
+   * =====================================================
+   */
+  logout(): void {
+
+    localStorage.removeItem(
+      'auth_token'
+    );
+
+    localStorage.removeItem(
+      'role'
+    );
+
+    this.router.navigateByUrl(
+      '/login'
+    );
+
+    this.close();
+
+  }
+
+
+  /*
+   * =====================================================
+   * CLICK OUTSIDE
+   * =====================================================
+   */
+  @HostListener(
+    'document:click',
+    ['$event']
+  )
+  clickout(event: Event): void {
+
+    if (
+      !this.eRef.nativeElement
+        .contains(event.target)
+    ) {
+
+      this.close();
+
+    }
+  }
 }
