@@ -41,41 +41,41 @@ public class FriendshipController {
     }
 
     // إرسال طلب باستخدام الـ ID
-//    @PostMapping("/request/{receiverId}")
-//    public ResponseEntity<String> sendFriendRequestById(
-//            Authentication authentication,
-//            @PathVariable Long receiverId) {
-//        return ResponseEntity.ok(friendshipService.sendFriendRequestById(authentication.getName(), receiverId));
-//    }
-
     @PostMapping("/request/{receiverId}")
     public ResponseEntity<String> sendFriendRequestById(
             Authentication authentication,
             @PathVariable Long receiverId) {
-
-        System.out.println(
-                "========== FRIEND REQUEST =========="
-        );
-
-        System.out.println(
-                "Requester: " + authentication.getName()
-        );
-
-        System.out.println(
-                "Receiver ID: " + receiverId
-        );
-
-        System.out.println(
-                "===================================="
-        );
-
-        return ResponseEntity.ok(
-                friendshipService.sendFriendRequestById(
-                        authentication.getName(),
-                        receiverId
-                )
-        );
+        return ResponseEntity.ok(friendshipService.sendFriendRequestById(authentication.getName(), receiverId));
     }
+
+//    @PostMapping("/request/{receiverId}")
+//    public ResponseEntity<String> sendFriendRequestById(
+//            Authentication authentication,
+//            @PathVariable Long receiverId) {
+//
+//        System.out.println(
+//                "========== FRIEND REQUEST =========="
+//        );
+//
+//        System.out.println(
+//                "Requester: " + authentication.getName()
+//        );
+//
+//        System.out.println(
+//                "Receiver ID: " + receiverId
+//        );
+//
+//        System.out.println(
+//                "===================================="
+//        );
+//
+//        return ResponseEntity.ok(
+//                friendshipService.sendFriendRequestById(
+//                        authentication.getName(),
+//                        receiverId
+//                )
+//        );
+//    }
 
     // جلب قائمة الأصدقاء للبروفايل
     @GetMapping("/my-friends")
