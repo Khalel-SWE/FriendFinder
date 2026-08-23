@@ -19,6 +19,7 @@
             [userId]="profile()?.id"
             [isMyProfile]="isMyProfile()"
             [canViewPosts]="profile()?.canViewPosts ?? false"
+            [profileActivities]="profile()?.recentActivities ?? []"
           >
           </app-profile-timeline-tab>
         }

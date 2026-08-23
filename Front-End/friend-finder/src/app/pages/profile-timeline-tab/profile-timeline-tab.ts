@@ -295,6 +295,9 @@ import {
 } from '../../core/models/post-model';
 
 import { PostService } from '../../core/services/post';
+import {
+  ProfileActivity
+} from '../../core/models/profile-model';
 
 @Component({
   selector: 'app-profile-timeline-tab',
@@ -318,6 +321,9 @@ export class ProfileTimelineTab
 
   @Input()
   canViewPosts: boolean = false;
+
+  @Input()
+profileActivities: ProfileActivity[] = [];
 
   private postService =
     inject(PostService);

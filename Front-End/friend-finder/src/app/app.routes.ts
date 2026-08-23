@@ -24,7 +24,20 @@ export const routes: Routes = [
   
   // صفحة الفيد بعد تسجيل الدخول
   { path: 'feed', component: HomeFeed, canActivate: [authGuard] },
-  { path: 'profile', component: ProfilePage }, // 👈 إضافة طريق البروفايل
+  // { path: 'profile', component: ProfilePage }, // 👈 إضافة طريق البروفايل
+
+  { 
+  path: 'profile',
+  component: ProfilePage,
+  canActivate: [authGuard]
+},
+
+{
+  path: 'profile/:id',
+  component: ProfilePage,
+  canActivate: [authGuard]
+},
+
   { path: 'edit-profile', component: EditProfile, canActivate: [authGuard] },
   
   { path: 'login', component: Login, canActivate: [noAuthGuard]},

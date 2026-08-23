@@ -47,68 +47,82 @@
       <!-- ================= ACTIONS ================= -->
 
       @if (isMyProfile) {
-        <button type="button" (click)="goToEdit()" class="profile-action primary-action">
+        <button
+          type="button"
+          (click)="goToEdit()"
+          class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
+          style="background: #c9a24b; color: #17130e"
+        >
           Edit Profile
         </button>
       } @else {
-        @switch (relationshipStatus) {
-          <!-- ================= NONE ================= -->
-
+        @switch (profile.relationshipStatus) {
           @case ('NONE') {
             <button
               type="button"
+              [disabled]="actionLoading"
               (click)="sendFriendRequest()"
-              class="profile-action primary-action"
+              class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
+              style="background: #c9a24b; color: #17130e"
             >
-              Add Friend
+              {{ actionLoading ? 'Sending...' : 'Add Friend' }}
             </button>
           }
 
-          <!-- ================= OUTGOING PENDING ================= -->
-
           @case ('OUTGOING_PENDING') {
-            <button type="button" class="profile-action secondary-action" disabled>
+            <button
+              type="button"
+              disabled
+              class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block"
+              style="border: 1px solid #c9a24b; color: #c9a24b; background: transparent"
+            >
               Request Sent
             </button>
           }
 
-          <!-- ================= INCOMING PENDING ================= -->
-
           @case ('INCOMING_PENDING') {
-            <div class="profile-actions-group">
+            <div class="ms-auto mb-2 hidden sm:flex items-center gap-2">
               <button
                 type="button"
+                [disabled]="actionLoading"
                 (click)="acceptFriendRequest()"
-                class="profile-action primary-action"
+                class="px-5 py-2 rounded-full text-sm font-semibold transition"
+                style="background: #c9a24b; color: #17130e"
               >
                 Accept
               </button>
 
               <button
                 type="button"
+                [disabled]="actionLoading"
                 (click)="rejectFriendRequest()"
-                class="profile-action danger-action"
+                class="px-5 py-2 rounded-full text-sm font-semibold transition"
+                style="border: 1px solid #dc3545; color: #dc3545; background: transparent"
               >
                 Reject
               </button>
             </div>
           }
 
-          <!-- ================= FRIEND ================= -->
-
           @case ('FRIEND') {
-            <button type="button" (click)="unfriend()" class="profile-action danger-action">
-              Unfriend
+            <button
+              type="button"
+              [disabled]="actionLoading"
+              (click)="unfriend()"
+              class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
+              style="border: 1px solid #dc3545; color: #dc3545; background: transparent"
+            >
+              {{ actionLoading ? 'Removing...' : 'Unfriend' }}
             </button>
           }
         }
       }
+
+      <!-- ================= MOBILE NAME ================= -->
+
+      <p class="sm:hidden font-display text-xl text-text -mt-1">
+        {{ fullName }}
+      </p>
     </div>
-
-    <!-- ================= MOBILE NAME ================= -->
-
-    <p class="sm:hidden font-display text-xl text-text -mt-1">
-      {{ fullName }}
-    </p>
   </div>
 </div>
