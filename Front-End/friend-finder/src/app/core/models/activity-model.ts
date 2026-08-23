@@ -2,10 +2,15 @@ export interface ActivityResponse {
 
   id: number;
 
-  activityType: string;
+  activityType:
+    | 'POST_CREATED'
+    | 'COMMENT_CREATED'
+    | 'REACTION_ADDED'
+    | 'FRIEND_ADDED';
 
-  referenceId: number;
+  referenceId: number | null;
+
+  targetName: string | null;
 
   createdAt: string;
-
 }

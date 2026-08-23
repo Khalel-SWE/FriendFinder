@@ -1,58 +1,114 @@
 <div class="relative">
-  <!-- 👇 الغلاف 👇 -->
-  <!-- 👇 الغلاف: ضفنا ستايل يمنع التكرار ويظبط المقاس 👇 -->
+  <!-- ================= COVER ================= -->
+
   <div
     class="cover-photo h-52 sm:h-64"
     [style.backgroundImage]="
       profile.coverPhoto ? 'url(http://localhost:9090' + profile.coverPhoto + ')' : null
     "
-    style="background-size: cover; background-position: center; background-repeat: no-repeat"
   ></div>
+
+  <!-- ================= PROFILE CONTENT ================= -->
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
     <div class="relative -mt-16 flex items-end gap-4 pb-3">
-      <!-- 👇 الصورة الشخصية 👇 -->
+      <!-- ================= AVATAR ================= -->
+
       @if (profile.profilePicture) {
         <img
-          [src]="'http://localhost:9090' + profile.profilePicture"
-          alt="Avatar"
+          [src]="getImageUrl(profile.profilePicture)!"
+          [alt]="fullName"
           class="profile-avatar w-28 h-28 rounded-full border-4 border-[#161110] object-cover shrink-0"
         />
       } @else {
         <div
           class="profile-avatar w-28 h-28 rounded-full flex items-center justify-center text-2xl font-bold border-4 border-[#161110] shrink-0"
-          style="background-image: linear-gradient(135deg, #b4893a, #d9b769); color: #17130e"
         >
           {{ initials }}
         </div>
       }
 
+      <!-- ================= NAME ================= -->
+
       <div class="pb-2 hidden sm:block">
-        <p class="font-display text-2xl text-text leading-none">{{ fullName }}</p>
+        <p class="font-display text-2xl text-text leading-none">
+          {{ fullName }}
+        </p>
+
         <p class="text-xs tracking-widest uppercase text-muted mt-1">
-          {{ profile.location }} · Member since {{ memberSince }}
+          @if (profile.location) {
+            {{ profile.location }} ·
+          }
+
+          Member since {{ memberSince }}
         </p>
       </div>
 
-      <!-- 👇 الزراير 👇 -->
+      <!-- ================= ACTIONS ================= -->
+
       @if (isMyProfile) {
-        <button
-          type="button"
-          (click)="goToEdit()"
-          class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
-          style="background: #c9a24b; color: #17130e"
-        >
+        <button type="button" (click)="goToEdit()" class="profile-action primary-action">
           Edit Profile
         </button>
       } @else {
-        <button
-          class="ms-auto mb-2 px-5 py-2 rounded-full text-sm font-semibold hidden sm:inline-block transition"
-          style="border: 1px solid #dc3545; color: #dc3545; background: transparent"
-        >
-          Unfriend
-        </button>
+        @switch (relationshipStatus) {
+          <!-- ================= NONE ================= -->
+
+          @case ('NONE') {
+            <button
+              type="button"
+              (click)="sendFriendRequest()"
+              class="profile-action primary-action"
+            >
+              Add Friend
+            </button>
+          }
+
+          <!-- ================= OUTGOING PENDING ================= -->
+
+          @case ('OUTGOING_PENDING') {
+            <button type="button" class="profile-action secondary-action" disabled>
+              Request Sent
+            </button>
+          }
+
+          <!-- ================= INCOMING PENDING ================= -->
+
+          @case ('INCOMING_PENDING') {
+            <div class="profile-actions-group">
+              <button
+                type="button"
+                (click)="acceptFriendRequest()"
+                class="profile-action primary-action"
+              >
+                Accept
+              </button>
+
+              <button
+                type="button"
+                (click)="rejectFriendRequest()"
+                class="profile-action danger-action"
+              >
+                Reject
+              </button>
+            </div>
+          }
+
+          <!-- ================= FRIEND ================= -->
+
+          @case ('FRIEND') {
+            <button type="button" (click)="unfriend()" class="profile-action danger-action">
+              Unfriend
+            </button>
+          }
+        }
       }
     </div>
-    <p class="sm:hidden font-display text-xl text-text -mt-1">{{ fullName }}</p>
+
+    <!-- ================= MOBILE NAME ================= -->
+
+    <p class="sm:hidden font-display text-xl text-text -mt-1">
+      {{ fullName }}
+    </p>
   </div>
 </div>

@@ -1,33 +1,294 @@
-import { Component, Input, inject } from '@angular/core'; // 👈 ضفنا inject هنا
-import { ProfileResponse } from '../../core/models/profile-model';
-import { Router, RouterModule } from '@angular/router'; // 👈 ضفنا Router هنا
+// import { Component, Input, inject } from '@angular/core'; // 👈 ضفنا inject هنا
+// import { ProfileResponse } from '../../core/models/profile-model';
+// import { Router, RouterModule } from '@angular/router'; // 👈 ضفنا Router هنا
+
+// @Component({
+//   selector: 'app-profile-cover',
+//   standalone: true,
+//   imports: [RouterModule], 
+//   templateUrl: './profile-cover.html',
+//   styleUrl: './profile-cover.css'
+// })
+// export class ProfileCover {
+//   @Input() profile!: ProfileResponse;
+//   @Input() memberSince?: string;
+  
+//   @Input() isMyProfile: boolean = true; 
+
+//   get initials(): string {
+//     if (!this.profile) return '';
+//     return (this.profile.firstName?.charAt(0) || '') + (this.profile.lastName?.charAt(0) || '');
+//   }
+
+//   get fullName(): string {
+//     if (!this.profile) return '';
+//     return `${this.profile.firstName} ${this.profile.lastName}`;
+//   }
+
+//   private router = inject(Router);
+
+//   goToEdit() {
+//     this.router.navigate(['/edit-profile']);
+//   }
+// }
+
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject
+} from '@angular/core';
+
+import {
+  ProfileResponse,
+  RelationshipStatus
+} from '../../core/models/profile-model';
+
+import {
+  FriendshipService
+} from '../../core/services/friendship';
+
+import {
+  Router,
+  RouterModule
+} from '@angular/router';
 
 @Component({
   selector: 'app-profile-cover',
   standalone: true,
-  imports: [RouterModule], 
+  imports: [RouterModule],
   templateUrl: './profile-cover.html',
   styleUrl: './profile-cover.css'
 })
 export class ProfileCover {
+
   @Input() profile!: ProfileResponse;
+
   @Input() memberSince?: string;
-  
-  @Input() isMyProfile: boolean = true; 
 
-  get initials(): string {
-    if (!this.profile) return '';
-    return (this.profile.firstName?.charAt(0) || '') + (this.profile.lastName?.charAt(0) || '');
-  }
+  @Input() isMyProfile = true;
 
-  get fullName(): string {
-    if (!this.profile) return '';
-    return `${this.profile.firstName} ${this.profile.lastName}`;
-  }
+  @Output()
+  relationshipChanged =
+    new EventEmitter<void>();
 
   private router = inject(Router);
 
-  goToEdit() {
-    this.router.navigate(['/edit-profile']);
+  private friendshipService =
+    inject(FriendshipService);
+
+  // =====================================================
+  // DISPLAY
+  // =====================================================
+
+  get initials(): string {
+
+    if (!this.profile) {
+      return '';
+    }
+
+    const first =
+      this.profile.firstName?.charAt(0) ?? '';
+
+    const last =
+      this.profile.lastName?.charAt(0) ?? '';
+
+    return (
+      first + last
+    ).toUpperCase();
+  }
+
+  get fullName(): string {
+
+    if (!this.profile) {
+      return '';
+    }
+
+    return `${this.profile.firstName} ${this.profile.lastName}`;
+  }
+
+  // =====================================================
+  // IMAGE URL
+  // =====================================================
+
+  getImageUrl(
+    path: string | null
+  ): string | null {
+
+    if (!path) {
+      return null;
+    }
+
+    return path.startsWith('http')
+      ? path
+      : `http://localhost:9090${path}`;
+  }
+
+  // =====================================================
+  // EDIT PROFILE
+  // =====================================================
+
+  goToEdit(): void {
+
+    this.router.navigate([
+      '/edit-profile'
+    ]);
+  }
+
+  // =====================================================
+  // SEND FRIEND REQUEST
+  // =====================================================
+
+  sendFriendRequest(): void {
+
+    if (!this.profile?.id) {
+      return;
+    }
+
+    this.friendshipService
+      .sendFriendRequest(this.profile.id)
+      .subscribe({
+
+        next: () => {
+
+          this.relationshipChanged.emit();
+
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Error sending friend request:',
+            err
+          );
+        }
+
+      });
+  }
+
+  // =====================================================
+  // ACCEPT FRIEND REQUEST
+  // =====================================================
+
+  acceptFriendRequest(): void {
+
+    const requestId =
+      this.profile.pendingRequestId;
+
+    if (!requestId) {
+      return;
+    }
+
+    this.friendshipService
+      .respondToRequest(
+        requestId,
+        'ACCEPTED'
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.relationshipChanged.emit();
+
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Error accepting friend request:',
+            err
+          );
+        }
+
+      });
+  }
+
+  // =====================================================
+  // REJECT FRIEND REQUEST
+  // =====================================================
+
+  rejectFriendRequest(): void {
+
+    const requestId =
+      this.profile.pendingRequestId;
+
+    if (!requestId) {
+      return;
+    }
+
+    this.friendshipService
+      .respondToRequest(
+        requestId,
+        'REJECTED'
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.relationshipChanged.emit();
+
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Error rejecting friend request:',
+            err
+          );
+        }
+
+      });
+  }
+
+  // =====================================================
+  // UNFRIEND
+  // =====================================================
+
+  unfriend(): void {
+
+    if (!this.profile?.id) {
+      return;
+    }
+
+    const confirmed =
+      window.confirm(
+        'Are you sure you want to remove this friendship?'
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.friendshipService
+      .removeFriend(this.profile.id)
+      .subscribe({
+
+        next: () => {
+
+          this.relationshipChanged.emit();
+
+        },
+
+        error: (err: unknown) => {
+
+          console.error(
+            'Error removing friend:',
+            err
+          );
+        }
+
+      });
+  }
+
+  // =====================================================
+  // RELATIONSHIP
+  // =====================================================
+
+  get relationshipStatus():
+    RelationshipStatus {
+
+    return this.profile
+      ?.relationshipStatus ?? 'NONE';
   }
 }

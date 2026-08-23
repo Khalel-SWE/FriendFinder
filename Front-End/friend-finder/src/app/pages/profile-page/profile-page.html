@@ -8,38 +8,61 @@
     </app-profile-cover>
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <app-profile-tabs-nav
-        [active]="activeTab()"
-        (tabChange)="onTabChange($event)"
-      ></app-profile-tabs-nav>
+      <app-profile-tabs-nav [active]="activeTab()" (tabChange)="onTabChange($event)">
+      </app-profile-tabs-nav>
     </div>
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
       @switch (activeTab()) {
         @case ('timeline') {
-          <!-- ضفنا [isMyProfile] هنا 👇 -->
-          <app-profile-timeline-tab [userId]="profile()?.id" [isMyProfile]="isMyProfile()">
+          <app-profile-timeline-tab
+            [userId]="profile()?.id"
+            [isMyProfile]="isMyProfile()"
+            [canViewPosts]="profile()?.canViewPosts ?? false"
+          >
           </app-profile-timeline-tab>
         }
+
         @case ('about') {
-          <app-profile-about-tab [profile]="profile()!"></app-profile-about-tab>
+          <app-profile-about-tab [profile]="profile()!"> </app-profile-about-tab>
         }
+
         @case ('friends') {
-          <app-profile-friends-tab></app-profile-friends-tab>
+          @if (isMyProfile() || profile()?.canViewPosts) {
+            <app-profile-friends-tab> </app-profile-friends-tab>
+          } @else {
+            <div class="ff-card p-8 text-center">
+              <p class="text-sm" style="color: var(--muted)">
+                You need to be friends to see this section.
+              </p>
+            </div>
+          }
         }
+
         @case ('photos') {
-          <!-- ضفنا الـ userId هنا 👇 -->
-          <app-profile-media-grid
-            mediaType="photo"
-            [userId]="profile()?.id"
-          ></app-profile-media-grid>
+          @if (isMyProfile() || profile()?.canViewPosts) {
+            <app-profile-media-grid mediaType="photo" [userId]="profile()?.id">
+            </app-profile-media-grid>
+          } @else {
+            <div class="ff-card p-8 text-center">
+              <p class="text-sm" style="color: var(--muted)">
+                You need to be friends to see this section.
+              </p>
+            </div>
+          }
         }
+
         @case ('videos') {
-          <!-- وضفنا الـ userId هنا 👇 -->
-          <app-profile-media-grid
-            mediaType="video"
-            [userId]="profile()?.id"
-          ></app-profile-media-grid>
+          @if (isMyProfile() || profile()?.canViewPosts) {
+            <app-profile-media-grid mediaType="video" [userId]="profile()?.id">
+            </app-profile-media-grid>
+          } @else {
+            <div class="ff-card p-8 text-center">
+              <p class="text-sm" style="color: var(--muted)">
+                You need to be friends to see this section.
+              </p>
+            </div>
+          }
         }
       }
     </div>

@@ -5,17 +5,17 @@
   <h3 class="font-display text-lg font-bold mb-4" style="color: var(--gold)">Recent Activity</h3>
 
   <div class="flex flex-col gap-4">
-    @for (activity of activities(); track activity.id) {
+    @for (activity of activities; track activity.id) {
       <div class="flex items-start gap-3">
-        <!-- نقطة ذهبية صغيرة جنب كل نشاط -->
-        <span style="color: var(--gold); font-size: 1.2rem; line-height: 1">•</span>
+        <span style="color: var(--gold); font-size: 1.2rem; line-height: 1"> • </span>
 
         <div>
           <p class="text-sm font-semibold" style="color: var(--text)">
-            {{ activity.text }}
+            {{ getActivityText(activity) }}
           </p>
+
           <p class="text-xs mt-1" style="color: var(--muted)">
-            {{ activity.time }}
+            {{ calculateTimeAgo(activity.createdAt) }}
           </p>
         </div>
       </div>
