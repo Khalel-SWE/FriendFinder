@@ -3,6 +3,7 @@ package com.media.friend_finder.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.media.friend_finder.dto.FriendSuggestionResponse;
 import com.media.friend_finder.dto.ProfileResponse;
+import com.media.friend_finder.dto.PublicProfileResponse;
 import com.media.friend_finder.dto.UpdateProfileRequest;
 import com.media.friend_finder.service.ProfileService;
 import com.media.friend_finder.service.UserService;
@@ -23,33 +24,109 @@ public class ProfileController {
     private final ProfileService profileService;
     private final UserService userService;
 
+
+    // =====================================================
+    // MY PROFILE
+    // =====================================================
+
     @GetMapping("/me")
-    public ResponseEntity<ProfileResponse> getMyProfile(Authentication authentication) {
-        return ResponseEntity.ok(profileService.getMyProfile(authentication.getName()));
+    public ResponseEntity<ProfileResponse> getMyProfile(
+            Authentication authentication
+    ) {
+
+        return ResponseEntity.ok(
+                profileService.getMyProfile(
+                        authentication.getName()
+                )
+        );
     }
 
-    // 👇 Endpoint التعديل الجديد اللي بيستقبل صور وبيانات 👇
-    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    // =====================================================
+    // PUBLIC PROFILE
+    // =====================================================
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<PublicProfileResponse> getPublicProfile(
+            Authentication authentication,
+            @PathVariable Long userId
+    ) {
+
+        return ResponseEntity.ok(
+                profileService.getPublicProfile(
+                        authentication.getName(),
+                        userId
+                )
+        );
+    }
+
+
+    // =====================================================
+    // UPDATE PROFILE
+    // =====================================================
+
+    @PutMapping(
+            value = "/update",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<ProfileResponse> updateProfile(
             Authentication authentication,
             @RequestPart("profile") String profileJson,
-            @RequestPart(value = "avatar", required = false) MultipartFile avatar,
-            @RequestPart(value = "cover", required = false) MultipartFile cover) {
+            @RequestPart(
+                    value = "avatar",
+                    required = false
+            ) MultipartFile avatar,
+            @RequestPart(
+                    value = "cover",
+                    required = false
+            ) MultipartFile cover
+    ) {
 
         try {
-            // تحويل الـ JSON اللي جاي من الأنجولار لـ Object سبرينج يفهمه
-            ObjectMapper mapper = new ObjectMapper();
-            UpdateProfileRequest request = mapper.readValue(profileJson, UpdateProfileRequest.class);
 
-            // نبعت البيانات والصور للسيرفيس
-            return ResponseEntity.ok(profileService.updateMyProfileWithMedia(authentication.getName(), request, avatar, cover));
+            ObjectMapper mapper =
+                    new ObjectMapper();
+
+            UpdateProfileRequest request =
+                    mapper.readValue(
+                            profileJson,
+                            UpdateProfileRequest.class
+                    );
+
+            return ResponseEntity.ok(
+                    profileService.updateMyProfileWithMedia(
+                            authentication.getName(),
+                            request,
+                            avatar,
+                            cover
+                    )
+            );
+
         } catch (Exception e) {
-            throw new RuntimeException("Error processing profile update", e);
+
+            throw new RuntimeException(
+                    "Error processing profile update",
+                    e
+            );
         }
     }
 
+
+    // =====================================================
+    // FRIEND SUGGESTIONS
+    // =====================================================
+
     @GetMapping("/suggestions")
-    public ResponseEntity<List<FriendSuggestionResponse>> getSuggestions(Authentication authentication) {
-        return ResponseEntity.ok(userService.getFriendSuggestions(authentication.getName()));
+    public ResponseEntity<List<FriendSuggestionResponse>>
+    getSuggestions(
+            Authentication authentication
+    ) {
+
+        return ResponseEntity.ok(
+                userService.getFriendSuggestions(
+                        authentication.getName()
+                )
+        );
     }
 }
