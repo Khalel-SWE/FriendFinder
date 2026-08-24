@@ -1,89 +1,3 @@
-// import { Component, OnInit, signal, inject } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router'; 
-// import { ProfileCover } from '../profile-cover/profile-cover';
-// import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
-// import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
-// import { ProfileAboutTab } from '../profile-about-tab/profile-about-tab';
-// import { ProfileFriendsTab } from '../profile-friends-tab/profile-friends-tab';
-// import { ProfileMediaGrid } from '../profile-media-grid/profile-media-grid';
-// import { ProfileResponse, ProfileTab } from '../../core/models/profile-model';
-// import { ProfileService } from '../../core/services/profile';
-
-// @Component({
-//   selector: 'app-profile-page',
-//   standalone: true,
-//   imports: [
-//     ProfileCover,
-//     ProfileTabsNav,
-//     ProfileTimelineTab,
-//     ProfileAboutTab,
-//     ProfileFriendsTab,
-//     ProfileMediaGrid
-//   ],
-//   templateUrl: './profile-page.html',
-//   styleUrl: './profile-page.css'
-// })
-// export class ProfilePage implements OnInit {
-//   activeTab = signal<ProfileTab>('timeline');
-//   profile = signal<ProfileResponse | null>(null);
-  
-//   isMyProfile = signal<boolean>(true); 
-  
-//   // 👈 متغير جديد عشان يشيل سنة الانضمام ويبعتها للـ Cover
-//   memberSince = signal<string>('...'); 
-
-//   private profileService = inject(ProfileService);
-//   private route = inject(ActivatedRoute);
-
-//   ngOnInit() {
-//     this.route.paramMap.subscribe(params => {
-//       const userId = params.get('id');
-
-//       if (userId) {
-//         this.isMyProfile.set(false);
-//         this.loadUserProfile(Number(userId));
-//       } else {
-//         this.isMyProfile.set(true);
-//         this.loadMyProfile();
-//       }
-//     });
-//   }
-
-//   loadUserProfile(userId: number) {
-//     this.profileService.getUserProfile(userId).subscribe({
-//       next: (res: any) => {
-//         this.profile.set(res as unknown as ProfileResponse);
-//         this.extractYear(res.createdAt); // 👈 تحديث التاريخ
-//       },
-//       error: (err: any) => console.error('Error fetching user profile', err)
-//     });
-//   }
-
-//   loadMyProfile() {
-//     this.profileService.getMyProfile().subscribe({
-//       next: (res: any) => {
-//         this.profile.set(res as unknown as ProfileResponse);
-//         this.extractYear(res.createdAt); // 👈 تحديث التاريخ
-//       },
-//       error: (err: any) => console.error('Error fetching my profile', err)
-//     });
-//   }
-
-//   // 👇 دالة صغيرة بتستخرج السنة من التاريخ اللي راجع من الداتا بيز
-//   private extractYear(dateString?: string) {
-//     if (dateString) {
-//       const date = new Date(dateString);
-//       this.memberSince.set(date.getFullYear().toString());
-//     } else {
-//       this.memberSince.set('2024'); // قيمة افتراضية لو مفيش تاريخ
-//     }
-//   }
-
-//   onTabChange(tab: ProfileTab): void {
-//     this.activeTab.set(tab);
-//   }
-// }
-
 import {
   Component,
   OnInit,
@@ -91,21 +5,42 @@ import {
   inject
 } from '@angular/core';
 
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute
+} from '@angular/router';
 
-import { ProfileCover } from '../profile-cover/profile-cover';
-import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
-import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
-import { ProfileAboutTab } from '../profile-about-tab/profile-about-tab';
-import { ProfileFriendsTab } from '../profile-friends-tab/profile-friends-tab';
-import { ProfileMediaGrid } from '../profile-media-grid/profile-media-grid';
+import {
+  ProfileCover
+} from '../profile-cover/profile-cover';
+
+import {
+  ProfileTabsNav
+} from '../profile-tabs-nav/profile-tabs-nav';
+
+import {
+  ProfileTimelineTab
+} from '../profile-timeline-tab/profile-timeline-tab';
+
+import {
+  ProfileAboutTab
+} from '../profile-about-tab/profile-about-tab';
+
+import {
+  ProfileFriendsTab
+} from '../profile-friends-tab/profile-friends-tab';
+
+import {
+  ProfileMediaGrid
+} from '../profile-media-grid/profile-media-grid';
 
 import {
   ProfileResponse,
   ProfileTab
 } from '../../core/models/profile-model';
 
-import { ProfileService } from '../../core/services/profile';
+import {
+  ProfileService
+} from '../../core/services/profile';
 
 @Component({
   selector: 'app-profile-page',
@@ -121,68 +56,91 @@ import { ProfileService } from '../../core/services/profile';
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css'
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage
+  implements OnInit {
 
-  activeTab = signal<ProfileTab>('timeline');
+  activeTab =
+    signal<ProfileTab>('timeline');
 
-  profile = signal<ProfileResponse | null>(null);
+  profile =
+    signal<ProfileResponse | null>(null);
 
-  isMyProfile = signal<boolean>(true);
+  isMyProfile =
+    signal<boolean>(true);
 
-  memberSince = signal<string>('...');
+  memberSince =
+    signal<string>('...');
 
-  private profileService = inject(ProfileService);
-  private route = inject(ActivatedRoute);
+  private profileService =
+    inject(ProfileService);
+
+  private route =
+    inject(ActivatedRoute);
+
 
   ngOnInit(): void {
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(
+      params => {
 
-      const userId = params.get('id');
+        const userId =
+          params.get('id');
 
-      if (userId) {
+        if (userId) {
 
-        this.isMyProfile.set(false);
+          this.isMyProfile.set(false);
 
-        this.loadUserProfile(
-          Number(userId)
-        );
+          this.loadUserProfile(
+            Number(userId)
+          );
 
-      } else {
+        } else {
 
-        this.isMyProfile.set(true);
+          this.isMyProfile.set(true);
 
-        this.loadMyProfile();
+          this.loadMyProfile();
+
+        }
+
       }
-
-    });
+    );
   }
 
-  loadUserProfile(userId: number): void {
+
+  loadUserProfile(
+    userId: number
+  ): void {
 
     this.profileService
       .getUserProfile(userId)
       .subscribe({
 
-        next: (res: ProfileResponse) => {
+        next: (
+          res: ProfileResponse
+        ) => {
 
           this.profile.set(res);
 
           this.extractYear(
             res.createdAt
           );
+
         },
 
-        error: (err: unknown) => {
+        error: (
+          err: unknown
+        ) => {
 
           console.error(
             'Error fetching user profile',
             err
           );
+
         }
 
       });
   }
+
 
   loadMyProfile(): void {
 
@@ -190,40 +148,79 @@ export class ProfilePage implements OnInit {
       .getMyProfile()
       .subscribe({
 
-        next: (res: ProfileResponse) => {
+        next: (
+          res: ProfileResponse
+        ) => {
 
-          /*
-           * My Profile endpoint does not currently
-           * return relationship fields.
-           *
-           * We add the SELF values locally.
-           */
+          const myProfile:
+            ProfileResponse = {
 
-          const myProfile: ProfileResponse = {
             ...res,
-            relationshipStatus: 'SELF',
-            pendingRequestId: null,
-            canViewPosts: true,
-            recentActivities: []
+
+            relationshipStatus:
+              'SELF',
+
+            pendingRequestId:
+              null,
+
+            canViewPosts:
+              true,
+
+            recentActivities:
+              []
           };
 
-          this.profile.set(myProfile);
+          this.profile.set(
+            myProfile
+          );
 
           this.extractYear(
             res.createdAt
           );
+
         },
 
-        error: (err: unknown) => {
+        error: (
+          err: unknown
+        ) => {
 
           console.error(
             'Error fetching my profile',
             err
           );
+
         }
 
       });
   }
+
+
+  // =====================================================
+  // RELOAD PROFILE AFTER RELATIONSHIP CHANGE
+  // =====================================================
+
+  reloadCurrentProfile(): void {
+
+    const current =
+      this.profile();
+
+    if (!current) {
+      return;
+    }
+
+    if (this.isMyProfile()) {
+
+      this.loadMyProfile();
+
+    } else {
+
+      this.loadUserProfile(
+        current.id
+      );
+
+    }
+  }
+
 
   private extractYear(
     dateString?: string
@@ -240,11 +237,17 @@ export class ProfilePage implements OnInit {
 
     } else {
 
-      this.memberSince.set('2024');
+      this.memberSince.set(
+        '2024'
+      );
+
     }
   }
 
-  onTabChange(tab: ProfileTab): void {
+
+  onTabChange(
+    tab: ProfileTab
+  ): void {
 
     this.activeTab.set(tab);
   }
