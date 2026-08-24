@@ -6,12 +6,29 @@ import {
   computed
 } from '@angular/core';
 
-import { ProfileService } from '../../core/services/profile';
-import { FriendshipService } from '../../core/services/friendship';
+import {
+  ProfileService
+} from '../../core/services/profile';
 
-import { FriendSuggestionResponse } from '../../core/models/post-model';
-import { LanguageService } from '../../core/services/language';
-import { SearchService } from '../../core/services/search';
+import {
+  FriendshipService
+} from '../../core/services/friendship';
+
+import {
+  FriendSuggestionResponse
+} from '../../core/models/post-model';
+
+import {
+  LanguageService
+} from '../../core/services/language';
+
+import {
+  SearchService
+} from '../../core/services/search';
+
+import {
+  Router
+} from '@angular/router';
 
 @Component({
   selector: 'app-friend-suggestions',
@@ -20,35 +37,62 @@ import { SearchService } from '../../core/services/search';
   templateUrl: './friend-suggestions.html',
   styleUrl: './friend-suggestions.css'
 })
-export class FriendSuggestions implements OnInit {
+export class FriendSuggestions
+  implements OnInit {
 
-  suggestions = signal<FriendSuggestionResponse[]>([]);
+  suggestions =
+    signal<FriendSuggestionResponse[]>([]);
 
-  private profileService = inject(ProfileService);
-  private friendshipService = inject(FriendshipService);
-  public lang = inject(LanguageService);
-  private searchService = inject(SearchService);
+  private profileService =
+    inject(ProfileService);
 
-  filteredSuggestions = computed(() => {
+  private friendshipService =
+    inject(FriendshipService);
 
-    const q = this.searchService
-      .query()
-      .toLowerCase()
-      .trim();
+  private router =
+    inject(Router);
 
-    if (!q) {
-      return this.suggestions();
-    }
+  public lang =
+    inject(LanguageService);
 
-    return this.suggestions().filter(user =>
-      user.firstName.toLowerCase().includes(q) ||
-      user.lastName.toLowerCase().includes(q)
-    );
-  });
+  private searchService =
+    inject(SearchService);
+
+
+  filteredSuggestions =
+    computed(() => {
+
+      const q =
+        this.searchService
+          .query()
+          .toLowerCase()
+          .trim();
+
+      if (!q) {
+
+        return this.suggestions();
+
+      }
+
+      return this.suggestions().filter(
+        user =>
+          user.firstName
+            .toLowerCase()
+            .includes(q) ||
+
+          user.lastName
+            .toLowerCase()
+            .includes(q)
+      );
+
+    });
+
 
   ngOnInit(): void {
+
     this.loadSuggestions();
   }
+
 
   private loadSuggestions(): void {
 
@@ -56,23 +100,51 @@ export class FriendSuggestions implements OnInit {
       .getFriendSuggestions()
       .subscribe({
 
-        next: (res: FriendSuggestionResponse[]) => {
+        next: (
+          res: FriendSuggestionResponse[]
+        ) => {
 
           this.suggestions.set(res);
+
         },
 
-        error: (err: unknown) => {
+        error: (
+          err: unknown
+        ) => {
 
           console.error(
             'Error fetching suggestions',
             err
           );
+
         }
 
       });
   }
 
-  addFriend(id: number): void {
+
+  // =====================================================
+  // OPEN PROFILE
+  // =====================================================
+
+  openProfile(
+    userId: number
+  ): void {
+
+    this.router.navigate([
+      '/profile',
+      userId
+    ]);
+  }
+
+
+  // =====================================================
+  // SEND FRIEND REQUEST
+  // =====================================================
+
+  addFriend(
+    id: number
+  ): void {
 
     console.log(
       'Friend request target user id:',
@@ -83,28 +155,34 @@ export class FriendSuggestions implements OnInit {
       .sendFriendRequest(id)
       .subscribe({
 
-        next: (response: string) => {
+        next: (
+          response: string
+        ) => {
 
           console.log(
             'Friend request sent successfully:',
             response
           );
 
-          // نشيل الشخص من المقترحات بعد إرسال الطلب
           this.suggestions.update(
             list =>
               list.filter(
-                user => user.id !== id
+                user =>
+                  user.id !== id
               )
           );
+
         },
 
-        error: (err: unknown) => {
+        error: (
+          err: unknown
+        ) => {
 
           console.error(
             'Error sending friend request:',
             err
           );
+
         }
 
       });

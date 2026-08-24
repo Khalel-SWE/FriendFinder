@@ -8,7 +8,12 @@
       <div class="suggestion-row">
         <!-- Avatar -->
 
-        <div class="suggestion-avatar">
+        <div
+          class="suggestion-avatar cursor-pointer"
+          (click)="openProfile(user.id)"
+          role="button"
+          tabindex="0"
+        >
           @if (user.profilePicture) {
             <img
               [src]="
@@ -28,7 +33,7 @@
         <!-- User info -->
 
         <div class="suggestion-info">
-          <p class="suggestion-name">
+          <p class="suggestion-name cursor-pointer" (click)="openProfile(user.id)">
             {{ user.firstName }}
             {{ user.lastName }}
           </p>
