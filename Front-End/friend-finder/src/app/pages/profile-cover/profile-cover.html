@@ -4,8 +4,9 @@
   <div
     class="cover-photo h-52 sm:h-64"
     [style.backgroundImage]="
-      profile.coverPhoto ? 'url(http://localhost:9090' + profile.coverPhoto + ')' : null
+      getImageUrl(profile.coverPhoto) ? 'url(' + getImageUrl(profile.coverPhoto) + ')' : null
     "
+    style="background-size: cover; background-position: center; background-repeat: no-repeat"
   ></div>
 
   <!-- ================= PROFILE CONTENT ================= -->
@@ -56,7 +57,7 @@
           Edit Profile
         </button>
       } @else {
-        @switch (profile.relationshipStatus) {
+        @switch (relationshipStatus) {
           @case ('NONE') {
             <button
               type="button"

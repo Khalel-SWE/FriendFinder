@@ -1,37 +1,3 @@
-// import { Component, Input, inject } from '@angular/core'; // 👈 ضفنا inject هنا
-// import { ProfileResponse } from '../../core/models/profile-model';
-// import { Router, RouterModule } from '@angular/router'; // 👈 ضفنا Router هنا
-
-// @Component({
-//   selector: 'app-profile-cover',
-//   standalone: true,
-//   imports: [RouterModule], 
-//   templateUrl: './profile-cover.html',
-//   styleUrl: './profile-cover.css'
-// })
-// export class ProfileCover {
-//   @Input() profile!: ProfileResponse;
-//   @Input() memberSince?: string;
-  
-//   @Input() isMyProfile: boolean = true; 
-
-//   get initials(): string {
-//     if (!this.profile) return '';
-//     return (this.profile.firstName?.charAt(0) || '') + (this.profile.lastName?.charAt(0) || '');
-//   }
-
-//   get fullName(): string {
-//     if (!this.profile) return '';
-//     return `${this.profile.firstName} ${this.profile.lastName}`;
-//   }
-
-//   private router = inject(Router);
-
-//   goToEdit() {
-//     this.router.navigate(['/edit-profile']);
-//   }
-// }
-
 import {
   Component,
   EventEmitter,
@@ -63,11 +29,14 @@ import {
 })
 export class ProfileCover {
 
-  @Input() profile!: ProfileResponse;
+  @Input()
+  profile!: ProfileResponse;
 
-  @Input() memberSince?: string;
+  @Input()
+  memberSince?: string;
 
-  @Input() isMyProfile = true;
+  @Input()
+  isMyProfile = true;
 
   @Output()
   relationshipChanged =
@@ -77,6 +46,9 @@ export class ProfileCover {
 
   private friendshipService =
     inject(FriendshipService);
+
+  // مهم: كان ناقص وده سبب مشكلة الـ template
+  actionLoading = false;
 
   // =====================================================
   // DISPLAY
@@ -113,7 +85,7 @@ export class ProfileCover {
   // =====================================================
 
   getImageUrl(
-    path: string | null
+    path: string | null | undefined
   ): string | null {
 
     if (!path) {
@@ -142,9 +114,14 @@ export class ProfileCover {
 
   sendFriendRequest(): void {
 
-    if (!this.profile?.id) {
+    if (
+      this.actionLoading ||
+      !this.profile?.id
+    ) {
       return;
     }
+
+    this.actionLoading = true;
 
     this.friendshipService
       .sendFriendRequest(this.profile.id)
@@ -152,8 +129,9 @@ export class ProfileCover {
 
         next: () => {
 
-          this.relationshipChanged.emit();
+          this.actionLoading = false;
 
+          this.relationshipChanged.emit();
         },
 
         error: (err: unknown) => {
@@ -162,6 +140,8 @@ export class ProfileCover {
             'Error sending friend request:',
             err
           );
+
+          this.actionLoading = false;
         }
 
       });
@@ -174,11 +154,16 @@ export class ProfileCover {
   acceptFriendRequest(): void {
 
     const requestId =
-      this.profile.pendingRequestId;
+      this.profile?.pendingRequestId;
 
-    if (!requestId) {
+    if (
+      this.actionLoading ||
+      !requestId
+    ) {
       return;
     }
+
+    this.actionLoading = true;
 
     this.friendshipService
       .respondToRequest(
@@ -189,8 +174,9 @@ export class ProfileCover {
 
         next: () => {
 
-          this.relationshipChanged.emit();
+          this.actionLoading = false;
 
+          this.relationshipChanged.emit();
         },
 
         error: (err: unknown) => {
@@ -199,6 +185,8 @@ export class ProfileCover {
             'Error accepting friend request:',
             err
           );
+
+          this.actionLoading = false;
         }
 
       });
@@ -211,11 +199,16 @@ export class ProfileCover {
   rejectFriendRequest(): void {
 
     const requestId =
-      this.profile.pendingRequestId;
+      this.profile?.pendingRequestId;
 
-    if (!requestId) {
+    if (
+      this.actionLoading ||
+      !requestId
+    ) {
       return;
     }
+
+    this.actionLoading = true;
 
     this.friendshipService
       .respondToRequest(
@@ -226,8 +219,9 @@ export class ProfileCover {
 
         next: () => {
 
-          this.relationshipChanged.emit();
+          this.actionLoading = false;
 
+          this.relationshipChanged.emit();
         },
 
         error: (err: unknown) => {
@@ -236,6 +230,8 @@ export class ProfileCover {
             'Error rejecting friend request:',
             err
           );
+
+          this.actionLoading = false;
         }
 
       });
@@ -247,7 +243,10 @@ export class ProfileCover {
 
   unfriend(): void {
 
-    if (!this.profile?.id) {
+    if (
+      this.actionLoading ||
+      !this.profile?.id
+    ) {
       return;
     }
 
@@ -260,14 +259,17 @@ export class ProfileCover {
       return;
     }
 
+    this.actionLoading = true;
+
     this.friendshipService
       .removeFriend(this.profile.id)
       .subscribe({
 
         next: () => {
 
-          this.relationshipChanged.emit();
+          this.actionLoading = false;
 
+          this.relationshipChanged.emit();
         },
 
         error: (err: unknown) => {
@@ -276,6 +278,8 @@ export class ProfileCover {
             'Error removing friend:',
             err
           );
+
+          this.actionLoading = false;
         }
 
       });
@@ -288,7 +292,7 @@ export class ProfileCover {
   get relationshipStatus():
     RelationshipStatus {
 
-    return this.profile
-      ?.relationshipStatus ?? 'NONE';
+    return this.profile?.relationshipStatus
+      ?? 'NONE';
   }
 }
