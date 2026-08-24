@@ -1,108 +1,14 @@
-//package com.media.friend_finder.service;
-//
-//import com.media.friend_finder.dto.NotificationResponse;
-//import com.media.friend_finder.entity.Notification;
-//import com.media.friend_finder.entity.Notification.NotificationType;
-//import com.media.friend_finder.entity.User;
-//import com.media.friend_finder.repository.NotificationRepository;
-//import com.media.friend_finder.repository.UserRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class NotificationService {
-//
-//    private final NotificationRepository notificationRepository;
-//    private final UserRepository userRepository;
-//
-//    // 1. دالة إنشاء الإشعار (اتعدلت عشان تاخد Enum بدل String)
-//    public void createNotification(User user, String message, NotificationType type, Long relatedId) {
-//        Notification notification = new Notification();
-//        notification.setUser(user);
-//        notification.setMessage(message);
-//        notification.setType(type); // الإيرور هيختفي من هنا
-//        notification.setRelatedId(relatedId);
-//        notificationRepository.save(notification);
-//    }
-//
-//    // 2. Get Notifications
-//    public List<NotificationResponse> getNotifications(String email) {
-//        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-//        return notificationRepository.findByUserOrderByCreatedAtDesc(user)
-//                .stream()
-//                .map(this::mapToResponse)
-//                .collect(Collectors.toList());
-//    }
-//
-//    // 3. Mark As Read (Single)
-//    public void markAsRead(String email, Long notificationId) {
-//        Notification notification = notificationRepository.findById(notificationId)
-//                .orElseThrow(() -> new RuntimeException("Notification not found"));
-//
-//        // التأكد إن الإشعار يخص اليوزر ده
-//        if (notification.getUser().getEmail().equals(email)) {
-//            notification.setRead(true);
-//            notificationRepository.save(notification);
-//        } else {
-//            throw new RuntimeException("Unauthorized to update this notification");
-//        }
-//    }
-//
-//    // 4. Mark All As Read (The Optimized Way)
-//    @Transactional // لازم نحط دي عشان بننفذ Custom Update Query في الداتا بيز
-//    public void markAllAsRead(String email) {
-//        User user = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        // سطر واحد بس صاروخي بدل ما كنا بنجيب الداتا كلها ونعملها فلتر لوب!
-//        notificationRepository.markAllAsReadByUser(user);
-//    }
-//
-//    // 5. Delete Notification
-//    public void deleteNotification(String email, Long notificationId) {
-//        Notification notification = notificationRepository.findById(notificationId)
-//                .orElseThrow(() -> new RuntimeException("Notification not found"));
-//
-//        if (notification.getUser().getEmail().equals(email)) {
-//            notificationRepository.delete(notification);
-//        } else {
-//            throw new RuntimeException("Unauthorized to delete this notification");
-//        }
-//    }
-//
-//    // 6. جلب عدد الإشعارات غير المقروءة
-//    public long getUnreadCount(String email) {
-//        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-//        return notificationRepository.countByUserAndIsReadFalse(user);
-//    }
-//
-//    // Mappers
-//    private NotificationResponse mapToResponse(Notification notification) {
-//        return NotificationResponse.builder()
-//                .id(notification.getId())
-//                .message(notification.getMessage())
-//                .type(notification.getType())
-//                .relatedId(notification.getRelatedId())
-//                .isRead(notification.isRead())
-//                .createdAt(notification.getCreatedAt())
-//                .build();
-//    }
-//}
-
 package com.media.friend_finder.service;
 
 import com.media.friend_finder.dto.NotificationResponse;
 import com.media.friend_finder.entity.ContactMessage;
+import com.media.friend_finder.entity.Friendship;
 import com.media.friend_finder.entity.Notification;
 import com.media.friend_finder.entity.Notification.NotificationType;
 import com.media.friend_finder.entity.Profile;
 import com.media.friend_finder.entity.User;
 import com.media.friend_finder.repository.ContactMessageRepository;
+import com.media.friend_finder.repository.FriendshipRepository;
 import com.media.friend_finder.repository.NotificationRepository;
 import com.media.friend_finder.repository.ProfileRepository;
 import com.media.friend_finder.repository.UserRepository;
@@ -121,9 +27,12 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final ContactMessageRepository contactMessageRepository;
+    private final FriendshipRepository friendshipRepository;
 
 
-    // ================= CREATE =================
+    // =====================================================
+    // CREATE
+    // =====================================================
 
     public void createNotification(
             User user,
@@ -143,14 +52,17 @@ public class NotificationService {
     }
 
 
-    // ================= GET =================
+    // =====================================================
+    // GET NOTIFICATIONS
+    // =====================================================
 
     public List<NotificationResponse> getNotifications(String email) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found")
-                );
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException("User not found")
+                        );
 
         return notificationRepository
                 .findByUserOrderByCreatedAtDesc(user)
@@ -160,7 +72,9 @@ public class NotificationService {
     }
 
 
-    // ================= MARK SINGLE =================
+    // =====================================================
+    // MARK SINGLE
+    // =====================================================
 
     public void markAsRead(
             String email,
@@ -170,10 +84,14 @@ public class NotificationService {
         Notification notification =
                 notificationRepository.findById(notificationId)
                         .orElseThrow(() ->
-                                new RuntimeException("Notification not found")
+                                new RuntimeException(
+                                        "Notification not found"
+                                )
                         );
 
-        if (!notification.getUser().getEmail().equals(email)) {
+        if (!notification.getUser()
+                .getEmail()
+                .equals(email)) {
 
             throw new RuntimeException(
                     "Unauthorized to update this notification"
@@ -186,7 +104,9 @@ public class NotificationService {
     }
 
 
-    // ================= MARK ALL =================
+    // =====================================================
+    // MARK ALL
+    // =====================================================
 
     @Transactional
     public void markAllAsRead(String email) {
@@ -194,14 +114,18 @@ public class NotificationService {
         User user =
                 userRepository.findByEmail(email)
                         .orElseThrow(() ->
-                                new RuntimeException("User not found")
+                                new RuntimeException(
+                                        "User not found"
+                                )
                         );
 
         notificationRepository.markAllAsReadByUser(user);
     }
 
 
-    // ================= DELETE =================
+    // =====================================================
+    // DELETE
+    // =====================================================
 
     public void deleteNotification(
             String email,
@@ -211,10 +135,14 @@ public class NotificationService {
         Notification notification =
                 notificationRepository.findById(notificationId)
                         .orElseThrow(() ->
-                                new RuntimeException("Notification not found")
+                                new RuntimeException(
+                                        "Notification not found"
+                                )
                         );
 
-        if (!notification.getUser().getEmail().equals(email)) {
+        if (!notification.getUser()
+                .getEmail()
+                .equals(email)) {
 
             throw new RuntimeException(
                     "Unauthorized to delete this notification"
@@ -225,14 +153,18 @@ public class NotificationService {
     }
 
 
-    // ================= UNREAD COUNT =================
+    // =====================================================
+    // UNREAD COUNT
+    // =====================================================
 
     public long getUnreadCount(String email) {
 
         User user =
                 userRepository.findByEmail(email)
                         .orElseThrow(() ->
-                                new RuntimeException("User not found")
+                                new RuntimeException(
+                                        "User not found"
+                                )
                         );
 
         return notificationRepository
@@ -240,18 +172,27 @@ public class NotificationService {
     }
 
 
-    // ================= MAPPING =================
+    // =====================================================
+    // MAPPING
+    // =====================================================
 
     private NotificationResponse mapToResponse(
             Notification notification
     ) {
 
-        User actor = resolveActor(notification);
+        User actor =
+                resolveActor(notification);
 
         String actorName = null;
+
         String actorProfilePicture = null;
 
+        Long actorId = null;
+
+
         if (actor != null) {
+
+            actorId = actor.getId();
 
             Profile profile =
                     profileRepository
@@ -263,12 +204,12 @@ public class NotificationService {
                 String firstName =
                         profile.getFirstName() == null
                                 ? ""
-                                : profile.getFirstName();
+                                : profile.getFirstName().trim();
 
                 String lastName =
                         profile.getLastName() == null
                                 ? ""
-                                : profile.getLastName();
+                                : profile.getLastName().trim();
 
                 actorName =
                         (firstName + " " + lastName).trim();
@@ -277,35 +218,61 @@ public class NotificationService {
                         profile.getProfilePicture();
             }
 
-            if (actorName == null || actorName.isBlank()) {
+            if (actorName == null
+                    || actorName.isBlank()) {
+
                 actorName = actor.getEmail();
             }
         }
 
+
         return NotificationResponse.builder()
+
                 .id(notification.getId())
+
                 .message(notification.getMessage())
+
                 .type(notification.getType())
+
                 .relatedId(notification.getRelatedId())
+
+                .actorId(actorId)
+
                 .actorName(actorName)
-                .actorProfilePicture(actorProfilePicture)
+
+                .actorProfilePicture(
+                        actorProfilePicture
+                )
+
                 .isRead(notification.isRead())
+
                 .createdAt(notification.getCreatedAt())
+
                 .build();
     }
 
 
-    // ================= ACTOR RESOLUTION =================
+    // =====================================================
+    // ACTOR RESOLUTION
+    // =====================================================
 
-    private User resolveActor(Notification notification) {
+    private User resolveActor(
+            Notification notification
+    ) {
 
-        Long relatedId = notification.getRelatedId();
+        Long relatedId =
+                notification.getRelatedId();
 
         if (relatedId == null) {
             return null;
         }
 
+
         switch (notification.getType()) {
+
+            // =================================================
+            // CONTACT MESSAGE
+            // =================================================
 
             case NEW_CONTACT_MESSAGE:
 
@@ -315,34 +282,69 @@ public class NotificationService {
                         .orElse(null);
 
 
+            // =================================================
+            // ADMIN REPLY
+            // =================================================
+
             case ADMIN_REPLY:
 
                 return userRepository
-                        .findByEmail("admin@friendfinder.com")
+                        .findByEmail(
+                                "admin@friendfinder.com"
+                        )
                         .orElse(null);
 
+
+            // =================================================
+            // FRIEND REQUEST
+            // =================================================
+            //
+            // relatedId = Friendship ID
+            //
+            // actor = requester
+            // =================================================
 
             case FRIEND_REQUEST:
 
+                return friendshipRepository
+                        .findById(relatedId)
+                        .map(Friendship::getRequester)
+                        .orElse(null);
+
+
+            // =================================================
+            // ACCEPT FRIEND REQUEST
+            // =================================================
+            //
+            // relatedId = Friendship ID
+            //
+            // actor = addressee
+            // =================================================
+
             case ACCEPT_FRIEND_REQUEST:
 
-                /*
-                 * هنا نفترض أن relatedId هو User ID
-                 * الخاص بالشخص الذي قام بالفعل.
-                 */
-                return userRepository
+                return friendshipRepository
                         .findById(relatedId)
+                        .map(Friendship::getAddressee)
                         .orElse(null);
+
+
+            // =================================================
+            // LIKE / COMMENT
+            // =================================================
+            //
+            // هنكمل actor resolution بتاعهم
+            // لما نعمل notification system الكامل.
+            // =================================================
+
+            case LIKE:
+            case COMMENT:
+
+                return null;
 
 
             default:
 
-                /*
-                 * LIKE / COMMENT
-                 *
-                 * سنربط actor بشكل أدق لما نعمل
-                 * نظام الإشعارات الكامل للـ reactions/comments.
-                 */
                 return null;
         }
     }

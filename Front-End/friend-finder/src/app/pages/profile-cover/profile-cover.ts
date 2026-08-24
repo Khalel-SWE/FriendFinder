@@ -11,9 +11,7 @@ import {
   RelationshipStatus
 } from '../../core/models/profile-model';
 
-import {
-  FriendshipService
-} from '../../core/services/friendship';
+import { FriendshipService } from '../../core/services/friendship';
 
 import {
   Router,
@@ -42,13 +40,13 @@ export class ProfileCover {
   relationshipChanged =
     new EventEmitter<void>();
 
+  actionLoading = false;
+
   private router = inject(Router);
 
   private friendshipService =
     inject(FriendshipService);
 
-  // مهم: كان ناقص وده سبب مشكلة الـ template
-  actionLoading = false;
 
   // =====================================================
   // DISPLAY
@@ -61,15 +59,18 @@ export class ProfileCover {
     }
 
     const first =
-      this.profile.firstName?.charAt(0) ?? '';
+      this.profile.firstName
+        ?.charAt(0) ?? '';
 
     const last =
-      this.profile.lastName?.charAt(0) ?? '';
+      this.profile.lastName
+        ?.charAt(0) ?? '';
 
     return (
       first + last
     ).toUpperCase();
   }
+
 
   get fullName(): string {
 
@@ -77,15 +78,18 @@ export class ProfileCover {
       return '';
     }
 
-    return `${this.profile.firstName} ${this.profile.lastName}`;
+    return (
+      `${this.profile.firstName} ${this.profile.lastName}`
+    ).trim();
   }
+
 
   // =====================================================
   // IMAGE URL
   // =====================================================
 
   getImageUrl(
-    path: string | null | undefined
+    path: string | null
   ): string | null {
 
     if (!path) {
@@ -96,6 +100,7 @@ export class ProfileCover {
       ? path
       : `http://localhost:9090${path}`;
   }
+
 
   // =====================================================
   // EDIT PROFILE
@@ -108,23 +113,25 @@ export class ProfileCover {
     ]);
   }
 
+
   // =====================================================
   // SEND FRIEND REQUEST
   // =====================================================
 
   sendFriendRequest(): void {
 
-    if (
-      this.actionLoading ||
-      !this.profile?.id
-    ) {
+    if (!this.profile?.id
+        || this.actionLoading) {
+
       return;
     }
 
     this.actionLoading = true;
 
     this.friendshipService
-      .sendFriendRequest(this.profile.id)
+      .sendFriendRequest(
+        this.profile.id
+      )
       .subscribe({
 
         next: () => {
@@ -136,16 +143,17 @@ export class ProfileCover {
 
         error: (err: unknown) => {
 
+          this.actionLoading = false;
+
           console.error(
             'Error sending friend request:',
             err
           );
-
-          this.actionLoading = false;
         }
 
       });
   }
+
 
   // =====================================================
   // ACCEPT FRIEND REQUEST
@@ -154,12 +162,11 @@ export class ProfileCover {
   acceptFriendRequest(): void {
 
     const requestId =
-      this.profile?.pendingRequestId;
+      this.profile.pendingRequestId;
 
-    if (
-      this.actionLoading ||
-      !requestId
-    ) {
+    if (!requestId
+        || this.actionLoading) {
+
       return;
     }
 
@@ -181,16 +188,17 @@ export class ProfileCover {
 
         error: (err: unknown) => {
 
+          this.actionLoading = false;
+
           console.error(
             'Error accepting friend request:',
             err
           );
-
-          this.actionLoading = false;
         }
 
       });
   }
+
 
   // =====================================================
   // REJECT FRIEND REQUEST
@@ -199,12 +207,11 @@ export class ProfileCover {
   rejectFriendRequest(): void {
 
     const requestId =
-      this.profile?.pendingRequestId;
+      this.profile.pendingRequestId;
 
-    if (
-      this.actionLoading ||
-      !requestId
-    ) {
+    if (!requestId
+        || this.actionLoading) {
+
       return;
     }
 
@@ -226,16 +233,17 @@ export class ProfileCover {
 
         error: (err: unknown) => {
 
+          this.actionLoading = false;
+
           console.error(
             'Error rejecting friend request:',
             err
           );
-
-          this.actionLoading = false;
         }
 
       });
   }
+
 
   // =====================================================
   // UNFRIEND
@@ -243,10 +251,9 @@ export class ProfileCover {
 
   unfriend(): void {
 
-    if (
-      this.actionLoading ||
-      !this.profile?.id
-    ) {
+    if (!this.profile?.id
+        || this.actionLoading) {
+
       return;
     }
 
@@ -262,7 +269,9 @@ export class ProfileCover {
     this.actionLoading = true;
 
     this.friendshipService
-      .removeFriend(this.profile.id)
+      .removeFriend(
+        this.profile.id
+      )
       .subscribe({
 
         next: () => {
@@ -274,16 +283,17 @@ export class ProfileCover {
 
         error: (err: unknown) => {
 
+          this.actionLoading = false;
+
           console.error(
             'Error removing friend:',
             err
           );
-
-          this.actionLoading = false;
         }
 
       });
   }
+
 
   // =====================================================
   // RELATIONSHIP
@@ -292,7 +302,7 @@ export class ProfileCover {
   get relationshipStatus():
     RelationshipStatus {
 
-    return this.profile?.relationshipStatus
-      ?? 'NONE';
+    return this.profile
+      ?.relationshipStatus ?? 'NONE';
   }
 }

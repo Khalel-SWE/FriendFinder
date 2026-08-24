@@ -1,282 +1,3 @@
-// import {
-//   Component,
-//   OnInit,
-//   signal,
-//   inject,
-//   Input
-// } from '@angular/core';
-
-// import { PostComposer } from '../post-composer/post-composer';
-// import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel';
-
-// import {
-//   Post,
-//   PostResponse,
-//   ReactionType
-// } from '../../core/models/post-model';
-
-// import { PostService } from '../../core/services/post';
-
-// @Component({
-//   selector: 'app-profile-timeline-tab',
-//   standalone: true,
-//   imports: [
-//     PostComposer,
-//     RecentActivityPanel
-//   ],
-//   templateUrl: './profile-timeline-tab.html',
-//   styleUrl: './profile-timeline-tab.css'
-// })
-// export class ProfileTimelineTab implements OnInit {
-
-//   posts = signal<Post[]>([]);
-
-//   @Input() userId?: number;
-
-//   @Input() isMyProfile: boolean = false;
-
-//   private postService = inject(PostService);
-
-//   ngOnInit(): void {
-//     this.loadPosts();
-//   }
-
-//   loadPosts(): void {
-
-//     /*
-//      * لو عندنا userId:
-//      * نجيب بوستات اليوزر المحدد.
-//      *
-//      * لو مفيش:
-//      * نجيب الـ feed الحالي.
-//      */
-//     const request$ = this.userId
-//       ? this.postService.getUserPosts(this.userId)
-//       : this.postService.getFeed();
-
-//     request$.subscribe({
-
-//       next: (
-//         responses: PostResponse[]
-//       ) => {
-
-//         /*
-//          * ترتيب البوستات:
-//          * الأحدث أولاً.
-//          */
-//         responses.sort(
-//           (a, b) =>
-//             new Date(b.createdAt).getTime() -
-//             new Date(a.createdAt).getTime()
-//         );
-
-//         /*
-//          * تحويل PostResponse
-//          * إلى Post المستخدم في الـ UI.
-//          */
-//         const mappedPosts: Post[] =
-//           responses.map(
-//             res => ({
-
-//               id: res.id,
-
-//               authorName:
-//                 `${res.userFirstName} ${res.userLastName}`,
-
-//               authorInitials:
-//                 (
-//                   res.userFirstName.charAt(0) +
-//                   res.userLastName.charAt(0)
-//                 ).toUpperCase(),
-
-//               /*
-//                * صورة صاحب البوست.
-//                */
-//               profilePicture:
-//                 res.profilePicture,
-
-//               timeLabel:
-//                 this.calculateTimeAgo(
-//                   res.createdAt
-//                 ),
-
-//               text:
-//                 res.content,
-
-//               mediaUrl:
-//                 res.mediaUrl
-//                   ? `http://localhost:9090${res.mediaUrl}`
-//                   : undefined,
-
-//               mediaType:
-//                 res.mediaType
-//                   ?.toLowerCase()
-//                   .includes('video')
-//                   ? 'video'
-//                   : 'image',
-
-//               /*
-//                * كل أنواع الـ reactions.
-//                *
-//                * WOW كانت ناقصة هنا.
-//                */
-//               reactions: {
-
-//                 like:
-//                   res.reactionsCount?.['LIKE'] || 0,
-
-//                 love:
-//                   res.reactionsCount?.['LOVE'] || 0,
-
-//                 haha:
-//                   res.reactionsCount?.['HAHA'] || 0,
-
-//                 wow:
-//                   res.reactionsCount?.['WOW'] || 0,
-
-//                 sad:
-//                   res.reactionsCount?.['SAD'] || 0,
-
-//                 angry:
-//                   res.reactionsCount?.['ANGRY'] || 0
-
-//               },
-
-//               /*
-//                * الـ reaction الحالي للمستخدم.
-//                *
-//                * Backend -> "LIKE"
-//                * Frontend -> "like"
-//                */
-//               currentUserReaction:
-//                 res.currentUserReaction
-//                   ? res.currentUserReaction.toLowerCase() as ReactionType
-//                   : null,
-
-//               commentsCount:
-//                 res.commentsCount || 0,
-
-//               comments:
-//                 res.comments || []
-
-//             })
-//           );
-
-//         this.posts.set(mappedPosts);
-//       },
-
-//       error: (
-//         err: unknown
-//       ) => {
-
-//         console.error(
-//           'Error fetching timeline posts',
-//           err
-//         );
-
-//       }
-
-//     });
-//   }
-
-//   calculateTimeAgo(
-//     dateString: string
-//   ): string {
-
-//     if (!dateString) {
-//       return '';
-//     }
-
-//     const postDate =
-//       new Date(dateString);
-
-//     const now =
-//       new Date();
-
-//     const diffInSeconds =
-//       Math.floor(
-//         (
-//           now.getTime() -
-//           postDate.getTime()
-//         ) / 1000
-//       );
-
-//     if (diffInSeconds < 60) {
-//       return 'Just now';
-//     }
-
-//     const diffInMinutes =
-//       Math.floor(
-//         diffInSeconds / 60
-//       );
-
-//     if (diffInMinutes < 60) {
-//       return `${diffInMinutes}m`;
-//     }
-
-//     const diffInHours =
-//       Math.floor(
-//         diffInMinutes / 60
-//       );
-
-//     if (diffInHours < 24) {
-//       return `${diffInHours}h`;
-//     }
-
-//     const diffInDays =
-//       Math.floor(
-//         diffInHours / 24
-//       );
-
-//     if (diffInDays < 7) {
-//       return `${diffInDays}d`;
-//     }
-
-//     return postDate.toLocaleDateString();
-//   }
-
-//   onPosted(
-//     payload: {
-//       text?: string;
-//       file?: File;
-//     }
-//   ): void {
-
-//     /*
-//      * إنشاء بوست جديد.
-//      */
-//     this.postService
-//       .createPost(
-//         payload.text || '',
-//         payload.file
-//       )
-//       .subscribe({
-
-//         next: () => {
-
-//           /*
-//            * تحديث الـ timeline
-//            * بعد إنشاء البوست.
-//            */
-//           this.loadPosts();
-
-//         },
-
-//         error: (
-//           err: unknown
-//         ) => {
-
-//           console.error(
-//             'Error creating post in profile',
-//             err
-//           );
-
-//         }
-
-//       });
-//   }
-// }
-
 import {
   Component,
   OnInit,
@@ -295,6 +16,7 @@ import {
 } from '../../core/models/post-model';
 
 import { PostService } from '../../core/services/post';
+
 import {
   ProfileActivity
 } from '../../core/models/profile-model';
@@ -309,59 +31,55 @@ import {
   templateUrl: './profile-timeline-tab.html',
   styleUrl: './profile-timeline-tab.css'
 })
-export class ProfileTimelineTab
-  implements OnInit {
+export class ProfileTimelineTab implements OnInit {
 
   posts = signal<Post[]>([]);
 
-  @Input() userId?: number;
+  @Input()
+  userId?: number;
 
   @Input()
-  isMyProfile: boolean = false;
+  isMyProfile = false;
 
   @Input()
-  canViewPosts: boolean = false;
+  canViewPosts = false;
 
   @Input()
-profileActivities: ProfileActivity[] = [];
+  profileActivities: ProfileActivity[] = [];
 
-  private postService =
-    inject(PostService);
+  private postService = inject(PostService);
 
   ngOnInit(): void {
-
     this.loadPosts();
   }
+
+  // =====================================================
+  // LOAD POSTS
+  // =====================================================
 
   loadPosts(): void {
 
     /*
      * Visitor profile:
-     * لو مش مسموح له يشوف البوستات
-     * منوقف هنا ومش نعمل API request.
+     * If the visitor is not a friend,
+     * do not load private posts.
      */
 
     if (
       !this.isMyProfile &&
       !this.canViewPosts
     ) {
-
       this.posts.set([]);
-
       return;
     }
 
     const request$ = this.userId
-      ? this.postService.getUserPosts(
-          this.userId
-        )
+      ? this.postService.getUserPosts(this.userId)
       : this.postService.getFeed();
 
     request$.subscribe({
 
-      next: (
-        responses: PostResponse[]
-      ) => {
+      next: (responses: PostResponse[]) => {
 
         responses.sort(
           (a, b) =>
@@ -369,8 +87,8 @@ profileActivities: ProfileActivity[] = [];
             new Date(a.createdAt).getTime()
         );
 
-        const mappedPosts: Post[] =
-          responses.map(res => ({
+        const mappedPosts: Post[] = responses.map(
+          (res: PostResponse): Post => ({
 
             id: res.id,
 
@@ -387,9 +105,7 @@ profileActivities: ProfileActivity[] = [];
               res.profilePicture,
 
             timeLabel:
-              this.calculateTimeAgo(
-                res.createdAt
-              ),
+              this.calculateTimeAgo(res.createdAt),
 
             text:
               res.content,
@@ -400,14 +116,11 @@ profileActivities: ProfileActivity[] = [];
                 : undefined,
 
             mediaType:
-              res.mediaType
-                ?.toLowerCase()
-                .includes('video')
+              res.mediaType?.toLowerCase().includes('video')
                 ? 'video'
                 : 'image',
 
             reactions: {
-
               like:
                 res.reactionsCount?.['LIKE'] || 0,
 
@@ -428,10 +141,9 @@ profileActivities: ProfileActivity[] = [];
             },
 
             currentUserReaction:
-              res.currentUserReaction
-                ? res.currentUserReaction
-                    .toLowerCase() as ReactionType
-                : null,
+              this.mapReaction(
+                res.currentUserReaction
+              ),
 
             commentsCount:
               res.commentsCount || 0,
@@ -439,16 +151,13 @@ profileActivities: ProfileActivity[] = [];
             comments:
               res.comments || []
 
-          }));
-
-        this.posts.set(
-          mappedPosts
+          })
         );
+
+        this.posts.set(mappedPosts);
       },
 
-      error: (
-        err: unknown
-      ) => {
+      error: (err: unknown) => {
 
         console.error(
           'Error fetching timeline posts',
@@ -460,6 +169,25 @@ profileActivities: ProfileActivity[] = [];
     });
   }
 
+  // =====================================================
+  // MAP REACTION
+  // =====================================================
+
+  private mapReaction(
+    reaction: string | null | undefined
+  ): ReactionType | null {
+
+    if (!reaction) {
+      return null;
+    }
+
+    return reaction.toLowerCase() as ReactionType;
+  }
+
+  // =====================================================
+  // TIME AGO
+  // =====================================================
+
   calculateTimeAgo(
     dateString: string
   ): string {
@@ -468,11 +196,8 @@ profileActivities: ProfileActivity[] = [];
       return '';
     }
 
-    const postDate =
-      new Date(dateString);
-
-    const now =
-      new Date();
+    const postDate = new Date(dateString);
+    const now = new Date();
 
     const diffInSeconds =
       Math.floor(
@@ -516,6 +241,10 @@ profileActivities: ProfileActivity[] = [];
     return postDate.toLocaleDateString();
   }
 
+  // =====================================================
+  // CREATE POST
+  // =====================================================
+
   onPosted(
     payload: {
       text?: string;
@@ -531,14 +260,10 @@ profileActivities: ProfileActivity[] = [];
       .subscribe({
 
         next: () => {
-
           this.loadPosts();
-
         },
 
-        error: (
-          err: unknown
-        ) => {
+        error: (err: unknown) => {
 
           console.error(
             'Error creating post in profile',

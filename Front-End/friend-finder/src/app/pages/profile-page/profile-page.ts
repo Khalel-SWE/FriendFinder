@@ -5,42 +5,22 @@ import {
   inject
 } from '@angular/core';
 
-import {
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
-import {
-  ProfileCover
-} from '../profile-cover/profile-cover';
-
-import {
-  ProfileTabsNav
-} from '../profile-tabs-nav/profile-tabs-nav';
-
-import {
-  ProfileTimelineTab
-} from '../profile-timeline-tab/profile-timeline-tab';
-
-import {
-  ProfileAboutTab
-} from '../profile-about-tab/profile-about-tab';
-
-import {
-  ProfileFriendsTab
-} from '../profile-friends-tab/profile-friends-tab';
-
-import {
-  ProfileMediaGrid
-} from '../profile-media-grid/profile-media-grid';
+import { ProfileCover } from '../profile-cover/profile-cover';
+import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
+import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
+import { ProfileAboutTab } from '../profile-about-tab/profile-about-tab';
+import { ProfileFriendsTab } from '../profile-friends-tab/profile-friends-tab';
+import { ProfileMediaGrid } from '../profile-media-grid/profile-media-grid';
 
 import {
   ProfileResponse,
   ProfileTab
 } from '../../core/models/profile-model';
 
-import {
-  ProfileService
-} from '../../core/services/profile';
+import { ProfileService } from '../../core/services/profile';
+
 
 @Component({
   selector: 'app-profile-page',
@@ -56,8 +36,7 @@ import {
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css'
 })
-export class ProfilePage
-  implements OnInit {
+export class ProfilePage implements OnInit {
 
   activeTab =
     signal<ProfileTab>('timeline');
@@ -71,12 +50,17 @@ export class ProfilePage
   memberSince =
     signal<string>('...');
 
+
   private profileService =
     inject(ProfileService);
 
   private route =
     inject(ActivatedRoute);
 
+
+  // =====================================================
+  // INIT
+  // =====================================================
 
   ngOnInit(): void {
 
@@ -99,13 +83,16 @@ export class ProfilePage
           this.isMyProfile.set(true);
 
           this.loadMyProfile();
-
         }
 
       }
     );
   }
 
+
+  // =====================================================
+  // LOAD VISITOR PROFILE
+  // =====================================================
 
   loadUserProfile(
     userId: number
@@ -124,7 +111,6 @@ export class ProfilePage
           this.extractYear(
             res.createdAt
           );
-
         },
 
         error: (
@@ -135,12 +121,15 @@ export class ProfilePage
             'Error fetching user profile',
             err
           );
-
         }
 
       });
   }
 
+
+  // =====================================================
+  // LOAD MY PROFILE
+  // =====================================================
 
   loadMyProfile(): void {
 
@@ -168,6 +157,7 @@ export class ProfilePage
 
             recentActivities:
               []
+
           };
 
           this.profile.set(
@@ -177,7 +167,6 @@ export class ProfilePage
           this.extractYear(
             res.createdAt
           );
-
         },
 
         error: (
@@ -188,7 +177,6 @@ export class ProfilePage
             'Error fetching my profile',
             err
           );
-
         }
 
       });
@@ -196,31 +184,44 @@ export class ProfilePage
 
 
   // =====================================================
-  // RELOAD PROFILE AFTER RELATIONSHIP CHANGE
+  // RELATIONSHIP CHANGED
   // =====================================================
 
-  reloadCurrentProfile(): void {
+  onRelationshipChanged(): void {
 
-    const current =
+    const currentProfile =
       this.profile();
 
-    if (!current) {
+    if (!currentProfile) {
       return;
     }
 
+    /*
+     * My profile:
+     * nothing needs to be reloaded.
+     */
     if (this.isMyProfile()) {
-
-      this.loadMyProfile();
-
-    } else {
-
-      this.loadUserProfile(
-        current.id
-      );
-
+      return;
     }
+
+    /*
+     * Reload the visitor profile so the backend
+     * recalculates:
+     *
+     * relationshipStatus
+     * pendingRequestId
+     * canViewPosts
+     * recentActivities
+     */
+    this.loadUserProfile(
+      currentProfile.id
+    );
   }
 
+
+  // =====================================================
+  // EXTRACT YEAR
+  // =====================================================
 
   private extractYear(
     dateString?: string
@@ -245,10 +246,15 @@ export class ProfilePage
   }
 
 
+  // =====================================================
+  // TAB
+  // =====================================================
+
   onTabChange(
     tab: ProfileTab
   ): void {
 
     this.activeTab.set(tab);
   }
+
 }

@@ -196,3 +196,11 @@
 
   margin-top: 3px;
 }
+
+.clickable-notification {
+  cursor: pointer;
+}
+
+.clickable-notification:hover {
+  background: rgba(201, 162, 75, .10);
+}

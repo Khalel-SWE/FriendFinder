@@ -1,8 +1,24 @@
-import { Component, signal, HostListener, ElementRef, inject, OnInit} from '@angular/core';
+import {
+  Component,
+  signal,
+  HostListener,
+  ElementRef,
+  inject,
+  OnInit
+} from '@angular/core';
+
 import { DatePipe } from '@angular/common';
+
+import { Router } from '@angular/router';
+
 import { LanguageService } from '../../core/services/language';
+
 import { Notification } from '../../core/services/notification';
-import { NotificationResponse } from '../../core/models/notification.model';
+
+import {
+  NotificationResponse
+} from '../../core/models/notification.model';
+
 
 @Component({
   selector: 'app-notification-bell',
@@ -11,151 +27,323 @@ import { NotificationResponse } from '../../core/models/notification.model';
   templateUrl: './notification-bell.html',
   styleUrl: './notification-bell.css'
 })
-export class NotificationBell implements OnInit {
+export class NotificationBell
+  implements OnInit {
 
-  private notification = inject(Notification);
+  private notification =
+    inject(Notification);
 
-  open = signal(false);
+  private router =
+    inject(Router);
 
-  notifications = signal<NotificationResponse[]>([]);
 
-  unreadCount = signal(0);
+  open =
+    signal(false);
+
+  notifications =
+    signal<NotificationResponse[]>([]);
+
+  unreadCount =
+    signal(0);
+
 
   constructor(
     public lang: LanguageService,
     private eRef: ElementRef
   ) {}
 
+
   ngOnInit(): void {
 
-    this.notification.getMyNotifications().subscribe({
+    this.notification
+      .getMyNotifications()
+      .subscribe({
 
-      next: (data) => {
+        next: (data) => {
 
-        this.notifications.set(data);
-
-        this.unreadCount.set(
-          data.filter(n => !n.read).length
-        );
-
-      },
-
-      error: (err) => {
-        console.error('Error loading notifications', err);
-      }
-
-    });
-  }
-
-
-  toggle(): void {
-
-    this.open.update(v => !v);
-
-    if (this.open() && this.unreadCount() > 0) {
-
-      this.notification.markAllAsRead().subscribe({
-
-        next: () => {
-
-          this.notifications.update(list =>
-            list.map(item => ({
-              ...item,
-              read: true
-            }))
+          this.notifications.set(
+            data
           );
 
-          this.unreadCount.set(0);
-
+          this.unreadCount.set(
+            data.filter(
+              n => !n.read
+            ).length
+          );
         },
 
-        error: err => {
-          console.error('Failed to mark notifications as read', err);
+        error: (err) => {
+
+          console.error(
+            'Error loading notifications',
+            err
+          );
         }
 
       });
+  }
 
+
+  // =====================================================
+  // TOGGLE
+  // =====================================================
+
+  toggle(): void {
+
+    this.open.update(
+      value => !value
+    );
+
+
+    if (
+      this.open()
+      &&
+      this.unreadCount() > 0
+    ) {
+
+      this.notification
+        .markAllAsRead()
+        .subscribe({
+
+          next: () => {
+
+            this.notifications.update(
+              list =>
+                list.map(
+                  item => ({
+                    ...item,
+                    read: true
+                  })
+                )
+            );
+
+            this.unreadCount.set(0);
+          },
+
+          error: (err) => {
+
+            console.error(
+              'Failed to mark notifications as read',
+              err
+            );
+          }
+
+        });
     }
   }
 
 
+  // =====================================================
+  // CLOSE
+  // =====================================================
+
   close(): void {
+
     this.open.set(false);
   }
 
 
+  // =====================================================
+  // NOTIFICATION TEXT
+  // =====================================================
+
   getNotificationText(
-  notification: NotificationResponse
-): string {
+    notification: NotificationResponse
+  ): string {
 
-  const actor = notification.actorName ?? '';
-
-  switch (notification.type) {
-
-    case 'NEW_CONTACT_MESSAGE':
-
-      return `${this.lang.t('admin_notif_contact')} ${actor}`;
+    const actor =
+      notification.actorName ?? '';
 
 
-    case 'ADMIN_REPLY':
+    switch (
+      notification.type
+    ) {
 
-  return this.lang.t('admin_notif_reply');
+      case 'NEW_CONTACT_MESSAGE':
 
-
-    case 'FRIEND_REQUEST':
-
-      return `${actor} ${this.lang.t('notif_friend_request')}`;
-
-
-    case 'ACCEPT_FRIEND_REQUEST':
-
-      return `${actor} ${this.lang.t('notif_friend_accept')}`;
+        return `
+          ${this.lang.t('admin_notif_contact')}
+          ${actor}
+        `;
 
 
-    case 'LIKE':
+      case 'ADMIN_REPLY':
 
-      return `${actor} ${this.lang.t('notif_reacted')}`;
-
-
-    case 'COMMENT':
-
-      return `${actor} ${this.lang.t('notif_commented')}`;
+        return this.lang.t(
+          'admin_notif_reply'
+        );
 
 
-    default:
+      case 'FRIEND_REQUEST':
 
-      return notification.message;
+        return `
+          ${actor}
+          ${this.lang.t(
+            'notif_friend_request'
+          )}
+        `;
+
+
+      case 'ACCEPT_FRIEND_REQUEST':
+
+        return `
+          ${actor}
+          ${this.lang.t(
+            'notif_friend_accept'
+          )}
+        `;
+
+
+      case 'LIKE':
+
+        return `
+          ${actor}
+          ${this.lang.t(
+            'notif_reacted'
+          )}
+        `;
+
+
+      case 'COMMENT':
+
+        return `
+          ${actor}
+          ${this.lang.t(
+            'notif_commented'
+          )}
+        `;
+
+
+      default:
+
+        return notification.message;
+    }
   }
-}
 
 
-  getActorInitial(notification: NotificationResponse): string {
+  // =====================================================
+  // ACTOR INITIAL
+  // =====================================================
+
+  getActorInitial(
+    notification: NotificationResponse
+  ): string {
 
     if (notification.actorName) {
-      return notification.actorName.charAt(0).toUpperCase();
+
+      const parts =
+        notification.actorName
+          .trim()
+          .split(/\s+/);
+
+      const first =
+        parts[0]?.charAt(0) ?? '';
+
+      const last =
+        parts.length > 1
+          ? parts[1]?.charAt(0) ?? ''
+          : '';
+
+      return (
+        first + last
+      ).toUpperCase();
     }
 
-    return notification.message.charAt(0).toUpperCase();
+    return notification.message
+      .charAt(0)
+      .toUpperCase();
   }
 
+
+  // =====================================================
+  // ACTOR IMAGE
+  // =====================================================
 
   getActorImage(
     notification: NotificationResponse
   ): string | null {
 
-    if (!notification.actorProfilePicture) {
+    if (
+      !notification.actorProfilePicture
+    ) {
+
       return null;
     }
 
-    return 'http://localhost:9090' +
-      notification.actorProfilePicture;
+
+    return notification.actorProfilePicture
+      .startsWith('http')
+        ? notification.actorProfilePicture
+        : `
+          http://localhost:9090
+          ${notification.actorProfilePicture}
+        `.replace(/\s+/g, '');
   }
 
 
-  @HostListener('document:click', ['$event'])
+  // =====================================================
+  // CAN OPEN PROFILE
+  // =====================================================
+
+  canOpenProfile(
+    notification: NotificationResponse
+  ): boolean {
+
+    return (
+      (
+        notification.type === 'FRIEND_REQUEST'
+        ||
+        notification.type === 'ACCEPT_FRIEND_REQUEST'
+      )
+      &&
+      notification.actorId !== null
+    );
+  }
+
+
+  // =====================================================
+  // OPEN PROFILE
+  // =====================================================
+
+  openNotification(
+    notification: NotificationResponse
+  ): void {
+
+    if (
+      !this.canOpenProfile(
+        notification
+      )
+    ) {
+
+      return;
+    }
+
+
+    this.close();
+
+
+    this.router.navigate([
+      '/profile',
+      notification.actorId
+    ]);
+  }
+
+
+  // =====================================================
+  // OUTSIDE CLICK
+  // =====================================================
+
+  @HostListener(
+    'document:click',
+    ['$event']
+  )
   clickout(event: Event): void {
 
-    if (!this.eRef.nativeElement.contains(event.target)) {
+    if (
+      !this.eRef.nativeElement
+        .contains(event.target)
+    ) {
+
       this.close();
     }
   }

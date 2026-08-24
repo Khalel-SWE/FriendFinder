@@ -28,12 +28,17 @@
 
       <div class="bell-list">
         @for (item of notifications(); track item.id) {
-          <div class="bell-item">
+          <div
+            class="bell-item"
+            [class.clickable-notification]="canOpenProfile(item)"
+            (click)="openNotification(item)"
+          >
             <!-- ================= AVATAR ================= -->
+
             @if (item.type !== 'ADMIN_REPLY') {
               <div class="bell-avatar from-burgundy">
                 @if (getActorImage(item)) {
-                  <img [src]="getActorImage(item)" [alt]="item.actorName || 'User'" />
+                  <img [src]="getActorImage(item)!" [alt]="item.actorName || 'User'" />
                 } @else {
                   <span>
                     {{ getActorInitial(item) }}
@@ -41,6 +46,7 @@
                 }
               </div>
             }
+
             <!-- ================= TEXT ================= -->
 
             <div class="bell-text">
@@ -53,7 +59,9 @@
           </div>
         } @empty {
           <div class="bell-item">
-            <span class="bell-text"> No notifications </span>
+            <span class="bell-text">
+              {{ lang.t('admin_no_notifications') }}
+            </span>
           </div>
         }
       </div>
