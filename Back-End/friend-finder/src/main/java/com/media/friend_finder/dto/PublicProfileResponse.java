@@ -16,6 +16,8 @@ public class PublicProfileResponse {
 
     private Long id;
 
+    private String email;
+
     private String firstName;
 
     private String lastName;
@@ -41,25 +43,8 @@ public class PublicProfileResponse {
     // RELATIONSHIP
     // =========================
 
-    /*
-     * SELF
-     * FRIEND
-     * INCOMING_PENDING
-     * OUTGOING_PENDING
-     * NONE
-     */
     private String relationshipStatus;
 
-
-    // =========================
-    // FRIEND REQUEST
-    // =========================
-
-    /*
-     * لو فيه Incoming Request
-     * هنحتاج الـ ID بتاع الطلب
-     * علشان Angular يقدر يعمل Accept / Reject.
-     */
     private Long pendingRequestId;
 
 
@@ -67,9 +52,6 @@ public class PublicProfileResponse {
     // ACCESS CONTROL
     // =========================
 
-    /*
-     * هل الـ viewer مسموح له يشوف Posts الشخص ده؟
-     */
     private boolean canViewPosts;
 
 
@@ -77,8 +59,5 @@ public class PublicProfileResponse {
     // RECENT ACTIVITY
     // =========================
 
-    /*
-     * آخر 5 Activities فقط.
-     */
     private List<ActivityResponse> recentActivities;
 }

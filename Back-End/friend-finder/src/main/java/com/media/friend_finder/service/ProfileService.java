@@ -119,6 +119,7 @@ public class ProfileService {
 
             return PublicProfileResponse.builder()
                     .id(profileUser.getId())
+                    .email(profileUser.getEmail())
                     .firstName(profile.getFirstName())
                     .lastName(profile.getLastName())
                     .bio(profile.getBio())
@@ -238,6 +239,7 @@ public class ProfileService {
 
         return PublicProfileResponse.builder()
                 .id(profileUser.getId())
+                .email(profileUser.getEmail())
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
                 .bio(profile.getBio())
