@@ -42,8 +42,16 @@ public class FriendshipService {
         // ADMIN PROTECTION
         // =====================================================
 
-        if ("ADMIN".equals(addressee.getRole())) {
-            throw new RuntimeException("You cannot send a friend request to an Admin");
+        if ("ADMIN".equalsIgnoreCase(requester.getRole())) {
+            throw new RuntimeException(
+                    "Admin accounts cannot send friend requests"
+            );
+        }
+
+        if ("ADMIN".equalsIgnoreCase(addressee.getRole())) {
+            throw new RuntimeException(
+                    "You cannot send a friend request to an Admin"
+            );
         }
 
         // =====================================================
@@ -98,9 +106,11 @@ public class FriendshipService {
                 // إرسال Notification جديد للطلب الجديد
                 notificationService.createNotification(
                         addressee,
-                        "You have a new friend request from " + requester.getEmail(),
+                        "You have a new friend request from "
+                                + requester.getEmail(),
                         Notification.NotificationType.FRIEND_REQUEST,
-                        friendship.getId()
+                        friendship.getId(),
+                        requester
                 );
 
                 return "Friend request sent successfully to " + addresseeEmail;
@@ -133,9 +143,11 @@ public class FriendshipService {
 
         notificationService.createNotification(
                 addressee,
-                "You have a new friend request from " + requester.getEmail(),
+                "You have a new friend request from "
+                        + requester.getEmail(),
                 Notification.NotificationType.FRIEND_REQUEST,
-                friendship.getId()
+                friendship.getId(),
+                requester
         );
 
         return "Friend request sent successfully to " + addresseeEmail;
@@ -280,7 +292,8 @@ public class FriendshipService {
                     friendship.getAddressee().getEmail()
                             + " accepted your friend request",
                     Notification.NotificationType.ACCEPT_FRIEND_REQUEST,
-                    friendship.getId()
+                    friendship.getId(),
+                    friendship.getAddressee()
             );
         }
 

@@ -53,7 +53,8 @@ public class InteractionService {
                     post.getUser(),
                     profile.getFirstName() + " commented on your post",
                     Notification.NotificationType.COMMENT,
-                    post.getId()
+                    post.getId(),
+                    user
             );
         }
 
@@ -116,11 +117,13 @@ public class InteractionService {
 
             // إرسال الإشعار لصاحب البوست للرياكت الجديد فقط
             if (!user.equals(post.getUser())) {
+
                 notificationService.createNotification(
                         post.getUser(),
                         user.getEmail() + " reacted to your post",
                         Notification.NotificationType.LIKE,
-                        post.getId()
+                        post.getId(),
+                        user
                 );
             }
         }

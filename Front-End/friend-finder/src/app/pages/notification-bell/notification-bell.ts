@@ -19,7 +19,6 @@ import {
   NotificationResponse
 } from '../../core/models/notification.model';
 
-
 @Component({
   selector: 'app-notification-bell',
   standalone: true,
@@ -35,7 +34,6 @@ export class NotificationBell
 
   private router =
     inject(Router);
-
 
   open =
     signal(false);
@@ -53,6 +51,10 @@ export class NotificationBell
   ) {}
 
 
+  // =====================================================
+  // INIT
+  // =====================================================
+
   ngOnInit(): void {
 
     this.notification
@@ -61,9 +63,7 @@ export class NotificationBell
 
         next: (data) => {
 
-          this.notifications.set(
-            data
-          );
+          this.notifications.set(data);
 
           this.unreadCount.set(
             data.filter(
@@ -93,7 +93,6 @@ export class NotificationBell
     this.open.update(
       value => !value
     );
-
 
     if (
       this.open()
@@ -154,65 +153,33 @@ export class NotificationBell
     const actor =
       notification.actorName ?? '';
 
-
     switch (
       notification.type
     ) {
 
       case 'NEW_CONTACT_MESSAGE':
 
-        return `
-          ${this.lang.t('admin_notif_contact')}
-          ${actor}
-        `;
-
+        return `${actor} sent a contact message`;
 
       case 'ADMIN_REPLY':
 
-        return this.lang.t(
-          'admin_notif_reply'
-        );
-
+        return 'Admin replied to your message';
 
       case 'FRIEND_REQUEST':
 
-        return `
-          ${actor}
-          ${this.lang.t(
-            'notif_friend_request'
-          )}
-        `;
-
+        return `${actor} sent you a friend request`;
 
       case 'ACCEPT_FRIEND_REQUEST':
 
-        return `
-          ${actor}
-          ${this.lang.t(
-            'notif_friend_accept'
-          )}
-        `;
-
+        return `${actor} accepted your friend request`;
 
       case 'LIKE':
 
-        return `
-          ${actor}
-          ${this.lang.t(
-            'notif_reacted'
-          )}
-        `;
-
+        return `${actor} reacted to your post`;
 
       case 'COMMENT':
 
-        return `
-          ${actor}
-          ${this.lang.t(
-            'notif_commented'
-          )}
-        `;
-
+        return `${actor} commented on your post`;
 
       default:
 
@@ -222,7 +189,7 @@ export class NotificationBell
 
 
   // =====================================================
-  // ACTOR INITIAL
+  // ACTOR INITIALS
   // =====================================================
 
   getActorInitial(
@@ -249,9 +216,7 @@ export class NotificationBell
       ).toUpperCase();
     }
 
-    return notification.message
-      .charAt(0)
-      .toUpperCase();
+    return '?';
   }
 
 
@@ -270,39 +235,55 @@ export class NotificationBell
       return null;
     }
 
-
-    return notification.actorProfilePicture
+    return notification
+      .actorProfilePicture
       .startsWith('http')
-        ? notification.actorProfilePicture
-        : `
-          http://localhost:9090
-          ${notification.actorProfilePicture}
-        `.replace(/\s+/g, '');
+
+      ? notification.actorProfilePicture
+
+      : `http://localhost:9090${notification.actorProfilePicture}`;
   }
 
 
   // =====================================================
-  // CAN OPEN PROFILE
+  // CAN NAVIGATE
   // =====================================================
 
-  canOpenProfile(
+  canOpenNotification(
     notification: NotificationResponse
   ): boolean {
 
-    return (
-      (
-        notification.type === 'FRIEND_REQUEST'
-        ||
-        notification.type === 'ACCEPT_FRIEND_REQUEST'
-      )
-      &&
-      notification.actorId !== null
-    );
+    switch (
+      notification.type
+    ) {
+
+      case 'FRIEND_REQUEST':
+
+      case 'ACCEPT_FRIEND_REQUEST':
+
+        return notification.actorId !== null;
+
+      case 'LIKE':
+
+      case 'COMMENT':
+
+        return notification.relatedId !== null;
+
+      case 'NEW_CONTACT_MESSAGE':
+
+      case 'ADMIN_REPLY':
+
+        return true;
+
+      default:
+
+        return false;
+    }
   }
 
 
   // =====================================================
-  // OPEN PROFILE
+  // OPEN NOTIFICATION
   // =====================================================
 
   openNotification(
@@ -310,7 +291,7 @@ export class NotificationBell
   ): void {
 
     if (
-      !this.canOpenProfile(
+      !this.canOpenNotification(
         notification
       )
     ) {
@@ -318,14 +299,80 @@ export class NotificationBell
       return;
     }
 
-
     this.close();
 
 
-    this.router.navigate([
-      '/profile',
-      notification.actorId
-    ]);
+    // ===================================================
+    // FRIEND REQUEST
+    // ===================================================
+
+    if (
+      notification.type === 'FRIEND_REQUEST'
+      ||
+      notification.type === 'ACCEPT_FRIEND_REQUEST'
+    ) {
+
+      if (
+        notification.actorId === null
+      ) {
+
+        return;
+      }
+
+      this.router.navigate([
+        '/profile',
+        notification.actorId
+      ]);
+
+      return;
+    }
+
+
+    // ===================================================
+    // CONTACT / ADMIN
+    // ===================================================
+
+    if (
+      notification.type === 'NEW_CONTACT_MESSAGE'
+      ||
+      notification.type === 'ADMIN_REPLY'
+    ) {
+
+      this.router.navigate([
+        '/my-messages'
+      ]);
+
+      return;
+    }
+
+
+    // ===================================================
+    // LIKE / COMMENT
+    // ===================================================
+
+    if (
+      notification.type === 'LIKE'
+      ||
+      notification.type === 'COMMENT'
+    ) {
+
+      if (
+        notification.relatedId === null
+      ) {
+
+        return;
+      }
+
+      this.router.navigate(
+        ['/feed'],
+        {
+          queryParams: {
+            postId:
+              notification.relatedId
+          }
+        }
+      );
+    }
   }
 
 
@@ -340,7 +387,8 @@ export class NotificationBell
   clickout(event: Event): void {
 
     if (
-      !this.eRef.nativeElement
+      !this.eRef
+        .nativeElement
         .contains(event.target)
     ) {
 

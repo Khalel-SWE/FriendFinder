@@ -65,9 +65,11 @@ public class ContactMessageService {
 
         notificationService.createNotification(
                 admin,
-                "New contact message from " + message.getSenderName(),
+                "New contact message from "
+                        + message.getSenderName(),
                 Notification.NotificationType.NEW_CONTACT_MESSAGE,
-                savedMessage.getId()
+                savedMessage.getId(),
+                user
         );
     }
 
@@ -115,11 +117,20 @@ public class ContactMessageService {
         // Notification -> User
         // ============================
 
+        User admin =
+                userRepository.findFirstByRole("ADMIN")
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Admin user not found"
+                                )
+                        );
+
         notificationService.createNotification(
                 message.getUser(),
                 "Admin replied to your message",
                 Notification.NotificationType.ADMIN_REPLY,
-                message.getId()
+                message.getId(),
+                admin
         );
     }
 

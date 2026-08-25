@@ -30,27 +30,27 @@
         @for (item of notifications(); track item.id) {
           <div
             class="bell-item"
-            [class.clickable-notification]="canOpenProfile(item)"
+            [class.clickable-notification]="canOpenNotification(item)"
             (click)="openNotification(item)"
           >
-            <!-- ================= AVATAR ================= -->
+            <!-- AVATAR -->
 
-            @if (item.type !== 'ADMIN_REPLY') {
-              <div class="bell-avatar from-burgundy">
-                @if (getActorImage(item)) {
-                  <img [src]="getActorImage(item)!" [alt]="item.actorName || 'User'" />
-                } @else {
-                  <span>
-                    {{ getActorInitial(item) }}
-                  </span>
-                }
-              </div>
-            }
+            <div class="bell-avatar">
+              @if (getActorImage(item)) {
+                <img [src]="getActorImage(item)!" [alt]="item.actorName || 'User'" />
+              } @else {
+                <span>
+                  {{ getActorInitial(item) }}
+                </span>
+              }
+            </div>
 
-            <!-- ================= TEXT ================= -->
+            <!-- TEXT -->
 
             <div class="bell-text">
-              {{ getNotificationText(item) }}
+              <div>
+                {{ getNotificationText(item) }}
+              </div>
 
               <span class="bell-time">
                 {{ item.createdAt | date: 'short' }}

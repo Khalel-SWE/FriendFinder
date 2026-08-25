@@ -4,7 +4,6 @@ import com.media.friend_finder.dto.NotificationResponse;
 import com.media.friend_finder.entity.ContactMessage;
 import com.media.friend_finder.entity.Friendship;
 import com.media.friend_finder.entity.Notification;
-import com.media.friend_finder.entity.Notification.NotificationType;
 import com.media.friend_finder.entity.Profile;
 import com.media.friend_finder.entity.User;
 import com.media.friend_finder.repository.ContactMessageRepository;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,24 +29,68 @@ public class NotificationService {
 
 
     // =====================================================
-    // CREATE
+    // CREATE NOTIFICATION
     // =====================================================
 
     public void createNotification(
             User user,
             String message,
-            NotificationType type,
+            Notification.NotificationType type,
             Long relatedId
     ) {
 
-        Notification notification = new Notification();
+        createNotification(
+                user,
+                message,
+                type,
+                relatedId,
+                null
+        );
+    }
+
+
+    // =====================================================
+    // CREATE NOTIFICATION WITH ACTOR
+    // =====================================================
+
+    public void createNotification(
+            User user,
+            String message,
+            Notification.NotificationType type,
+            Long relatedId,
+            User actor
+    ) {
+
+        Notification notification =
+                new Notification();
 
         notification.setUser(user);
         notification.setMessage(message);
         notification.setType(type);
         notification.setRelatedId(relatedId);
 
-        notificationRepository.save(notification);
+        /*
+         * Admin is not a social actor.
+         *
+         * Therefore:
+         *
+         * USER -> ADMIN notification
+         * can have USER as actor.
+         *
+         * ADMIN -> USER notification
+         * keeps actorId null.
+         */
+        if (actor != null
+                && !"ADMIN".equalsIgnoreCase(actor.getRole())) {
+
+            notification.setActorId(
+                    actor.getId()
+            );
+        }
+
+        notificationRepository.save(
+                notification
+        );
     }
 
 
@@ -56,19 +98,23 @@ public class NotificationService {
     // GET NOTIFICATIONS
     // =====================================================
 
-    public List<NotificationResponse> getNotifications(String email) {
+    public List<NotificationResponse> getNotifications(
+            String email
+    ) {
 
         User user =
                 userRepository.findByEmail(email)
                         .orElseThrow(() ->
-                                new RuntimeException("User not found")
+                                new RuntimeException(
+                                        "User not found"
+                                )
                         );
 
         return notificationRepository
                 .findByUserOrderByCreatedAtDesc(user)
                 .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
@@ -82,14 +128,16 @@ public class NotificationService {
     ) {
 
         Notification notification =
-                notificationRepository.findById(notificationId)
+                notificationRepository
+                        .findById(notificationId)
                         .orElseThrow(() ->
                                 new RuntimeException(
                                         "Notification not found"
                                 )
                         );
 
-        if (!notification.getUser()
+        if (!notification
+                .getUser()
                 .getEmail()
                 .equals(email)) {
 
@@ -100,7 +148,9 @@ public class NotificationService {
 
         notification.setRead(true);
 
-        notificationRepository.save(notification);
+        notificationRepository.save(
+                notification
+        );
     }
 
 
@@ -109,7 +159,9 @@ public class NotificationService {
     // =====================================================
 
     @Transactional
-    public void markAllAsRead(String email) {
+    public void markAllAsRead(
+            String email
+    ) {
 
         User user =
                 userRepository.findByEmail(email)
@@ -119,7 +171,8 @@ public class NotificationService {
                                 )
                         );
 
-        notificationRepository.markAllAsReadByUser(user);
+        notificationRepository
+                .markAllAsReadByUser(user);
     }
 
 
@@ -133,14 +186,16 @@ public class NotificationService {
     ) {
 
         Notification notification =
-                notificationRepository.findById(notificationId)
+                notificationRepository
+                        .findById(notificationId)
                         .orElseThrow(() ->
                                 new RuntimeException(
                                         "Notification not found"
                                 )
                         );
 
-        if (!notification.getUser()
+        if (!notification
+                .getUser()
                 .getEmail()
                 .equals(email)) {
 
@@ -149,7 +204,9 @@ public class NotificationService {
             );
         }
 
-        notificationRepository.delete(notification);
+        notificationRepository.delete(
+                notification
+        );
     }
 
 
@@ -157,7 +214,9 @@ public class NotificationService {
     // UNREAD COUNT
     // =====================================================
 
-    public long getUnreadCount(String email) {
+    public long getUnreadCount(
+            String email
+    ) {
 
         User user =
                 userRepository.findByEmail(email)
@@ -173,26 +232,76 @@ public class NotificationService {
 
 
     // =====================================================
-    // MAPPING
+    // ENTITY -> DTO
     // =====================================================
 
     private NotificationResponse mapToResponse(
             Notification notification
     ) {
 
-        User actor =
-                resolveActor(notification);
+        User actor = null;
+
+        Long actorId =
+                notification.getActorId();
+
+
+        // =================================================
+        // 1. NEW NOTIFICATIONS
+        // =================================================
+
+        if (actorId != null) {
+
+            actor =
+                    userRepository
+                            .findById(actorId)
+                            .orElse(null);
+
+            if (actor != null
+                    && "ADMIN".equalsIgnoreCase(
+                    actor.getRole()
+            )) {
+
+                actor = null;
+                actorId = null;
+            }
+        }
+
+
+        // =================================================
+        // 2. FALLBACK FOR OLD NOTIFICATIONS
+        // =================================================
+
+        if (actor == null) {
+
+            actor =
+                    resolveLegacyActor(notification);
+
+            if (actor != null
+                    && "ADMIN".equalsIgnoreCase(
+                    actor.getRole()
+            )) {
+
+                actor = null;
+            }
+
+            if (actor != null) {
+
+                actorId =
+                        actor.getId();
+            }
+        }
+
+
+        // =================================================
+        // 3. ACTOR DATA
+        // =================================================
 
         String actorName = null;
 
         String actorProfilePicture = null;
 
-        Long actorId = null;
-
 
         if (actor != null) {
-
-            actorId = actor.getId();
 
             Profile profile =
                     profileRepository
@@ -204,15 +313,21 @@ public class NotificationService {
                 String firstName =
                         profile.getFirstName() == null
                                 ? ""
-                                : profile.getFirstName().trim();
+                                : profile
+                                .getFirstName()
+                                .trim();
 
                 String lastName =
                         profile.getLastName() == null
                                 ? ""
-                                : profile.getLastName().trim();
+                                : profile
+                                .getLastName()
+                                .trim();
 
                 actorName =
-                        (firstName + " " + lastName).trim();
+                        (firstName + " "
+                                + lastName)
+                                .trim();
 
                 actorProfilePicture =
                         profile.getProfilePicture();
@@ -221,42 +336,43 @@ public class NotificationService {
             if (actorName == null
                     || actorName.isBlank()) {
 
-                actorName = actor.getEmail();
+                actorName =
+                        actor.getEmail();
             }
         }
 
 
+        // =================================================
+        // 4. BUILD RESPONSE
+        // =================================================
+
         return NotificationResponse.builder()
-
                 .id(notification.getId())
-
                 .message(notification.getMessage())
-
                 .type(notification.getType())
-
-                .relatedId(notification.getRelatedId())
-
+                .relatedId(
+                        notification.getRelatedId()
+                )
                 .actorId(actorId)
-
                 .actorName(actorName)
-
                 .actorProfilePicture(
                         actorProfilePicture
                 )
-
-                .isRead(notification.isRead())
-
-                .createdAt(notification.getCreatedAt())
-
+                .isRead(
+                        notification.isRead()
+                )
+                .createdAt(
+                        notification.getCreatedAt()
+                )
                 .build();
     }
 
 
     // =====================================================
-    // ACTOR RESOLUTION
+    // LEGACY ACTOR RESOLUTION
     // =====================================================
 
-    private User resolveActor(
+    private User resolveLegacyActor(
             Notification notification
     ) {
 
@@ -271,37 +387,7 @@ public class NotificationService {
         switch (notification.getType()) {
 
             // =================================================
-            // CONTACT MESSAGE
-            // =================================================
-
-            case NEW_CONTACT_MESSAGE:
-
-                return contactMessageRepository
-                        .findById(relatedId)
-                        .map(ContactMessage::getUser)
-                        .orElse(null);
-
-
-            // =================================================
-            // ADMIN REPLY
-            // =================================================
-
-            case ADMIN_REPLY:
-
-                return userRepository
-                        .findByEmail(
-                                "admin@friendfinder.com"
-                        )
-                        .orElse(null);
-
-
-            // =================================================
             // FRIEND REQUEST
-            // =================================================
-            //
-            // relatedId = Friendship ID
-            //
-            // actor = requester
             // =================================================
 
             case FRIEND_REQUEST:
@@ -315,11 +401,6 @@ public class NotificationService {
             // =================================================
             // ACCEPT FRIEND REQUEST
             // =================================================
-            //
-            // relatedId = Friendship ID
-            //
-            // actor = addressee
-            // =================================================
 
             case ACCEPT_FRIEND_REQUEST:
 
@@ -330,22 +411,97 @@ public class NotificationService {
 
 
             // =================================================
-            // LIKE / COMMENT
+            // ADMIN REPLY
             // =================================================
-            //
-            // هنكمل actor resolution بتاعهم
-            // لما نعمل notification system الكامل.
+
+            case ADMIN_REPLY:
+
+                /*
+                 * Admin is intentionally NOT exposed
+                 * as a social actor.
+                 */
+                return null;
+
+
+            // =================================================
+            // CONTACT
+            // =================================================
+
+            case NEW_CONTACT_MESSAGE:
+
+                return contactMessageRepository
+                        .findById(relatedId)
+                        .map(ContactMessage::getUser)
+                        .orElse(null);
+
+
+            // =================================================
+            // LIKE / COMMENT
             // =================================================
 
             case LIKE:
             case COMMENT:
 
-                return null;
+                /*
+                 * Old notifications store the post ID
+                 * in relatedId.
+                 *
+                 * The old message contains the actor email,
+                 * for example:
+                 *
+                 * "foo@test.com reacted to your post"
+                 *
+                 * "foo@test.com commented on your post"
+                 *
+                 * Therefore we can recover the actor
+                 * from that email.
+                 */
+                return resolveActorFromLegacyMessage(
+                        notification.getMessage()
+                );
 
 
             default:
 
                 return null;
         }
+    }
+
+
+    // =====================================================
+    // RESOLVE LEGACY ACTOR FROM MESSAGE
+    // =====================================================
+
+    private User resolveActorFromLegacyMessage(
+            String message
+    ) {
+
+        if (message == null
+                || message.isBlank()) {
+
+            return null;
+        }
+
+        String email =
+                message
+                        .replace(
+                                " reacted to your post",
+                                ""
+                        )
+                        .replace(
+                                " commented on your post",
+                                ""
+                        )
+                        .trim();
+
+        if (email.isBlank()
+                || !email.contains("@")) {
+
+            return null;
+        }
+
+        return userRepository
+                .findByEmail(email)
+                .orElse(null);
     }
 }

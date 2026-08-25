@@ -1,26 +1,7 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
-
-// import { NotificationResponse } from '../models/notification.model';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class Notification {
-
-//   private apiUrl = 'http://localhost:9090/friend-finder/notifications';
-
-//   constructor(private http: HttpClient) {}
-
-//   getMyNotifications(): Observable<NotificationResponse[]> {
-//     return this.http.get<NotificationResponse[]>(this.apiUrl);
-//   }
-
-// }
-
 import { Injectable } from '@angular/core';
+
 import { HttpClient } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 
 import { NotificationResponse } from '../models/notification.model';
@@ -33,18 +14,27 @@ export class Notification {
   private apiUrl =
     'http://localhost:9090/friend-finder/notifications';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
-  getMyNotifications(): Observable<NotificationResponse[]> {
-    return this.http.get<NotificationResponse[]>(this.apiUrl);
-  }
+  getMyNotifications():
+    Observable<NotificationResponse[]> {
 
-  markAllAsRead(): Observable<string> {
-    return this.http.patch(
-      `${this.apiUrl}/read-all`,
-      {},
-      { responseType: 'text' }
+    return this.http.get<NotificationResponse[]>(
+      this.apiUrl
     );
   }
 
+  markAllAsRead():
+    Observable<string> {
+
+    return this.http.patch(
+      `${this.apiUrl}/read-all`,
+      {},
+      {
+        responseType: 'text'
+      }
+    );
+  }
 }

@@ -65,6 +65,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             SELECT p
             FROM Profile p
             WHERE p.user != :currentUser
+            AND p.user.role <> 'ADMIN'
 
             AND p.user NOT IN (
                 SELECT f.requester
