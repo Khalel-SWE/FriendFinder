@@ -46,9 +46,11 @@ public class ProfileService {
                                 )
                         );
 
+        User user = p.getUser();
+
         return ProfileResponse.builder()
-                .id(p.getUser().getId())
-                .email(p.getUser().getEmail())
+                .id(user.getId())
+                .email(user.getEmail())
                 .firstName(p.getFirstName())
                 .lastName(p.getLastName())
                 .bio(p.getBio())
@@ -58,7 +60,16 @@ public class ProfileService {
                 .languages(p.getLanguages())
                 .profilePicture(p.getProfilePicture())
                 .coverPhoto(p.getCoverPhoto())
-                .createdAt(p.getUser().getCreatedAt())
+                .createdAt(user.getCreatedAt())
+
+                // =========================================
+                // LAST 5 ACTIVITIES
+                // =========================================
+                .recentActivities(
+                        activityService
+                                .getRecentUserActivities(user)
+                )
+
                 .build();
     }
 
@@ -98,6 +109,18 @@ public class ProfileService {
                         );
 
 
+        // =================================================
+        // ADMIN PROTECTION
+        // =================================================
+
+        if ("ADMIN".equalsIgnoreCase(profileUser.getRole())) {
+
+            throw new RuntimeException(
+                    "Admin profile is not publicly accessible"
+            );
+        }
+
+
         // -------------------------------------------------
         // PROFILE
         // -------------------------------------------------
@@ -135,7 +158,9 @@ public class ProfileService {
                     .canViewPosts(true)
                     .recentActivities(
                             activityService
-                                    .getRecentUserActivities(profileUser)
+                                    .getRecentUserActivities(
+                                            profileUser
+                                    )
                     )
                     .build();
         }
@@ -152,7 +177,6 @@ public class ProfileService {
                 );
 
 
-        // Default state
         String relationshipStatus = "NONE";
 
         Long pendingRequestId = null;
@@ -189,16 +213,6 @@ public class ProfileService {
             else if (FriendshipStatus.PENDING.name()
                     .equalsIgnoreCase(status)) {
 
-                /*
-                 * هل الـ target user هو اللي بعت الطلب؟
-                 *
-                 * currentUser -> profileUser
-                 * = OUTGOING
-                 *
-                 * profileUser -> currentUser
-                 * = INCOMING
-                 */
-
                 if (friendship.getRequester()
                         .getId()
                         .equals(currentUser.getId())) {
@@ -221,12 +235,6 @@ public class ProfileService {
 
             else if (FriendshipStatus.REJECTED.name()
                     .equalsIgnoreCase(status)) {
-
-                /*
-                 * REJECTED = no active relationship.
-                 *
-                 * الشخص يرجع يظهر كـ NONE.
-                 */
 
                 relationshipStatus = "NONE";
             }

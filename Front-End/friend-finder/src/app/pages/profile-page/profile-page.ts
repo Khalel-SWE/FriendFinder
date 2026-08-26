@@ -36,7 +36,8 @@ import { ProfileService } from '../../core/services/profile';
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css'
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage
+  implements OnInit {
 
   activeTab =
     signal<ProfileTab>('timeline');
@@ -84,7 +85,6 @@ export class ProfilePage implements OnInit {
 
           this.loadMyProfile();
         }
-
       }
     );
   }
@@ -155,8 +155,10 @@ export class ProfilePage implements OnInit {
             canViewPosts:
               true,
 
+            // IMPORTANT:
+            // DO NOT ERASE BACKEND ACTIVITIES
             recentActivities:
-              []
+              res.recentActivities ?? []
 
           };
 
@@ -196,23 +198,10 @@ export class ProfilePage implements OnInit {
       return;
     }
 
-    /*
-     * My profile:
-     * nothing needs to be reloaded.
-     */
     if (this.isMyProfile()) {
       return;
     }
 
-    /*
-     * Reload the visitor profile so the backend
-     * recalculates:
-     *
-     * relationshipStatus
-     * pendingRequestId
-     * canViewPosts
-     * recentActivities
-     */
     this.loadUserProfile(
       currentProfile.id
     );
@@ -241,7 +230,6 @@ export class ProfilePage implements OnInit {
       this.memberSince.set(
         '2024'
       );
-
     }
   }
 
@@ -256,5 +244,4 @@ export class ProfilePage implements OnInit {
 
     this.activeTab.set(tab);
   }
-
 }

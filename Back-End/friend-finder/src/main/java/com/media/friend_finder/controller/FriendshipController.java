@@ -17,77 +17,137 @@ public class FriendshipController {
 
     private final FriendshipService friendshipService;
 
-    // 1. إرسال طلب صداقة
+
+    // =====================================================
+    // SEND FRIEND REQUEST
+    // =====================================================
+
     @PostMapping("/request")
     public ResponseEntity<String> sendFriendRequest(
             Authentication authentication,
-            @RequestParam String toEmail) {
-        return ResponseEntity.ok(friendshipService.sendFriendRequest(authentication.getName(), toEmail));
+            @RequestParam String toEmail
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.sendFriendRequest(
+                        authentication.getName(),
+                        toEmail
+                )
+        );
     }
 
-    // 2. عرض الطلبات المعلقة
+
+    // =====================================================
+    // PENDING REQUESTS
+    // =====================================================
+
     @GetMapping("/requests/pending")
-    public ResponseEntity<List<FriendRequestResponse>> getPendingRequests(Authentication authentication) {
-        return ResponseEntity.ok(friendshipService.getPendingRequests(authentication.getName()));
+    public ResponseEntity<List<FriendRequestResponse>>
+    getPendingRequests(
+            Authentication authentication
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.getPendingRequests(
+                        authentication.getName()
+                )
+        );
     }
 
-    // 3. قبول أو رفض الطلب (الآن يمرر الـ Authentication لحماية الداتا)
+
+    // =====================================================
+    // ACCEPT / REJECT
+    // =====================================================
+
     @PutMapping("/requests/{id}")
     public ResponseEntity<String> acceptOrRejectRequest(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestParam String status) {
-        return ResponseEntity.ok(friendshipService.acceptOrRejectRequest(authentication.getName(), id, status));
+            @RequestParam String status
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.acceptOrRejectRequest(
+                        authentication.getName(),
+                        id,
+                        status
+                )
+        );
     }
 
-    // إرسال طلب باستخدام الـ ID
+
+    // =====================================================
+    // SEND REQUEST BY ID
+    // =====================================================
+
     @PostMapping("/request/{receiverId}")
     public ResponseEntity<String> sendFriendRequestById(
             Authentication authentication,
-            @PathVariable Long receiverId) {
-        return ResponseEntity.ok(friendshipService.sendFriendRequestById(authentication.getName(), receiverId));
+            @PathVariable Long receiverId
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.sendFriendRequestById(
+                        authentication.getName(),
+                        receiverId
+                )
+        );
     }
 
-//    @PostMapping("/request/{receiverId}")
-//    public ResponseEntity<String> sendFriendRequestById(
-//            Authentication authentication,
-//            @PathVariable Long receiverId) {
-//
-//        System.out.println(
-//                "========== FRIEND REQUEST =========="
-//        );
-//
-//        System.out.println(
-//                "Requester: " + authentication.getName()
-//        );
-//
-//        System.out.println(
-//                "Receiver ID: " + receiverId
-//        );
-//
-//        System.out.println(
-//                "===================================="
-//        );
-//
-//        return ResponseEntity.ok(
-//                friendshipService.sendFriendRequestById(
-//                        authentication.getName(),
-//                        receiverId
-//                )
-//        );
-//    }
 
-    // جلب قائمة الأصدقاء للبروفايل
+    // =====================================================
+    // MY FRIENDS
+    // =====================================================
+
     @GetMapping("/my-friends")
-    public ResponseEntity<List<FriendResponse>> getMyFriends(Authentication authentication) {
-        return ResponseEntity.ok(friendshipService.getMyFriends(authentication.getName()));
+    public ResponseEntity<List<FriendResponse>>
+    getMyFriends(
+            Authentication authentication
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.getMyFriends(
+                        authentication.getName()
+                )
+        );
     }
 
-    // مسح صديق
+
+    // =====================================================
+    // FRIENDS OF SPECIFIC PROFILE
+    // =====================================================
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<List<FriendResponse>>
+    getFriendsForProfile(
+            Authentication authentication,
+            @PathVariable Long userId
+    ) {
+
+        return ResponseEntity.ok(
+                friendshipService.getFriendsForProfile(
+                        authentication.getName(),
+                        userId
+                )
+        );
+    }
+
+
+    // =====================================================
+    // REMOVE FRIEND
+    // =====================================================
+
     @DeleteMapping("/remove/{friendId}")
-    public ResponseEntity<Void> removeFriend(Authentication authentication, @PathVariable Long friendId) {
-        friendshipService.removeFriend(authentication.getName(), friendId);
+    public ResponseEntity<Void> removeFriend(
+            Authentication authentication,
+            @PathVariable Long friendId
+    ) {
+
+        friendshipService.removeFriend(
+                authentication.getName(),
+                friendId
+        );
+
         return ResponseEntity.ok().build();
     }
-
 }

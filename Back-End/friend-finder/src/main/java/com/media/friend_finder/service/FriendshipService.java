@@ -22,88 +22,110 @@ public class FriendshipService {
     private final NotificationService notificationService;
     private final ActivityService activityService;
 
+
     // =====================================================
-    // 1. إرسال طلب صداقة
+    // 1. SEND FRIEND REQUEST
     // =====================================================
 
-    public String sendFriendRequest(String requesterEmail, String addresseeEmail) {
+    public String sendFriendRequest(
+            String requesterEmail,
+            String addresseeEmail
+    ) {
 
         if (requesterEmail.equals(addresseeEmail)) {
-            throw new RuntimeException("You cannot send a friend request to yourself");
+
+            throw new RuntimeException(
+                    "You cannot send a friend request to yourself"
+            );
         }
 
-        User requester = userRepository.findByEmail(requesterEmail)
-                .orElseThrow(() -> new RuntimeException("Sender not found"));
+        User requester =
+                userRepository.findByEmail(requesterEmail)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Sender not found"
+                                )
+                        );
 
-        User addressee = userRepository.findByEmail(addresseeEmail)
-                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+        User addressee =
+                userRepository.findByEmail(addresseeEmail)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Receiver not found"
+                                )
+                        );
+
 
         // =====================================================
         // ADMIN PROTECTION
         // =====================================================
 
         if ("ADMIN".equalsIgnoreCase(requester.getRole())) {
+
             throw new RuntimeException(
                     "Admin accounts cannot send friend requests"
             );
         }
 
         if ("ADMIN".equalsIgnoreCase(addressee.getRole())) {
+
             throw new RuntimeException(
                     "You cannot send a friend request to an Admin"
             );
         }
 
+
         // =====================================================
-        // EXISTING RELATIONSHIP CHECK
+        // EXISTING RELATIONSHIP
         // =====================================================
 
         var existingFriendship =
-                friendshipRepository.findFriendshipBetweenUsers(requester, addressee);
+                friendshipRepository.findFriendshipBetweenUsers(
+                        requester,
+                        addressee
+                );
 
         if (existingFriendship.isPresent()) {
 
-            Friendship friendship = existingFriendship.get();
+            Friendship friendship =
+                    existingFriendship.get();
 
-            String currentStatus = friendship.getStatus();
+            String currentStatus =
+                    friendship.getStatus();
 
-            // -------------------------------------------------
-            // PENDING
-            // -------------------------------------------------
 
-            if (FriendshipStatus.PENDING.name().equalsIgnoreCase(currentStatus)) {
+            if (FriendshipStatus.PENDING.name()
+                    .equalsIgnoreCase(currentStatus)) {
+
                 throw new RuntimeException(
                         "A friend request is already pending between these users"
                 );
             }
 
-            // -------------------------------------------------
-            // ACCEPTED
-            // -------------------------------------------------
 
-            if (FriendshipStatus.ACCEPTED.name().equalsIgnoreCase(currentStatus)) {
+            if (FriendshipStatus.ACCEPTED.name()
+                    .equalsIgnoreCase(currentStatus)) {
+
                 throw new RuntimeException(
                         "These users are already friends"
                 );
             }
 
-            // -------------------------------------------------
-            // REJECTED
-            // -------------------------------------------------
-            // الرفض لا يعني Block
-            // لذلك نستخدم نفس الـ Friendship record
-            // ونرجعه إلى PENDING
-            // -------------------------------------------------
 
-            if (FriendshipStatus.REJECTED.name().equalsIgnoreCase(currentStatus)) {
+            if (FriendshipStatus.REJECTED.name()
+                    .equalsIgnoreCase(currentStatus)) {
 
                 friendship.setRequester(requester);
+
                 friendship.setAddressee(addressee);
-                friendship.setStatus(FriendshipStatus.PENDING.name());
+
+                friendship.setStatus(
+                        FriendshipStatus.PENDING.name()
+                );
 
                 friendshipRepository.save(friendship);
 
-                // إرسال Notification جديد للطلب الجديد
+
                 notificationService.createNotification(
                         addressee,
                         "You have a new friend request from "
@@ -113,33 +135,35 @@ public class FriendshipService {
                         requester
                 );
 
-                return "Friend request sent successfully to " + addresseeEmail;
+                return "Friend request sent successfully to "
+                        + addresseeEmail;
             }
 
-            // =================================================
-            // UNKNOWN STATUS
-            // =================================================
 
             throw new RuntimeException(
-                    "Invalid friendship status: " + currentStatus
+                    "Invalid friendship status: "
+                            + currentStatus
             );
         }
 
+
         // =====================================================
-        // NO EXISTING RELATIONSHIP
+        // CREATE NEW FRIENDSHIP
         // =====================================================
 
-        Friendship friendship = new Friendship();
+        Friendship friendship =
+                new Friendship();
 
         friendship.setRequester(requester);
+
         friendship.setAddressee(addressee);
-        friendship.setStatus(FriendshipStatus.PENDING.name());
+
+        friendship.setStatus(
+                FriendshipStatus.PENDING.name()
+        );
 
         friendshipRepository.save(friendship);
 
-        // =====================================================
-        // NOTIFICATION
-        // =====================================================
 
         notificationService.createNotification(
                 addressee,
@@ -150,21 +174,26 @@ public class FriendshipService {
                 requester
         );
 
-        return "Friend request sent successfully to " + addresseeEmail;
+        return "Friend request sent successfully to "
+                + addresseeEmail;
     }
 
+
     // =====================================================
-    // 2. عرض طلبات الصداقة المعلقة لليوزر الحالي
+    // 2. GET PENDING REQUESTS
     // =====================================================
 
-    public List<FriendRequestResponse> getPendingRequests(String email) {
+    public List<FriendRequestResponse> getPendingRequests(
+            String email
+    ) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // TODO:
-        // Fix N+1 Query Problem later by using JOIN FETCH
-        // if the project grows significantly.
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
 
         return friendshipRepository
                 .findByAddresseeAndStatus(
@@ -180,9 +209,10 @@ public class FriendshipService {
                                             f.getRequester().getEmail()
                                     )
                                     .orElseThrow(
-                                            () -> new RuntimeException(
-                                                    "Profile not found"
-                                            )
+                                            () ->
+                                                    new RuntimeException(
+                                                            "Profile not found"
+                                                    )
                                     );
 
                     return FriendRequestResponse.builder()
@@ -202,8 +232,9 @@ public class FriendshipService {
                 .collect(Collectors.toList());
     }
 
+
     // =====================================================
-    // 3. قبول أو رفض طلب الصداقة
+    // 3. ACCEPT / REJECT
     // =====================================================
 
     public String acceptOrRejectRequest(
@@ -215,14 +246,12 @@ public class FriendshipService {
         Friendship friendship =
                 friendshipRepository.findById(requestId)
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Friend request not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "Friend request not found"
+                                        )
                         );
 
-        // =====================================================
-        // SECURITY CHECK
-        // =====================================================
 
         if (!friendship.getAddressee()
                 .getEmail()
@@ -233,9 +262,6 @@ public class FriendshipService {
             );
         }
 
-        // =====================================================
-        // VALIDATE STATUS
-        // =====================================================
 
         FriendshipStatus statusEnum;
 
@@ -253,6 +279,7 @@ public class FriendshipService {
             );
         }
 
+
         if (statusEnum == FriendshipStatus.PENDING) {
 
             throw new RuntimeException(
@@ -260,17 +287,13 @@ public class FriendshipService {
             );
         }
 
-        // =====================================================
-        // UPDATE STATUS
-        // =====================================================
 
-        friendship.setStatus(statusEnum.name());
+        friendship.setStatus(
+                statusEnum.name()
+        );
 
         friendshipRepository.save(friendship);
 
-        // =====================================================
-        // ACCEPTED
-        // =====================================================
 
         if (statusEnum == FriendshipStatus.ACCEPTED) {
 
@@ -286,35 +309,26 @@ public class FriendshipService {
                     friendship.getId()
             );
 
-            // Notification to requester
+
             notificationService.createNotification(
                     friendship.getRequester(),
                     friendship.getAddressee().getEmail()
                             + " accepted your friend request",
-                    Notification.NotificationType.ACCEPT_FRIEND_REQUEST,
+                    Notification.NotificationType
+                            .ACCEPT_FRIEND_REQUEST,
                     friendship.getId(),
                     friendship.getAddressee()
             );
         }
 
-        // =====================================================
-        // REJECTED
-        // =====================================================
-        // لا يوجد Block.
-        //
-        // فقط نغير الحالة إلى REJECTED.
-        //
-        // بعد ذلك:
-        // sendFriendRequest()
-        // يستطيع تحويلها مرة أخرى إلى PENDING.
-        // =====================================================
 
         return "Friend request has been "
                 + statusEnum.name().toLowerCase();
     }
 
+
     // =====================================================
-    // 4. إرسال طلب صداقة بالـ ID
+    // 4. SEND BY ID
     // =====================================================
 
     public String sendFriendRequestById(
@@ -325,9 +339,10 @@ public class FriendshipService {
         User receiver =
                 userRepository.findById(receiverId)
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Receiver not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "Receiver not found"
+                                        )
                         );
 
         return sendFriendRequest(
@@ -336,31 +351,155 @@ public class FriendshipService {
         );
     }
 
+
     // =====================================================
-    // 5. جلب الأصدقاء الفعليين
+    // 5. GET MY FRIENDS
     // =====================================================
 
-    public List<FriendResponse> getMyFriends(String email) {
+    public List<FriendResponse> getMyFriends(
+            String email
+    ) {
 
         User currentUser =
                 userRepository.findByEmail(email)
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "User not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "User not found"
+                                        )
                         );
+
+        return buildFriendList(currentUser);
+    }
+
+
+    // =====================================================
+    // 6. GET FRIENDS OF PROFILE USER
+    // =====================================================
+
+    public List<FriendResponse> getFriendsForProfile(
+            String currentUserEmail,
+            Long profileUserId
+    ) {
+
+        User currentUser =
+                userRepository.findByEmail(
+                                currentUserEmail
+                        )
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Current user not found"
+                                        )
+                        );
+
+
+        User profileUser =
+                userRepository.findById(profileUserId)
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Profile user not found"
+                                        )
+                        );
+
+
+        // =====================================================
+        // ADMIN PROTECTION
+        // =====================================================
+
+        if ("ADMIN".equalsIgnoreCase(
+                profileUser.getRole()
+        )) {
+
+            throw new RuntimeException(
+                    "Admin friends are not publicly accessible"
+            );
+        }
+
+
+        // =====================================================
+        // SELF
+        // =====================================================
+
+        if (currentUser.getId()
+                .equals(profileUser.getId())) {
+
+            return buildFriendList(
+                    profileUser
+            );
+        }
+
+
+        // =====================================================
+        // SECURITY
+        // =====================================================
+
+        Friendship friendship =
+                friendshipRepository
+                        .findFriendshipBetweenUsers(
+                                currentUser,
+                                profileUser
+                        )
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "You must be friends with this user to view their friends"
+                                        )
+                        );
+
+
+        if (!FriendshipStatus.ACCEPTED.name()
+                .equalsIgnoreCase(
+                        friendship.getStatus()
+                )) {
+
+            throw new RuntimeException(
+                    "You must be friends with this user to view their friends"
+            );
+        }
+
+
+        return buildFriendList(
+                profileUser
+        );
+    }
+
+
+    // =====================================================
+    // BUILD FRIEND LIST
+    // =====================================================
+
+    private List<FriendResponse> buildFriendList(
+            User owner
+    ) {
 
         List<Friendship> friendships =
                 friendshipRepository
-                        .findAcceptedFriendships(currentUser);
+                        .findAcceptedFriendships(owner);
+
 
         return friendships.stream()
-                .map(f -> {
+                .map(friendship -> {
 
                     User friendUser =
-                            f.getRequester().equals(currentUser)
-                                    ? f.getAddressee()
-                                    : f.getRequester();
+                            friendship.getRequester()
+                                    .equals(owner)
+                                    ? friendship.getAddressee()
+                                    : friendship.getRequester();
+
+
+                    // =================================================
+                    // SAFETY
+                    // =================================================
+
+                    if ("ADMIN".equalsIgnoreCase(
+                            friendUser.getRole()
+                    )) {
+
+                        return null;
+                    }
+
 
                     Profile profile =
                             profileRepository
@@ -368,40 +507,91 @@ public class FriendshipService {
                                             friendUser.getEmail()
                                     )
                                     .orElseThrow(
-                                            () -> new RuntimeException(
-                                                    "Profile not found"
-                                            )
+                                            () ->
+                                                    new RuntimeException(
+                                                            "Profile not found"
+                                                    )
                                     );
+
+
+                    String firstName =
+                            profile.getFirstName() == null
+                                    ? ""
+                                    : profile.getFirstName().trim();
+
+                    String lastName =
+                            profile.getLastName() == null
+                                    ? ""
+                                    : profile.getLastName().trim();
+
+
+                    String fullName =
+                            (firstName + " " + lastName)
+                                    .trim();
+
+
+//                    String initials =
+//                            (
+//                                    firstName.isEmpty()
+//                                            ? ""
+//                                            : firstName.charAt(0)
+//                            )
+//                                    + (
+//                                    lastName.isEmpty()
+//                                            ? ""
+//                                            : lastName.charAt(0)
+//                            );
 
                     String initials =
                             (
-                                    profile.getFirstName().charAt(0)
-                                            + ""
-                                            + profile.getLastName().charAt(0)
-                            ).toUpperCase();
+                                    firstName.isEmpty()
+                                            ? ""
+                                            : String.valueOf(firstName.charAt(0))
+                            )
+                                    + (
+                                    lastName.isEmpty()
+                                            ? ""
+                                            : String.valueOf(lastName.charAt(0))
+                            );
+
 
                     String gradient =
                             friendUser.getId() % 2 == 0
                                     ? "from-burgundy"
                                     : "from-gold";
 
+
                     return FriendResponse.builder()
                             .id(friendUser.getId())
                             .name(
-                                    profile.getFirstName()
-                                            + " "
-                                            + profile.getLastName()
+                                    fullName.isBlank()
+                                            ? friendUser.getEmail()
+                                            : fullName
                             )
-                            .initials(initials)
+                            .initials(
+                                    initials
+                                            .toUpperCase()
+                            )
                             .gradient(gradient)
                             .mutualCount(0)
+                            .profilePicture(
+                                    profile.getProfilePicture()
+                            )
+                            .coverPhoto(
+                                    profile.getCoverPhoto()
+                            )
                             .build();
+
                 })
+                .filter(
+                        friend -> friend != null
+                )
                 .collect(Collectors.toList());
     }
 
+
     // =====================================================
-    // 6. مسح صديق (Unfriend)
+    // 7. REMOVE FRIEND
     // =====================================================
 
     public void removeFriend(
@@ -412,18 +602,22 @@ public class FriendshipService {
         User currentUser =
                 userRepository.findByEmail(userEmail)
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "User not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "User not found"
+                                        )
                         );
+
 
         User friend =
                 userRepository.findById(friendId)
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Friend not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "Friend not found"
+                                        )
                         );
+
 
         Friendship friendship =
                 friendshipRepository
@@ -432,20 +626,26 @@ public class FriendshipService {
                                 friend
                         )
                         .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Friendship not found"
-                                )
+                                () ->
+                                        new RuntimeException(
+                                                "Friendship not found"
+                                        )
                         );
 
-        // نتأكد أنها فعلاً صداقة مقبولة
+
         if (!FriendshipStatus.ACCEPTED.name()
-                .equalsIgnoreCase(friendship.getStatus())) {
+                .equalsIgnoreCase(
+                        friendship.getStatus()
+                )) {
 
             throw new RuntimeException(
                     "These users are not friends"
             );
         }
 
-        friendshipRepository.delete(friendship);
+
+        friendshipRepository.delete(
+                friendship
+        );
     }
 }

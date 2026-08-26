@@ -1,10 +1,62 @@
 <div class="friends-grid">
   @for (friend of friends(); track friend.id) {
     <div class="friend-card">
-      <div class="friend-avatar" [class]="friend.gradient">{{ friend.initials }}</div>
-      <p class="friend-name">{{ friend.name }}</p>
-      <p class="friend-mutual">{{ friend.mutualCount }} mutual friends</p>
-      <button type="button" class="unfriend-btn" (click)="unfriend(friend)">Unfriend</button>
+      <!-- ================= COVER ================= -->
+
+      <div class="friend-cover">
+        @if (getImageUrl(friend.coverPhoto)) {
+          <img [src]="getImageUrl(friend.coverPhoto)!" [alt]="friend.name" />
+        }
+      </div>
+
+      <!-- ================= AVATAR ================= -->
+
+      <div class="friend-avatar-wrap">
+        @if (getImageUrl(friend.profilePicture)) {
+          <img
+            class="friend-avatar-image"
+            [src]="getImageUrl(friend.profilePicture)!"
+            [alt]="friend.name"
+          />
+        } @else {
+          <div
+            class="friend-avatar"
+            [class.from-burgundy]="friend.gradient === 'from-burgundy'"
+            [class.from-gold]="friend.gradient === 'from-gold'"
+          >
+            {{ friend.initials }}
+          </div>
+        }
+      </div>
+
+      <!-- ================= INFO ================= -->
+
+      <div class="friend-info">
+        <button type="button" class="friend-name" (click)="goToProfile(friend.id)">
+          {{ friend.name }}
+        </button>
+
+        <p class="friend-mutual">
+          {{ friend.mutualCount }}
+          mutual friends
+        </p>
+
+        <!-- ================= ACTIONS ================= -->
+
+        <div class="friend-actions">
+          <button type="button" class="profile-btn" (click)="goToProfile(friend.id)">
+            View Profile
+          </button>
+
+          @if (isMyProfile) {
+            <button type="button" class="unfriend-btn" (click)="unfriend(friend)">Unfriend</button>
+          }
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <div class="friends-empty">
+      <p>No friends to show.</p>
     </div>
   }
 </div>

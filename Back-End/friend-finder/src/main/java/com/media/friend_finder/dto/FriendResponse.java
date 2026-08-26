@@ -10,9 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendResponse {
+
     private Long id;
+
     private String name;
+
     private String initials;
+
     private String gradient;
+
     private int mutualCount;
+
+    private String profilePicture;
+
+    private String coverPhoto;
 }

@@ -31,7 +31,8 @@
 
         @case ('friends') {
           @if (isMyProfile() || profile()?.canViewPosts) {
-            <app-profile-friends-tab> </app-profile-friends-tab>
+            <app-profile-friends-tab [userId]="profile()?.id" [isMyProfile]="isMyProfile()">
+            </app-profile-friends-tab>
           } @else {
             <div class="ff-card p-8 text-center">
               <p class="text-sm" style="color: var(--muted)">
