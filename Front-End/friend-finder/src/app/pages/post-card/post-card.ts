@@ -18,6 +18,7 @@ import {
 } from '../../core/models/post-model';
 
 import { InteractionService } from '../../core/services/interaction';
+
 import { ProfileService } from '../../core/services/profile';
 
 
@@ -50,7 +51,14 @@ export class PostCard implements OnInit {
     signal('');
 
 
+  // =====================================================
+  // CURRENT USER
+  // =====================================================
+
   currentUserEmail =
+    signal<string>('');
+
+  currentUserName =
     signal<string>('');
 
 
@@ -62,9 +70,10 @@ export class PostCard implements OnInit {
     signal<string>('');
 
 
-  /*
-   * Reaction picker
-   */
+  // =====================================================
+  // REACTION PICKER
+  // =====================================================
+
   reactionPickerOpen =
     signal(false);
 
@@ -73,15 +82,10 @@ export class PostCard implements OnInit {
     Record<ReactionType, string> = {
 
       like: '👍',
-
       love: '❤️',
-
       haha: '😆',
-
       wow: '😮',
-
       sad: '😢',
-
       angry: '😡'
 
     };
@@ -91,15 +95,10 @@ export class PostCard implements OnInit {
     ReactionType[] = [
 
       'like',
-
       'love',
-
       'haha',
-
       'wow',
-
       'sad',
-
       'angry'
 
     ];
@@ -131,7 +130,13 @@ export class PostCard implements OnInit {
         next: (profile) => {
 
           this.currentUserEmail.set(
-            profile.email
+            profile.email ?? ''
+          );
+
+
+          this.currentUserName.set(
+            `${profile.firstName ?? ''} ${profile.lastName ?? ''}`
+              .trim()
           );
 
         },
@@ -159,9 +164,12 @@ export class PostCard implements OnInit {
     return Object.values(
       this.post().reactions
     ).reduce(
+
       (total, value) =>
         total + value,
+
       0
+
     );
 
   }
@@ -211,7 +219,11 @@ export class PostCard implements OnInit {
       this.post().currentUserReaction;
 
     if (!current) {
-      return this.lang.t('like');
+
+      return this.lang.t(
+        'like'
+      );
+
     }
 
     return this.lang.t(
@@ -277,7 +289,9 @@ export class PostCard implements OnInit {
     );
 
     if (this.showComments()) {
+
       this.loadComments();
+
     }
 
   }
@@ -337,8 +351,10 @@ export class PostCard implements OnInit {
 
           this.comments.update(
             list => [
+
               ...list,
               newComment
+
             ]
           );
 
@@ -439,6 +455,7 @@ export class PostCard implements OnInit {
       null
     );
 
+
     this.editingCommentText.set(
       ''
     );
@@ -509,15 +526,33 @@ export class PostCard implements OnInit {
     comment: CommentResponse
   ): boolean {
 
+    // ---------------------------------------------
+    // 1. Comment owner
+    // ---------------------------------------------
+
     const isCommentOwner =
       comment.userEmail ===
       this.currentUserEmail();
 
 
-    const isPostOwner =
-      this.post().authorName ===
-      this.getCurrentPostOwnerName();
+    // ---------------------------------------------
+    // 2. Post owner
+    // ---------------------------------------------
 
+    const isPostOwner =
+      this.currentUserName()
+        .trim()
+        .toLowerCase()
+      ===
+      this.post()
+        .authorName
+        .trim()
+        .toLowerCase();
+
+
+    // ---------------------------------------------
+    // Final permission
+    // ---------------------------------------------
 
     return (
       isCommentOwner ||
@@ -527,17 +562,13 @@ export class PostCard implements OnInit {
   }
 
 
-  private getCurrentPostOwnerName(): string {
-
-    return this.post()
-      .authorName;
-
-  }
-
-
   deleteComment(
     comment: CommentResponse
   ): void {
+
+    // ---------------------------------------------
+    // Frontend protection
+    // ---------------------------------------------
 
     if (
       !this.canDeleteComment(comment)
@@ -570,19 +601,24 @@ export class PostCard implements OnInit {
         next: () => {
 
           this.comments.update(
+
             list =>
               list.filter(
                 item =>
                   item.id !==
                   comment.id
               )
+
           );
 
 
           this.post().commentsCount =
             Math.max(
+
               0,
+
               this.post().commentsCount - 1
+
             );
 
         },
