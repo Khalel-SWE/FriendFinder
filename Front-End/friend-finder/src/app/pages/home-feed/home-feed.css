@@ -17,3 +17,17 @@
   .feed-side { display: none; }
 
 }
+
+.notification-post-wrapper {
+  scroll-margin-top: 100px;
+  border-radius: 12px;
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.notification-post-wrapper.notification-highlight {
+  box-shadow:
+    0 0 0 2px var(--gold),
+    0 0 24px rgba(201, 162, 75, 0.25);
+}

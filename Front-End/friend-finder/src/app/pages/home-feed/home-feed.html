@@ -1,13 +1,19 @@
 <div class="feed-shell">
   <main class="feed-main">
-    <app-post-composer (postCreated)="onPostCreated($event)"></app-post-composer>
+    <app-post-composer (postCreated)="onPostCreated($event)"> </app-post-composer>
 
     @for (post of posts(); track post.id) {
-      <app-post-card [post]="post" (reactionClicked)="onReaction(post, $event)"></app-post-card>
+      <div
+        [id]="'post-' + post.id"
+        [class.notification-highlight]="highlightedPostId() === post.id"
+        class="notification-post-wrapper"
+      >
+        <app-post-card [post]="post" (reactionClicked)="onReaction(post, $event)"> </app-post-card>
+      </div>
     }
   </main>
 
   <aside class="feed-side">
-    <app-friend-suggestions></app-friend-suggestions>
+    <app-friend-suggestions> </app-friend-suggestions>
   </aside>
 </div>

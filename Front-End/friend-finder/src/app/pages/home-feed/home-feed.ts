@@ -2,8 +2,14 @@ import {
   Component,
   OnInit,
   signal,
-  computed
+  computed,
+  AfterViewInit,
+  ElementRef,
+  ViewChildren,
+  QueryList
 } from '@angular/core';
+
+import { ActivatedRoute } from '@angular/router';
 
 import { PostComposer } from '../post-composer/post-composer';
 import { PostCard } from '../post-card/post-card';
@@ -35,6 +41,16 @@ export class HomeFeed implements OnInit {
 
   allPosts = signal<Post[]>([]);
 
+  highlightedPostId =
+    signal<number | null>(null);
+
+  private notificationPostId:
+    number | null = null;
+
+  @ViewChildren('postElement', {
+    read: ElementRef
+  })
+  postElements!: QueryList<ElementRef>;
 
   posts = computed(() => {
 
@@ -74,6 +90,7 @@ export class HomeFeed implements OnInit {
               .includes(q)
         )
       )
+
     );
   });
 
@@ -81,16 +98,37 @@ export class HomeFeed implements OnInit {
   constructor(
     private postService: PostService,
     private interactionService: InteractionService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private route: ActivatedRoute
   ) {}
 
 
+  // =====================================================
+  // INIT
+  // =====================================================
+
   ngOnInit(): void {
 
-    this.loadFeed();
+    this.route.queryParamMap
+      .subscribe(params => {
 
+        const postId =
+          params.get('postId');
+
+        this.notificationPostId =
+          postId
+            ? Number(postId)
+            : null;
+
+        this.loadFeed();
+
+      });
   }
 
+
+  // =====================================================
+  // LOAD FEED
+  // =====================================================
 
   loadFeed(): void {
 
@@ -104,15 +142,21 @@ export class HomeFeed implements OnInit {
 
           responses.sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() -
-              new Date(a.createdAt).getTime()
+              new Date(
+                b.createdAt
+              ).getTime()
+              -
+              new Date(
+                a.createdAt
+              ).getTime()
           );
 
 
           const mappedPosts: Post[] =
             responses.map(res => ({
 
-              id: res.id,
+              id:
+                res.id,
 
               authorName:
                 `${res.userFirstName} ${res.userLastName}`,
@@ -144,7 +188,6 @@ export class HomeFeed implements OnInit {
                   res.mediaType
                 ),
 
-
               reactions: {
 
                 like:
@@ -167,12 +210,13 @@ export class HomeFeed implements OnInit {
 
               },
 
-
               currentUserReaction:
                 res.currentUserReaction
-                  ? res.currentUserReaction.toLowerCase() as ReactionType
+                  ? (
+                      res.currentUserReaction
+                        .toLowerCase()
+                    ) as ReactionType
                   : null,
-
 
               commentsCount:
                 res.commentsCount || 0,
@@ -183,7 +227,55 @@ export class HomeFeed implements OnInit {
             }));
 
 
-          this.allPosts.set(mappedPosts);
+          this.allPosts.set(
+            mappedPosts
+          );
+
+
+          // =================================================
+          // OPEN POST FROM NOTIFICATION
+          // =================================================
+
+          if (
+            this.notificationPostId !== null
+          ) {
+
+            const postExists =
+              mappedPosts.some(
+                post =>
+                  post.id ===
+                  this.notificationPostId
+              );
+
+            if (postExists) {
+
+              this.highlightedPostId.set(
+                this.notificationPostId
+              );
+
+              this.scrollToPost(
+                this.notificationPostId
+              );
+
+            } else {
+
+              console.warn(
+                'Notification post was not found in the feed:',
+                this.notificationPostId
+              );
+
+              this.highlightedPostId.set(
+                null
+              );
+            }
+
+          } else {
+
+            this.highlightedPostId.set(
+              null
+            );
+
+          }
 
         },
 
@@ -202,6 +294,47 @@ export class HomeFeed implements OnInit {
   }
 
 
+  // =====================================================
+  // SCROLL TO POST
+  // =====================================================
+
+  private scrollToPost(
+    postId: number
+  ): void {
+
+    setTimeout(() => {
+
+      const element =
+        document.getElementById(
+          `post-${postId}`
+        );
+
+      if (!element) {
+        return;
+      }
+
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
+      setTimeout(() => {
+
+        this.highlightedPostId.set(
+          null
+        );
+
+      }, 3500);
+
+    }, 300);
+
+  }
+
+
+  // =====================================================
+  // MEDIA TYPE
+  // =====================================================
+
   getMediaType(
     mimeType?: string
   ): 'image' | 'video' | undefined {
@@ -215,8 +348,13 @@ export class HomeFeed implements OnInit {
       .includes('video')
       ? 'video'
       : 'image';
+
   }
 
+
+  // =====================================================
+  // TIME AGO
+  // =====================================================
 
   calculateTimeAgo(
     dateString: string
@@ -285,6 +423,10 @@ export class HomeFeed implements OnInit {
   }
 
 
+  // =====================================================
+  // CREATE POST
+  // =====================================================
+
   onPostCreated(
     newPostData: {
       text?: string;
@@ -319,36 +461,23 @@ export class HomeFeed implements OnInit {
   }
 
 
+  // =====================================================
+  // REACTION
+  // =====================================================
+
   onReaction(
     post: Post,
     type: ReactionType
   ): void {
 
-    /*
-     * الحالة القديمة قبل الضغط.
-     *
-     * مثال:
-     * previous = 'like'
-     * type = 'love'
-     */
     const previous =
       post.currentUserReaction;
 
 
-    /*
-     * الحالة القديمة للأرقام.
-     *
-     * بنحتفظ بيها لأننا محتاجين
-     * نرجعها لو الـ backend فشل.
-     */
     const previousCount =
       post.reactions[type];
 
 
-    /*
-     * لو كان عنده reaction قديم
-     * نشيله أولاً.
-     */
     if (previous) {
 
       post.reactions[previous] =
@@ -360,24 +489,12 @@ export class HomeFeed implements OnInit {
     }
 
 
-    /*
-     * ضغط نفس الـ reaction:
-     *
-     * LIKE -> LIKE
-     *
-     * معناها إزالة الـ reaction.
-     */
     if (previous === type) {
 
       post.currentUserReaction =
         null;
 
-    }
-
-    /*
-     * ضغط reaction مختلف.
-     */
-    else {
+    } else {
 
       post.currentUserReaction =
         type;
@@ -387,17 +504,11 @@ export class HomeFeed implements OnInit {
     }
 
 
-    /*
-     * تحديث Angular UI
-     */
     this.allPosts.update(
       list => [...list]
     );
 
 
-    /*
-     * إرسال العملية للـ backend.
-     */
     this.interactionService
       .reactToPost(
         post.id,
@@ -406,11 +517,6 @@ export class HomeFeed implements OnInit {
       .subscribe({
 
         next: () => {
-
-          /*
-           * العملية نجحت.
-           * لا نحتاج أي شيء إضافي.
-           */
 
         },
 
@@ -423,34 +529,21 @@ export class HomeFeed implements OnInit {
           );
 
 
-          /*
-           * Rollback
-           *
-           * نرجع الحالة القديمة بالضبط.
-           */
+          if (
+            previous === type
+          ) {
 
-          if (previous === type) {
-
-            /*
-             * كنا بنحذف نفس الـ reaction.
-             * إذن نرجعه.
-             */
             post.reactions[type] =
               previousCount + 1;
 
             post.currentUserReaction =
               previous;
 
-          }
+          } else {
 
-          else {
-
-            /*
-             * كان عندنا reaction قديم.
-             *
-             * نشيل الـ reaction الجديد.
-             */
-            if (post.currentUserReaction) {
+            if (
+              post.currentUserReaction
+            ) {
 
               post.reactions[
                 post.currentUserReaction
@@ -465,14 +558,12 @@ export class HomeFeed implements OnInit {
             }
 
 
-            /*
-             * نرجع الـ reaction القديم.
-             */
             if (previous) {
 
               post.reactions[previous]++;
 
             }
+
 
             post.currentUserReaction =
               previous;
@@ -480,9 +571,6 @@ export class HomeFeed implements OnInit {
           }
 
 
-          /*
-           * تحديث الواجهة بعد الـ rollback.
-           */
           this.allPosts.update(
             list => [...list]
           );
@@ -492,5 +580,4 @@ export class HomeFeed implements OnInit {
       });
 
   }
-
 }
