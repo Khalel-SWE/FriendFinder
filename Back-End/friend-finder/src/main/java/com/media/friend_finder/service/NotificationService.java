@@ -72,13 +72,7 @@ public class NotificationService {
         /*
          * Admin is not a social actor.
          *
-         * Therefore:
-         *
-         * USER -> ADMIN notification
-         * can have USER as actor.
-         *
-         * ADMIN -> USER notification
-         * keeps actorId null.
+         * Therefore Admin notifications keep actorId = null.
          */
         if (actor != null
                 && !"ADMIN".equalsIgnoreCase(actor.getRole())) {
@@ -268,13 +262,15 @@ public class NotificationService {
 
 
         // =================================================
-        // 2. FALLBACK FOR OLD NOTIFICATIONS
+        // 2. OLD NOTIFICATIONS
         // =================================================
 
         if (actor == null) {
 
             actor =
-                    resolveLegacyActor(notification);
+                    resolveLegacyActor(
+                            notification
+                    );
 
             if (actor != null
                     && "ADMIN".equalsIgnoreCase(
@@ -285,15 +281,13 @@ public class NotificationService {
             }
 
             if (actor != null) {
-
-                actorId =
-                        actor.getId();
+                actorId = actor.getId();
             }
         }
 
 
         // =================================================
-        // 3. ACTOR DATA
+        // 3. ACTOR DISPLAY DATA
         // =================================================
 
         String actorName = null;
@@ -379,100 +373,131 @@ public class NotificationService {
         Long relatedId =
                 notification.getRelatedId();
 
-        if (relatedId == null) {
+
+        // =================================================
+        // FRIEND REQUEST
+        // =================================================
+
+        if (notification.getType()
+                == Notification.NotificationType.FRIEND_REQUEST) {
+
+            /*
+             * First try the friendship record.
+             */
+            if (relatedId != null) {
+
+                User actor =
+                        friendshipRepository
+                                .findById(relatedId)
+                                .map(Friendship::getRequester)
+                                .orElse(null);
+
+                if (actor != null) {
+                    return actor;
+                }
+            }
+
+            /*
+             * If the old friendship was deleted,
+             * recover actor from the notification message.
+             */
+            return resolveActorFromMessage(
+                    notification.getMessage()
+            );
+        }
+
+
+        // =================================================
+        // ACCEPT FRIEND REQUEST
+        // =================================================
+
+        if (notification.getType()
+                == Notification.NotificationType.ACCEPT_FRIEND_REQUEST) {
+
+            /*
+             * First try the friendship record.
+             */
+            if (relatedId != null) {
+
+                User actor =
+                        friendshipRepository
+                                .findById(relatedId)
+                                .map(Friendship::getAddressee)
+                                .orElse(null);
+
+                if (actor != null) {
+                    return actor;
+                }
+            }
+
+            /*
+             * If the friendship was later deleted,
+             * recover actor from message.
+             */
+            return resolveActorFromMessage(
+                    notification.getMessage()
+            );
+        }
+
+
+        // =================================================
+        // CONTACT MESSAGE
+        // =================================================
+
+        if (notification.getType()
+                == Notification.NotificationType.NEW_CONTACT_MESSAGE) {
+
+            if (relatedId == null) {
+                return null;
+            }
+
+            return contactMessageRepository
+                    .findById(relatedId)
+                    .map(ContactMessage::getUser)
+                    .orElse(null);
+        }
+
+
+        // =================================================
+        // ADMIN REPLY
+        // =================================================
+
+        if (notification.getType()
+                == Notification.NotificationType.ADMIN_REPLY) {
+
+            /*
+             * Admin is intentionally not exposed
+             * as a social actor.
+             */
             return null;
         }
 
 
-        switch (notification.getType()) {
+        // =================================================
+        // LIKE / COMMENT
+        // =================================================
 
-            // =================================================
-            // FRIEND REQUEST
-            // =================================================
+        if (notification.getType()
+                == Notification.NotificationType.LIKE
+                ||
+                notification.getType()
+                        == Notification.NotificationType.COMMENT) {
 
-            case FRIEND_REQUEST:
-
-                return friendshipRepository
-                        .findById(relatedId)
-                        .map(Friendship::getRequester)
-                        .orElse(null);
-
-
-            // =================================================
-            // ACCEPT FRIEND REQUEST
-            // =================================================
-
-            case ACCEPT_FRIEND_REQUEST:
-
-                return friendshipRepository
-                        .findById(relatedId)
-                        .map(Friendship::getAddressee)
-                        .orElse(null);
-
-
-            // =================================================
-            // ADMIN REPLY
-            // =================================================
-
-            case ADMIN_REPLY:
-
-                /*
-                 * Admin is intentionally NOT exposed
-                 * as a social actor.
-                 */
-                return null;
-
-
-            // =================================================
-            // CONTACT
-            // =================================================
-
-            case NEW_CONTACT_MESSAGE:
-
-                return contactMessageRepository
-                        .findById(relatedId)
-                        .map(ContactMessage::getUser)
-                        .orElse(null);
-
-
-            // =================================================
-            // LIKE / COMMENT
-            // =================================================
-
-            case LIKE:
-            case COMMENT:
-
-                /*
-                 * Old notifications store the post ID
-                 * in relatedId.
-                 *
-                 * The old message contains the actor email,
-                 * for example:
-                 *
-                 * "foo@test.com reacted to your post"
-                 *
-                 * "foo@test.com commented on your post"
-                 *
-                 * Therefore we can recover the actor
-                 * from that email.
-                 */
-                return resolveActorFromLegacyMessage(
-                        notification.getMessage()
-                );
-
-
-            default:
-
-                return null;
+            return resolveActorFromMessage(
+                    notification.getMessage()
+            );
         }
+
+
+        return null;
     }
 
 
     // =====================================================
-    // RESOLVE LEGACY ACTOR FROM MESSAGE
+    // RESOLVE ACTOR FROM OLD MESSAGE
     // =====================================================
 
-    private User resolveActorFromLegacyMessage(
+    private User resolveActorFromMessage(
             String message
     ) {
 
@@ -482,23 +507,61 @@ public class NotificationService {
             return null;
         }
 
+        /*
+         * Old notification examples:
+         *
+         * "dunia@gmail.com sent you a friend request"
+         * "dada@test.com accepted your friend request"
+         * "dada@test.com reacted to your post"
+         * "dada@test.com commented on your post"
+         */
+
         String email =
-                message
-                        .replace(
-                                " reacted to your post",
-                                ""
-                        )
-                        .replace(
-                                " commented on your post",
-                                ""
-                        )
-                        .trim();
+                message.trim();
 
-        if (email.isBlank()
-                || !email.contains("@")) {
 
+        // Friend request
+        email = email.replace(
+                " sent you a friend request",
+                ""
+        );
+
+
+        // Friend accepted
+        email = email.replace(
+                " accepted your friend request",
+                ""
+        );
+
+
+        // Like
+        email = email.replace(
+                " reacted to your post",
+                ""
+        );
+
+
+        // Comment
+        email = email.replace(
+                " commented on your post",
+                ""
+        );
+
+
+        // Contact message
+        email = email.replace(
+                " sent a contact message",
+                ""
+        );
+
+
+        email = email.trim();
+
+
+        if (!email.contains("@")) {
             return null;
         }
+
 
         return userRepository
                 .findByEmail(email)

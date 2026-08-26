@@ -8,16 +8,15 @@ import {
 } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
-
 import { Router } from '@angular/router';
 
 import { LanguageService } from '../../core/services/language';
-
 import { Notification } from '../../core/services/notification';
 
 import {
   NotificationResponse
 } from '../../core/models/notification.model';
+
 
 @Component({
   selector: 'app-notification-bell',
@@ -34,6 +33,7 @@ export class NotificationBell
 
   private router =
     inject(Router);
+
 
   open =
     signal(false);
@@ -63,12 +63,17 @@ export class NotificationBell
 
         next: (data) => {
 
-          this.notifications.set(data);
+          this.notifications.set(
+            data
+          );
 
           this.unreadCount.set(
+
             data.filter(
-              n => !n.read
+              notification =>
+                !notification.read
             ).length
+
           );
         },
 
@@ -93,6 +98,7 @@ export class NotificationBell
     this.open.update(
       value => !value
     );
+
 
     if (
       this.open()
@@ -153,38 +159,57 @@ export class NotificationBell
     const actor =
       notification.actorName ?? '';
 
+
     switch (
       notification.type
     ) {
 
       case 'NEW_CONTACT_MESSAGE':
 
-        return `${actor} sent a contact message`;
+        return `${actor} sent you a contact message`;
+
 
       case 'ADMIN_REPLY':
 
         return 'Admin replied to your message';
 
+
       case 'FRIEND_REQUEST':
 
         return `${actor} sent you a friend request`;
+
 
       case 'ACCEPT_FRIEND_REQUEST':
 
         return `${actor} accepted your friend request`;
 
+
       case 'LIKE':
 
         return `${actor} reacted to your post`;
+
 
       case 'COMMENT':
 
         return `${actor} commented on your post`;
 
+
       default:
 
         return notification.message;
     }
+  }
+
+
+  // =====================================================
+  // SHOULD SHOW ACTOR AVATAR?
+  // =====================================================
+
+  showActorAvatar(
+    notification: NotificationResponse
+  ): boolean {
+
+    return notification.type !== 'ADMIN_REPLY';
   }
 
 
@@ -196,25 +221,31 @@ export class NotificationBell
     notification: NotificationResponse
   ): string {
 
-    if (notification.actorName) {
+    if (
+      notification.actorName
+    ) {
 
       const parts =
         notification.actorName
           .trim()
           .split(/\s+/);
 
+
       const first =
         parts[0]?.charAt(0) ?? '';
+
 
       const last =
         parts.length > 1
           ? parts[1]?.charAt(0) ?? ''
           : '';
 
+
       return (
         first + last
       ).toUpperCase();
     }
+
 
     return '?';
   }
@@ -234,6 +265,7 @@ export class NotificationBell
 
       return null;
     }
+
 
     return notification
       .actorProfilePicture
@@ -261,19 +293,26 @@ export class NotificationBell
 
       case 'ACCEPT_FRIEND_REQUEST':
 
-        return notification.actorId !== null;
+        return (
+          notification.actorId !== null
+        );
+
 
       case 'LIKE':
 
       case 'COMMENT':
 
-        return notification.relatedId !== null;
+        return (
+          notification.relatedId !== null
+        );
+
 
       case 'NEW_CONTACT_MESSAGE':
 
       case 'ADMIN_REPLY':
 
         return true;
+
 
       default:
 
@@ -299,6 +338,7 @@ export class NotificationBell
       return;
     }
 
+
     this.close();
 
 
@@ -319,6 +359,7 @@ export class NotificationBell
         return;
       }
 
+
       this.router.navigate([
         '/profile',
         notification.actorId
@@ -329,7 +370,7 @@ export class NotificationBell
 
 
     // ===================================================
-    // CONTACT / ADMIN
+    // ADMIN / CONTACT
     // ===================================================
 
     if (
@@ -362,6 +403,7 @@ export class NotificationBell
 
         return;
       }
+
 
       this.router.navigate(
         ['/feed'],
