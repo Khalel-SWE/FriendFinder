@@ -19,27 +19,6 @@ public class AdminSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        // بنتأكد إن مفيش أدمن متسجل قبل كده عشان منعملش Duplicate
-//        if (userRepository.findByEmail("admin@friendfinder.com").isEmpty()) {
-//
-//            User admin = new User();
-//
-//            admin.setEmail("admin@friendfinder.com");
-//            admin.setPasswordHash(passwordEncoder.encode("Admin@123"));
-//            admin.setRole("ADMIN");
-//
-//            admin = userRepository.save(admin);
-//
-//            Profile profile = new Profile();
-//            profile.setUser(admin);
-//            profile.setFirstName("Admin");
-//            profile.setLastName("System");
-//
-//            profileRepository.save(profile);
-//
-//            System.out.println("====== Super Admin created successfully! ======");
-//        }
-
         User admin;
 
         if (userRepository.findByEmail("admin@friendfinder.com").isEmpty()) {

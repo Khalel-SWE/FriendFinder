@@ -24,11 +24,6 @@ public class ProfileController {
     private final ProfileService profileService;
     private final UserService userService;
 
-
-    // =====================================================
-    // MY PROFILE
-    // =====================================================
-
     @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMyProfile(
             Authentication authentication
@@ -40,11 +35,6 @@ public class ProfileController {
                 )
         );
     }
-
-
-    // =====================================================
-    // PUBLIC PROFILE
-    // =====================================================
 
     @GetMapping("/{userId}")
     public ResponseEntity<PublicProfileResponse> getPublicProfile(
@@ -59,11 +49,6 @@ public class ProfileController {
                 )
         );
     }
-
-
-    // =====================================================
-    // UPDATE PROFILE
-    // =====================================================
 
     @PutMapping(
             value = "/update",
@@ -111,11 +96,6 @@ public class ProfileController {
             );
         }
     }
-
-
-    // =====================================================
-    // FRIEND SUGGESTIONS
-    // =====================================================
 
     @GetMapping("/suggestions")
     public ResponseEntity<List<FriendSuggestionResponse>>

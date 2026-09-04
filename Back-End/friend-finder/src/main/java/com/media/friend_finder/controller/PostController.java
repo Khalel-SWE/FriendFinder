@@ -32,7 +32,6 @@ public class PostController {
         return ResponseEntity.ok(postService.getFeed(authentication.getName()));
     }
 
-    // 👈 الدالة الجديدة اللي الأنجولار كان بيدور عليها ومش لاقيها
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PostResponse>> getUserPosts(
             @PathVariable Long userId,

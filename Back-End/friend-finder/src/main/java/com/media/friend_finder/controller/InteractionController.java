@@ -17,7 +17,6 @@ public class InteractionController {
 
     private final InteractionService interactionService;
 
-    // 1. إضافة تعليق
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponse> addComment(
             Authentication authentication,
@@ -26,13 +25,11 @@ public class InteractionController {
         return ResponseEntity.ok(interactionService.addComment(authentication.getName(), postId, content));
     }
 
-    // 2. عرض تعليقات بوست معين
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long postId) {
         return ResponseEntity.ok(interactionService.getComments(postId));
     }
 
-    // 3. تعديل تعليق
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponse> updateComment(
             Authentication authentication,
@@ -41,7 +38,6 @@ public class InteractionController {
         return ResponseEntity.ok(interactionService.updateComment(authentication.getName(), commentId, newContent));
     }
 
-    // 4. حذف تعليق
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
             Authentication authentication,
@@ -50,7 +46,6 @@ public class InteractionController {
         return ResponseEntity.ok("Comment deleted successfully");
     }
 
-    // 5. إضافة/تغيير رياكشن
     @PostMapping("/posts/{postId}/react")
     public ResponseEntity<String> reactToPost(
             Authentication authentication,

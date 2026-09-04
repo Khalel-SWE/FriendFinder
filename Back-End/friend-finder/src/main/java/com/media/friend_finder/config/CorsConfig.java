@@ -14,13 +14,10 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // السماح للفرونت إند بتاعك
         config.addAllowedOrigin("http://localhost:4200");
 
-        // السماح بكل الـ Headers
         config.addAllowedHeader("*");
 
-        // السماح بكل الطرق (GET, POST, PUT, DELETE, OPTIONS)
         config.addAllowedMethod("*");
 
         config.setAllowCredentials(true);

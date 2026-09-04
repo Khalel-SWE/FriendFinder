@@ -17,11 +17,6 @@ public class FriendshipController {
 
     private final FriendshipService friendshipService;
 
-
-    // =====================================================
-    // SEND FRIEND REQUEST
-    // =====================================================
-
     @PostMapping("/request")
     public ResponseEntity<String> sendFriendRequest(
             Authentication authentication,
@@ -36,11 +31,6 @@ public class FriendshipController {
         );
     }
 
-
-    // =====================================================
-    // PENDING REQUESTS
-    // =====================================================
-
     @GetMapping("/requests/pending")
     public ResponseEntity<List<FriendRequestResponse>>
     getPendingRequests(
@@ -53,11 +43,6 @@ public class FriendshipController {
                 )
         );
     }
-
-
-    // =====================================================
-    // ACCEPT / REJECT
-    // =====================================================
 
     @PutMapping("/requests/{id}")
     public ResponseEntity<String> acceptOrRejectRequest(
@@ -75,11 +60,6 @@ public class FriendshipController {
         );
     }
 
-
-    // =====================================================
-    // SEND REQUEST BY ID
-    // =====================================================
-
     @PostMapping("/request/{receiverId}")
     public ResponseEntity<String> sendFriendRequestById(
             Authentication authentication,
@@ -94,11 +74,6 @@ public class FriendshipController {
         );
     }
 
-
-    // =====================================================
-    // MY FRIENDS
-    // =====================================================
-
     @GetMapping("/my-friends")
     public ResponseEntity<List<FriendResponse>>
     getMyFriends(
@@ -111,11 +86,6 @@ public class FriendshipController {
                 )
         );
     }
-
-
-    // =====================================================
-    // FRIENDS OF SPECIFIC PROFILE
-    // =====================================================
 
     @GetMapping("/profile/{userId}")
     public ResponseEntity<List<FriendResponse>>
@@ -131,11 +101,6 @@ public class FriendshipController {
                 )
         );
     }
-
-
-    // =====================================================
-    // REMOVE FRIEND
-    // =====================================================
 
     @DeleteMapping("/remove/{friendId}")
     public ResponseEntity<Void> removeFriend(

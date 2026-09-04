@@ -20,8 +20,6 @@ public class ContactMessageController {
     private final ContactMessageService contactService;
     private final UserService userService;
 
-    // ================= USER =================
-
     @PostMapping("/contact")
     public void sendMessage(Authentication authentication,
                             @Valid @RequestBody ContactRequest request) {

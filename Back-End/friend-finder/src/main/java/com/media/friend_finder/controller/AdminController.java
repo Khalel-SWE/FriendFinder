@@ -34,8 +34,6 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getSystemStats());
     }
 
-//    *****************************************************************
-
     @GetMapping("/posts")
     public ResponseEntity<Page<AdminPostResponse>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
@@ -57,9 +55,6 @@ public class AdminController {
 
         return ResponseEntity.ok("Post deleted successfully");
     }
-
-
-//    *********************************************************************
 
     @GetMapping("/contacts")
     public ResponseEntity<Page<ContactResponse>> getAllContacts(

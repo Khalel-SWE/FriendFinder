@@ -31,27 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 1. بنسحب الهيدر اللي اسمه Authorization
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
 
-        // 2. لو مفيش هيدر أو مش بيبدأ بكلمة Bearer، بنعدي الريكويست من غير ما نعمل حاجة
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 3. بنقص كلمة Bearer وناخد التوكن نفسه
         jwt = authHeader.substring(7);
-        // 4. بنطلع الايميل من التوكن
         userEmail = jwtService.extractUsername(jwt);
 
-        // 5. لو الايميل موجود واليوزر مش متعرف في الـ Security Context
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            // 6. لو التوكن سليم، بنعمل Authentication Token ونحطه في الـ Security Context
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -65,7 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // 7. بنكمل دورة الريكويست العادية
         filterChain.doFilter(request, response);
     }
 }
