@@ -11,5 +11,5 @@ public class FriendSuggestionResponse {
     private String firstName;
     private String lastName;
     private String profilePicture;
-    private String initials; // الحروف الاختصارية مثل DA
+    private String initials;
 }

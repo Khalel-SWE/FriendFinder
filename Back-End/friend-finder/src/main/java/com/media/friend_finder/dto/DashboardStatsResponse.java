@@ -9,5 +9,5 @@ public class DashboardStatsResponse {
     private long totalUsers;
     private long totalPosts;
     private long totalComments;
-    private long activeFriendships; // عدد الصداقات المقبولة فقط
+    private long activeFriendships;
 }

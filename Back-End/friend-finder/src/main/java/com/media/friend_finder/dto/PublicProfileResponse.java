@@ -10,10 +10,6 @@ import java.util.List;
 @Builder
 public class PublicProfileResponse {
 
-    // =========================
-    // PROFILE DATA
-    // =========================
-
     private Long id;
 
     private String email;
@@ -38,26 +34,11 @@ public class PublicProfileResponse {
 
     private LocalDateTime createdAt;
 
-
-    // =========================
-    // RELATIONSHIP
-    // =========================
-
     private String relationshipStatus;
 
     private Long pendingRequestId;
 
-
-    // =========================
-    // ACCESS CONTROL
-    // =========================
-
     private boolean canViewPosts;
-
-
-    // =========================
-    // RECENT ACTIVITY
-    // =========================
 
     private List<ActivityResponse> recentActivities;
 }

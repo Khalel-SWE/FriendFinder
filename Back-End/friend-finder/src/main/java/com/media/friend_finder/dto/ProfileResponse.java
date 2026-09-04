@@ -34,9 +34,5 @@ public class ProfileResponse {
 
     private LocalDateTime createdAt;
 
-    // =====================================================
-    // RECENT ACTIVITY
-    // =====================================================
-
     private List<ActivityResponse> recentActivities;
 }
