@@ -11,13 +11,10 @@ import java.util.List;
 
 public interface ContactMessageRepository extends JpaRepository<ContactMessage, Long> {
 
-    // جميع رسائل مستخدم معين
     List<ContactMessage> findByUserOrderByCreatedAtDesc(User user);
 
-    // جميع الرسائل للأدمن
     Page<ContactMessage> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    // فلترة حسب الحالة
     List<ContactMessage> findByStatusOrderByCreatedAtDesc(ContactStatus status);
 
 }

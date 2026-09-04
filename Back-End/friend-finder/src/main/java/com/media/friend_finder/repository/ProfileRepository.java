@@ -17,49 +17,13 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     Optional<Profile> findByUserEmail(String email);
 
-    // =====================================================
-    // GET PROFILES FOR MULTIPLE USERS
-    // =====================================================
-
     List<Profile> findByUserIn(List<User> users);
-
-    // =====================================================
-    // GET ALL PROFILES WITH USERS
-    // =====================================================
 
     @Query(
             value = "SELECT p FROM Profile p JOIN FETCH p.user",
             countQuery = "SELECT count(p) FROM Profile p"
     )
     Page<Profile> findAllProfilesWithUsers(Pageable pageable);
-
-    // =====================================================
-    // FRIEND SUGGESTIONS
-    // =====================================================
-    //
-    // We exclude only:
-    //
-    // 1. The current user
-    // 2. Users with PENDING relationship
-    // 3. Users with ACCEPTED relationship
-    //
-    // REJECTED is intentionally NOT excluded.
-    //
-    // Why?
-    //
-    // Because REJECTED does not mean BLOCKED.
-    //
-    // After a rejection:
-    //
-    //     A -> B
-    //     REJECTED
-    //
-    // B should be able to appear again
-    // in A's suggestions.
-    //
-    // The same applies in the opposite direction.
-    //
-    // =====================================================
 
     @Query("""
             SELECT p
