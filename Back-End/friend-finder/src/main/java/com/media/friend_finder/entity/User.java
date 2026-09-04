@@ -33,15 +33,13 @@ public class User implements UserDetails {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    // --- أوامر Spring Security الأساسية ---
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Column(name = "is_enabled", nullable = false)
-    private boolean isEnabled = true; // الديفولت إن أي يوزر جديد حسابه شغال
+    private boolean isEnabled = true;
 
     @Override
     public String getPassword() {
@@ -50,7 +48,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // هنخلي السيكيورتي يعتبر الايميل هو اليوزر نيم
+        return email;
     }
 
     @Override

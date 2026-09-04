@@ -15,7 +15,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // دي العلاقة اللي بتربط البروفايل باليوزر (One to One)
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;

@@ -15,16 +15,16 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // الشخص اللي كتب البوست
+    private User user;
 
-    @Column(length = 4000) // عشان يسمح بنصوص طويلة للبوست
+    @Column(length = 4000)
     private String content;
 
     @Column(name = "media_url")
-    private String mediaUrl; // مسار الصورة أو الفيديو المرفوع
+    private String mediaUrl;
 
     @Column(name = "media_type")
-    private String mediaType; // عشان نعرف ده (IMAGE) ولا (VIDEO)
+    private String mediaType;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
