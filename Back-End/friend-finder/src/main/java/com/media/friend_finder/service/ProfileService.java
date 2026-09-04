@@ -31,11 +31,6 @@ public class ProfileService {
     private final FriendshipRepository friendshipRepository;
     private final ActivityService activityService;
 
-
-    // =====================================================
-    // MY PROFILE
-    // =====================================================
-
     public ProfileResponse getMyProfile(String email) {
 
         Profile p =
@@ -62,9 +57,6 @@ public class ProfileService {
                 .coverPhoto(p.getCoverPhoto())
                 .createdAt(user.getCreatedAt())
 
-                // =========================================
-                // LAST 5 ACTIVITIES
-                // =========================================
                 .recentActivities(
                         activityService
                                 .getRecentUserActivities(user)
@@ -73,19 +65,10 @@ public class ProfileService {
                 .build();
     }
 
-
-    // =====================================================
-    // PUBLIC PROFILE
-    // =====================================================
-
     public PublicProfileResponse getPublicProfile(
             String currentUserEmail,
             Long profileUserId
     ) {
-
-        // -------------------------------------------------
-        // CURRENT USER
-        // -------------------------------------------------
 
         User currentUser =
                 userRepository.findByEmail(currentUserEmail)
@@ -95,11 +78,6 @@ public class ProfileService {
                                 )
                         );
 
-
-        // -------------------------------------------------
-        // TARGET USER
-        // -------------------------------------------------
-
         User profileUser =
                 userRepository.findById(profileUserId)
                         .orElseThrow(() ->
@@ -108,22 +86,12 @@ public class ProfileService {
                                 )
                         );
 
-
-        // =================================================
-        // ADMIN PROTECTION
-        // =================================================
-
         if ("ADMIN".equalsIgnoreCase(profileUser.getRole())) {
 
             throw new RuntimeException(
                     "Admin profile is not publicly accessible"
             );
         }
-
-
-        // -------------------------------------------------
-        // PROFILE
-        // -------------------------------------------------
 
         Profile profile =
                 profileRepository.findByUser(profileUser)
@@ -132,11 +100,6 @@ public class ProfileService {
                                         "Profile not found"
                                 )
                         );
-
-
-        // -------------------------------------------------
-        // SELF
-        // -------------------------------------------------
 
         if (currentUser.getId().equals(profileUser.getId())) {
 
@@ -165,11 +128,6 @@ public class ProfileService {
                     .build();
         }
 
-
-        // -------------------------------------------------
-        // FIND RELATIONSHIP
-        // -------------------------------------------------
-
         var friendshipOptional =
                 friendshipRepository.findFriendshipBetweenUsers(
                         currentUser,
@@ -192,11 +150,6 @@ public class ProfileService {
             String status =
                     friendship.getStatus();
 
-
-            // =================================================
-            // ACCEPTED
-            // =================================================
-
             if (FriendshipStatus.ACCEPTED.name()
                     .equalsIgnoreCase(status)) {
 
@@ -204,11 +157,6 @@ public class ProfileService {
 
                 canViewPosts = true;
             }
-
-
-            // =================================================
-            // PENDING
-            // =================================================
 
             else if (FriendshipStatus.PENDING.name()
                     .equalsIgnoreCase(status)) {
@@ -228,22 +176,12 @@ public class ProfileService {
                 }
             }
 
-
-            // =================================================
-            // REJECTED
-            // =================================================
-
             else if (FriendshipStatus.REJECTED.name()
                     .equalsIgnoreCase(status)) {
 
                 relationshipStatus = "NONE";
             }
         }
-
-
-        // -------------------------------------------------
-        // BUILD RESPONSE
-        // -------------------------------------------------
 
         return PublicProfileResponse.builder()
                 .id(profileUser.getId())
@@ -268,11 +206,6 @@ public class ProfileService {
                 .build();
     }
 
-
-    // =====================================================
-    // UPDATE PROFILE
-    // =====================================================
-
     public ProfileResponse updateMyProfileWithMedia(
             String email,
             UpdateProfileRequest request,
@@ -296,11 +229,6 @@ public class ProfileService {
         profile.setInterests(request.getInterests());
         profile.setLanguages(request.getLanguages());
 
-
-        // -------------------------------------------------
-        // MEDIA
-        // -------------------------------------------------
-
         try {
 
             String uploadDir =
@@ -312,9 +240,6 @@ public class ProfileService {
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-
-
-            // AVATAR
 
             if (avatar != null && !avatar.isEmpty()) {
 
@@ -340,9 +265,6 @@ public class ProfileService {
                 );
             }
 
-
-            // COVER
-
             if (cover != null && !cover.isEmpty()) {
 
                 String coverName =
@@ -361,17 +283,14 @@ public class ProfileService {
                         StandardCopyOption.REPLACE_EXISTING
                 );
 
-                profile.setCoverPhoto(
-                        "/uploads/profiles/"
-                                + coverName
+                profile.setCoverPhoto("/uploads/profiles/" + coverName
                 );
             }
 
         } catch (IOException e) {
 
             throw new RuntimeException(
-                    "Failed to store media files",
-                    e
+                    "Failed to store media files", e
             );
         }
 

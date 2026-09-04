@@ -33,7 +33,6 @@ public class UserService {
 
         return suggestedProfiles.stream()
 
-                // الأدمن لا يظهر في Friend Suggestions
                 .filter(profile -> !"ADMIN".equals(profile.getUser().getRole()))
 
                 .map(profile -> {
@@ -53,8 +52,6 @@ public class UserService {
 
                     return FriendSuggestionResponse.builder()
 
-                            // IMPORTANT:
-                            // هنا نحتاج User ID وليس Profile ID
                             .id(profile.getUser().getId())
 
                             .email(profile.getUser().getEmail())

@@ -19,8 +19,6 @@ public class AdminService {
 
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
-
-    // ضفنا التلاتة دول عشان نستخدمهم في الإحصائيات
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ReactionRepository reactionRepository;

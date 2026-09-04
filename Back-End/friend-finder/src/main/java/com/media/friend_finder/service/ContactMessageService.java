@@ -25,13 +25,6 @@ public class ContactMessageService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-
-    /*
-     * ============================
-     * User
-     * ============================
-     */
-
     @Transactional
     public void sendMessage(User user, ContactRequest request) {
 
@@ -54,11 +47,6 @@ public class ContactMessageService {
         message.setStatus(ContactStatus.OPEN);
 
         ContactMessage savedMessage = contactRepository.save(message);
-
-
-        // ============================
-        // Notification -> Admin
-        // ============================
 
         User admin = userRepository.findFirstByRole("ADMIN")
                 .orElseThrow(() -> new RuntimeException("Admin user not found"));
@@ -83,13 +71,6 @@ public class ContactMessageService {
 
     }
 
-
-    /*
-     * ============================
-     * Admin
-     * ============================
-     */
-
     public Page<ContactResponse> getAllMessages(int page, int size) {
 
         return contactRepository
@@ -111,11 +92,6 @@ public class ContactMessageService {
         message.setRepliedAt(LocalDateTime.now());
 
         contactRepository.save(message);
-
-
-        // ============================
-        // Notification -> User
-        // ============================
 
         User admin =
                 userRepository.findFirstByRole("ADMIN")
@@ -145,13 +121,6 @@ public class ContactMessageService {
         contactRepository.save(message);
 
     }
-
-
-    /*
-     * ============================
-     * Mapper
-     * ============================
-     */
 
     private ContactResponse mapToResponse(ContactMessage message) {
 

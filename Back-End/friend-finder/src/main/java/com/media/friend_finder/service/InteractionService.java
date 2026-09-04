@@ -21,8 +21,6 @@ public class InteractionService {
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
     private final ProfileRepository profileRepository;
-
-    // ضفنا الـ NotificationService هنا
     private final NotificationService notificationService;
     private final ActivityService activityService;
 
@@ -47,7 +45,6 @@ public class InteractionService {
 
         Profile profile = profileRepository.findByUserEmail(email).orElseThrow();
 
-        // إرسال الإشعار لصاحب البوست (لو مش هو اللي كاتب الكومنت)
         if (!user.equals(post.getUser())) {
             notificationService.createNotification(
                     post.getUser(),
@@ -115,7 +112,6 @@ public class InteractionService {
                     post.getId()
             );
 
-            // إرسال الإشعار لصاحب البوست للرياكت الجديد فقط
             if (!user.equals(post.getUser())) {
 
                 notificationService.createNotification(

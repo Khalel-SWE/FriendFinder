@@ -22,11 +22,6 @@ public class FriendshipService {
     private final NotificationService notificationService;
     private final ActivityService activityService;
 
-
-    // =====================================================
-    // 1. SEND FRIEND REQUEST
-    // =====================================================
-
     public String sendFriendRequest(
             String requesterEmail,
             String addresseeEmail
@@ -55,11 +50,6 @@ public class FriendshipService {
                                 )
                         );
 
-
-        // =====================================================
-        // ADMIN PROTECTION
-        // =====================================================
-
         if ("ADMIN".equalsIgnoreCase(requester.getRole())) {
 
             throw new RuntimeException(
@@ -73,11 +63,6 @@ public class FriendshipService {
                     "You cannot send a friend request to an Admin"
             );
         }
-
-
-        // =====================================================
-        // EXISTING RELATIONSHIP
-        // =====================================================
 
         var existingFriendship =
                 friendshipRepository.findFriendshipBetweenUsers(
@@ -146,11 +131,6 @@ public class FriendshipService {
             );
         }
 
-
-        // =====================================================
-        // CREATE NEW FRIENDSHIP
-        // =====================================================
-
         Friendship friendship =
                 new Friendship();
 
@@ -177,11 +157,6 @@ public class FriendshipService {
         return "Friend request sent successfully to "
                 + addresseeEmail;
     }
-
-
-    // =====================================================
-    // 2. GET PENDING REQUESTS
-    // =====================================================
 
     public List<FriendRequestResponse> getPendingRequests(
             String email
@@ -231,11 +206,6 @@ public class FriendshipService {
                 })
                 .collect(Collectors.toList());
     }
-
-
-    // =====================================================
-    // 3. ACCEPT / REJECT
-    // =====================================================
 
     public String acceptOrRejectRequest(
             String currentUserEmail,
@@ -326,11 +296,6 @@ public class FriendshipService {
                 + statusEnum.name().toLowerCase();
     }
 
-
-    // =====================================================
-    // 4. SEND BY ID
-    // =====================================================
-
     public String sendFriendRequestById(
             String requesterEmail,
             Long receiverId
@@ -351,11 +316,6 @@ public class FriendshipService {
         );
     }
 
-
-    // =====================================================
-    // 5. GET MY FRIENDS
-    // =====================================================
-
     public List<FriendResponse> getMyFriends(
             String email
     ) {
@@ -371,11 +331,6 @@ public class FriendshipService {
 
         return buildFriendList(currentUser);
     }
-
-
-    // =====================================================
-    // 6. GET FRIENDS OF PROFILE USER
-    // =====================================================
 
     public List<FriendResponse> getFriendsForProfile(
             String currentUserEmail,
@@ -403,11 +358,6 @@ public class FriendshipService {
                                         )
                         );
 
-
-        // =====================================================
-        // ADMIN PROTECTION
-        // =====================================================
-
         if ("ADMIN".equalsIgnoreCase(
                 profileUser.getRole()
         )) {
@@ -417,11 +367,6 @@ public class FriendshipService {
             );
         }
 
-
-        // =====================================================
-        // SELF
-        // =====================================================
-
         if (currentUser.getId()
                 .equals(profileUser.getId())) {
 
@@ -429,11 +374,6 @@ public class FriendshipService {
                     profileUser
             );
         }
-
-
-        // =====================================================
-        // SECURITY
-        // =====================================================
 
         Friendship friendship =
                 friendshipRepository
@@ -465,11 +405,6 @@ public class FriendshipService {
         );
     }
 
-
-    // =====================================================
-    // BUILD FRIEND LIST
-    // =====================================================
-
     private List<FriendResponse> buildFriendList(
             User owner
     ) {
@@ -487,11 +422,6 @@ public class FriendshipService {
                                     .equals(owner)
                                     ? friendship.getAddressee()
                                     : friendship.getRequester();
-
-
-                    // =================================================
-                    // SAFETY
-                    // =================================================
 
                     if ("ADMIN".equalsIgnoreCase(
                             friendUser.getRole()
@@ -528,19 +458,6 @@ public class FriendshipService {
                     String fullName =
                             (firstName + " " + lastName)
                                     .trim();
-
-
-//                    String initials =
-//                            (
-//                                    firstName.isEmpty()
-//                                            ? ""
-//                                            : firstName.charAt(0)
-//                            )
-//                                    + (
-//                                    lastName.isEmpty()
-//                                            ? ""
-//                                            : lastName.charAt(0)
-//                            );
 
                     String initials =
                             (
@@ -588,11 +505,6 @@ public class FriendshipService {
                 )
                 .collect(Collectors.toList());
     }
-
-
-    // =====================================================
-    // 7. REMOVE FRIEND
-    // =====================================================
 
     public void removeFriend(
             String userEmail,

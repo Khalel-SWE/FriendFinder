@@ -27,11 +27,6 @@ public class NotificationService {
     private final ContactMessageRepository contactMessageRepository;
     private final FriendshipRepository friendshipRepository;
 
-
-    // =====================================================
-    // CREATE NOTIFICATION
-    // =====================================================
-
     public void createNotification(
             User user,
             String message,
@@ -47,11 +42,6 @@ public class NotificationService {
                 null
         );
     }
-
-
-    // =====================================================
-    // CREATE NOTIFICATION WITH ACTOR
-    // =====================================================
 
     public void createNotification(
             User user,
@@ -69,11 +59,6 @@ public class NotificationService {
         notification.setType(type);
         notification.setRelatedId(relatedId);
 
-        /*
-         * Admin is not a social actor.
-         *
-         * Therefore Admin notifications keep actorId = null.
-         */
         if (actor != null
                 && !"ADMIN".equalsIgnoreCase(actor.getRole())) {
 
@@ -86,11 +71,6 @@ public class NotificationService {
                 notification
         );
     }
-
-
-    // =====================================================
-    // GET NOTIFICATIONS
-    // =====================================================
 
     public List<NotificationResponse> getNotifications(
             String email
@@ -110,11 +90,6 @@ public class NotificationService {
                 .map(this::mapToResponse)
                 .toList();
     }
-
-
-    // =====================================================
-    // MARK SINGLE
-    // =====================================================
 
     public void markAsRead(
             String email,
@@ -147,11 +122,6 @@ public class NotificationService {
         );
     }
 
-
-    // =====================================================
-    // MARK ALL
-    // =====================================================
-
     @Transactional
     public void markAllAsRead(
             String email
@@ -168,11 +138,6 @@ public class NotificationService {
         notificationRepository
                 .markAllAsReadByUser(user);
     }
-
-
-    // =====================================================
-    // DELETE
-    // =====================================================
 
     public void deleteNotification(
             String email,
@@ -203,11 +168,6 @@ public class NotificationService {
         );
     }
 
-
-    // =====================================================
-    // UNREAD COUNT
-    // =====================================================
-
     public long getUnreadCount(
             String email
     ) {
@@ -224,11 +184,6 @@ public class NotificationService {
                 .countByUserAndIsReadFalse(user);
     }
 
-
-    // =====================================================
-    // ENTITY -> DTO
-    // =====================================================
-
     private NotificationResponse mapToResponse(
             Notification notification
     ) {
@@ -237,11 +192,6 @@ public class NotificationService {
 
         Long actorId =
                 notification.getActorId();
-
-
-        // =================================================
-        // 1. NEW NOTIFICATIONS
-        // =================================================
 
         if (actorId != null) {
 
@@ -259,11 +209,6 @@ public class NotificationService {
                 actorId = null;
             }
         }
-
-
-        // =================================================
-        // 2. OLD NOTIFICATIONS
-        // =================================================
 
         if (actor == null) {
 
@@ -284,11 +229,6 @@ public class NotificationService {
                 actorId = actor.getId();
             }
         }
-
-
-        // =================================================
-        // 3. ACTOR DISPLAY DATA
-        // =================================================
 
         String actorName = null;
 
@@ -335,11 +275,6 @@ public class NotificationService {
             }
         }
 
-
-        // =================================================
-        // 4. BUILD RESPONSE
-        // =================================================
-
         return NotificationResponse.builder()
                 .id(notification.getId())
                 .message(notification.getMessage())
@@ -361,11 +296,6 @@ public class NotificationService {
                 .build();
     }
 
-
-    // =====================================================
-    // LEGACY ACTOR RESOLUTION
-    // =====================================================
-
     private User resolveLegacyActor(
             Notification notification
     ) {
@@ -373,17 +303,9 @@ public class NotificationService {
         Long relatedId =
                 notification.getRelatedId();
 
-
-        // =================================================
-        // FRIEND REQUEST
-        // =================================================
-
         if (notification.getType()
                 == Notification.NotificationType.FRIEND_REQUEST) {
 
-            /*
-             * First try the friendship record.
-             */
             if (relatedId != null) {
 
                 User actor =
@@ -397,26 +319,14 @@ public class NotificationService {
                 }
             }
 
-            /*
-             * If the old friendship was deleted,
-             * recover actor from the notification message.
-             */
             return resolveActorFromMessage(
                     notification.getMessage()
             );
         }
 
-
-        // =================================================
-        // ACCEPT FRIEND REQUEST
-        // =================================================
-
         if (notification.getType()
                 == Notification.NotificationType.ACCEPT_FRIEND_REQUEST) {
 
-            /*
-             * First try the friendship record.
-             */
             if (relatedId != null) {
 
                 User actor =
@@ -430,19 +340,10 @@ public class NotificationService {
                 }
             }
 
-            /*
-             * If the friendship was later deleted,
-             * recover actor from message.
-             */
             return resolveActorFromMessage(
                     notification.getMessage()
             );
         }
-
-
-        // =================================================
-        // CONTACT MESSAGE
-        // =================================================
 
         if (notification.getType()
                 == Notification.NotificationType.NEW_CONTACT_MESSAGE) {
@@ -457,25 +358,11 @@ public class NotificationService {
                     .orElse(null);
         }
 
-
-        // =================================================
-        // ADMIN REPLY
-        // =================================================
-
         if (notification.getType()
                 == Notification.NotificationType.ADMIN_REPLY) {
 
-            /*
-             * Admin is intentionally not exposed
-             * as a social actor.
-             */
             return null;
         }
-
-
-        // =================================================
-        // LIKE / COMMENT
-        // =================================================
 
         if (notification.getType()
                 == Notification.NotificationType.LIKE
@@ -492,11 +379,6 @@ public class NotificationService {
         return null;
     }
 
-
-    // =====================================================
-    // RESOLVE ACTOR FROM OLD MESSAGE
-    // =====================================================
-
     private User resolveActorFromMessage(
             String message
     ) {
@@ -507,53 +389,33 @@ public class NotificationService {
             return null;
         }
 
-        /*
-         * Old notification examples:
-         *
-         * "dunia@gmail.com sent you a friend request"
-         * "dada@test.com accepted your friend request"
-         * "dada@test.com reacted to your post"
-         * "dada@test.com commented on your post"
-         */
-
         String email =
                 message.trim();
 
-
-        // Friend request
         email = email.replace(
                 " sent you a friend request",
                 ""
         );
 
-
-        // Friend accepted
         email = email.replace(
                 " accepted your friend request",
                 ""
         );
 
-
-        // Like
         email = email.replace(
                 " reacted to your post",
                 ""
         );
 
-
-        // Comment
         email = email.replace(
                 " commented on your post",
                 ""
         );
 
-
-        // Contact message
         email = email.replace(
                 " sent a contact message",
                 ""
         );
-
 
         email = email.trim();
 
@@ -561,7 +423,6 @@ public class NotificationService {
         if (!email.contains("@")) {
             return null;
         }
-
 
         return userRepository
                 .findByEmail(email)

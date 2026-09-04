@@ -249,27 +249,9 @@ public class PostService {
             return new ArrayList<>();
         }
 
-
-        /*
-         * ==============================
-         * Comments
-         * ==============================
-         */
-
         List<Comment> allComments =
                 commentRepository
                         .findByPostIn(posts);
-
-
-        /*
-         * نجمع كل المستخدمين:
-         *
-         * أصحاب البوستات
-         * +
-         * أصحاب التعليقات
-         *
-         * عشان نجيب صورهم وأسمائهم.
-         */
 
         List<User> usersToFetchProfiles =
                 new ArrayList<>(
@@ -322,13 +304,6 @@ public class PostService {
                                                         .getId()
                                 )
                         );
-
-
-        /*
-         * ==============================
-         * Reactions
-         * ==============================
-         */
 
         List<Reaction> allReactions =
                 reactionRepository
@@ -383,13 +358,6 @@ public class PostService {
                                                 existing
                                 )
                         );
-
-
-        /*
-         * ==============================
-         * Build Response
-         * ==============================
-         */
 
         return posts.stream()
 

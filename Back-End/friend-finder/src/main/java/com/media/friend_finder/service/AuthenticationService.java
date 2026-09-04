@@ -20,30 +20,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final ProfileRepository profileRepository; // ضيفنا الريبوزتوري ده
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    @Transactional // عشان لو حصلت مشكلة في سيف البروفايل، اليوزر ميتسيفش لوحده
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
-//        if(userRepository.existsByEmail(request.getEmail())) {
-//            throw new RuntimeException("Email already exists!");
-//        }
 
         if(userRepository.existsByEmail(request.getEmail())) {
-            // غيرنا دي للإكسبشن المخصص اللي عملناه
             throw new UserAlreadyExistsException("البريد الإلكتروني مسجل مسبقاً");
         }
 
-        // 1. كريت وحفظ اليوزر
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
         User savedUser = userRepository.save(user);
 
-        // 2. كريت وحفظ البروفايل التابع لليوزر ده تلقائياً
         Profile profile = new Profile();
         profile.setUser(savedUser);
         profile.setFirstName(request.getFirstName());
@@ -51,7 +45,6 @@ public class AuthenticationService {
         profileRepository.save(profile);
 
         var jwtToken = jwtService.generateToken(savedUser);
-//        return AuthResponse.builder().token(jwtToken).build();
         return AuthResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
@@ -70,7 +63,6 @@ public class AuthenticationService {
                 .orElseThrow();
 
         var jwtToken = jwtService.generateToken(user);
-//        return AuthResponse.builder().token(jwtToken).build();
         return AuthResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
