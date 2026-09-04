@@ -10,10 +10,8 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    // هتحتاج الدالة دي بعدين في الـ Feed عشان تجيب بوستات يوزر معين بترتيب الأحدث للأقدم
     List<Post> findByUserIdOrderByCreatedAtDesc(Long userId);
 
-    // بتجيب بوستات مجموعة من اليوزرز (أنا وأصدقائي) مترتبة بالأحدث
     List<Post> findByUserInOrderByCreatedAtDesc(List<User> users);
 
     Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
