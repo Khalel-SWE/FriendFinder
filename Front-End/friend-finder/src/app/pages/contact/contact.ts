@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { ContactService } from '../../core/services/contact';
 import { ContactRequest } from '../../core/models/contact-request';
 

@@ -1,19 +1,6 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  signal,
-  HostListener,
-  ElementRef
-} from '@angular/core';
-
-import {
-  Router,
-  NavigationEnd
-} from '@angular/router';
-
+import { Component, OnInit, OnDestroy, signal, HostListener, ElementRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-
 import { LanguageService } from '../../core/services/language';
 import { ProfileService } from '../../core/services/profile';
 
@@ -44,28 +31,9 @@ export class AccountMenu implements OnInit, OnDestroy {
     private eRef: ElementRef
   ) {}
 
-
   ngOnInit(): void {
 
-    /*
-     * تحميل البروفايل أول مرة
-     */
     this.loadProfile();
-
-
-    /*
-     * كل Navigation جديد:
-     *
-     * مثال:
-     * Edit Profile
-     *     ↓
-     * Save
-     *     ↓
-     * Profile
-     *
-     * نعيد تحميل الداتا
-     * عشان الصورة الجديدة تظهر في الـ Header.
-     */
     this.routerEventsSubscription =
       this.router.events
         .pipe(
@@ -80,19 +48,12 @@ export class AccountMenu implements OnInit, OnDestroy {
         });
   }
 
-
   ngOnDestroy(): void {
 
     this.routerEventsSubscription?.unsubscribe();
 
   }
 
-
-  /*
-   * =====================================================
-   * LOAD PROFILE
-   * =====================================================
-   */
   private loadProfile(): void {
 
     this.profileService
@@ -132,12 +93,6 @@ export class AccountMenu implements OnInit, OnDestroy {
       });
   }
 
-
-  /*
-   * =====================================================
-   * PROFILE IMAGE URL
-   * =====================================================
-   */
   getProfileImageUrl(): string | null {
 
     const picture = this.profilePicture();
@@ -153,12 +108,6 @@ export class AccountMenu implements OnInit, OnDestroy {
     return `http://localhost:9090${picture}`;
   }
 
-
-  /*
-   * =====================================================
-   * MENU
-   * =====================================================
-   */
   toggle(): void {
 
     this.open.update(
@@ -167,19 +116,12 @@ export class AccountMenu implements OnInit, OnDestroy {
 
   }
 
-
   close(): void {
 
     this.open.set(false);
 
   }
 
-
-  /*
-   * =====================================================
-   * NAVIGATION
-   * =====================================================
-   */
   goTo(path: string): void {
 
     this.router.navigateByUrl(path);
@@ -187,7 +129,6 @@ export class AccountMenu implements OnInit, OnDestroy {
     this.close();
 
   }
-
 
   goToEditProfile(): void {
 
@@ -199,12 +140,6 @@ export class AccountMenu implements OnInit, OnDestroy {
 
   }
 
-
-  /*
-   * =====================================================
-   * LOGOUT
-   * =====================================================
-   */
   logout(): void {
 
     localStorage.removeItem(
@@ -223,12 +158,6 @@ export class AccountMenu implements OnInit, OnDestroy {
 
   }
 
-
-  /*
-   * =====================================================
-   * CLICK OUTSIDE
-   * =====================================================
-   */
   @HostListener(
     'document:click',
     ['$event']

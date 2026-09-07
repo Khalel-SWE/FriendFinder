@@ -17,19 +17,9 @@
   --red-bg: rgba(178, 63, 63, .14);
 }
 
-
-/* =========================
-   Page
-   ========================= */
-
 .admin-posts-page {
   color: var(--text-main);
 }
-
-
-/* =========================
-   Grid
-   ========================= */
 
 .posts-grid {
   display: grid;
@@ -44,11 +34,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
-
-/* =========================
-   Card
-   ========================= */
 
 .post-card {
   background: var(--card-bg);
@@ -74,11 +59,6 @@
     0 12px 30px rgba(0, 0, 0, .25);
 }
 
-
-/* =========================
-   Header
-   ========================= */
-
 .post-header {
   display: flex;
 
@@ -102,11 +82,6 @@
 
   min-width: 0;
 }
-
-
-/* =========================
-   Profile Picture
-   ========================= */
 
 .profile-avatar {
   width: 2.75rem;
@@ -148,11 +123,6 @@
   object-fit: cover;
 }
 
-
-/* =========================
-   Author Info
-   ========================= */
-
 .author-info {
   min-width: 0;
 }
@@ -187,11 +157,6 @@
   text-overflow: ellipsis;
 }
 
-
-/* =========================
-   Post ID
-   ========================= */
-
 .post-id {
   flex-shrink: 0;
 
@@ -201,11 +166,6 @@
 
   font-weight: 600;
 }
-
-
-/* =========================
-   Content
-   ========================= */
 
 .post-content {
   padding: 1rem 1.15rem 0;
@@ -220,12 +180,6 @@
 
   white-space: pre-line;
 }
-
-
-/* =========================
-   Media
-   ========================= */
-
 
    .post-media,
 .post-video {
@@ -244,39 +198,10 @@
 
   object-fit: contain;
 }
-/* .post-media,
-.post-video {
-  display: block;
-
-  width: calc(100% - 2.3rem);
-
-  margin: 1rem 1.15rem 0;
-
-  border-radius: 10px;
-
-  max-height: 380px;
-
-  /* object-fit: cover; */
-  /* width: 100%;
-  max-height: 380px;
-
-  object-fit: contain;
-
-  background: #0F0C0D;
-
-  border-radius: 10px;
-
-  background: #0F0C0D;
-} */ 
 
 .post-video {
   object-fit: contain;
 }
-
-
-/* =========================
-   Footer
-   ========================= */
 
 .post-footer {
   display: flex;
@@ -295,11 +220,6 @@
 
   font-size: .7rem;
 }
-
-
-/* =========================
-   Delete
-   ========================= */
 
 .delete-button {
   border: 1px solid rgba(178, 63, 63, .25);
@@ -329,11 +249,6 @@
   border-color: rgba(178, 63, 63, .4);
 }
 
-
-/* =========================
-   Empty
-   ========================= */
-
 .empty-state {
   text-align: center;
 
@@ -345,11 +260,6 @@
 
   border-radius: 12px;
 }
-
-
-/* =========================
-   Pagination
-   ========================= */
 
 .pagination {
   display: flex;

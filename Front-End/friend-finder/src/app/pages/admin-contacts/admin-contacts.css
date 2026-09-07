@@ -18,21 +18,11 @@
   --gray: #AAA;
 }
 
-
-/* ================================================= */
-/* PAGE */
-/* ================================================= */
-
 .admin-contacts-page {
   color: var(--text-main);
 
   width: 100%;
 }
-
-
-/* ================================================= */
-/* HEADER */
-/* ================================================= */
 
 .page-header {
   display: flex;
@@ -70,11 +60,6 @@
   white-space: nowrap;
 }
 
-
-/* ================================================= */
-/* LOADING */
-/* ================================================= */
-
 .loading-state {
   padding: 2.5rem;
 
@@ -83,11 +68,6 @@
   color: var(--text-muted);
 }
 
-
-/* ================================================= */
-/* CONTACTS LIST */
-/* ================================================= */
-
 .contacts-list {
   display: flex;
 
@@ -95,11 +75,6 @@
 
   gap: .85rem;
 }
-
-
-/* ================================================= */
-/* CONTACT CARD */
-/* ================================================= */
 
 .contact-card {
   padding: 1rem 1.1rem;
@@ -123,11 +98,6 @@
     translateY(-1px);
 }
 
-
-/* ================================================= */
-/* CONTACT HEADER */
-/* ================================================= */
-
 .contact-header {
   display: flex;
 
@@ -143,11 +113,6 @@
     1px solid var(--border-light);
 }
 
-
-/* ================================================= */
-/* SENDER */
-/* ================================================= */
-
 .sender-section {
   display: flex;
 
@@ -157,7 +122,6 @@
 
   min-width: 0;
 }
-
 
 .contact-avatar {
   width: 2.8rem;
@@ -192,7 +156,6 @@
     rgba(201, 162, 75, .15);
 }
 
-
 .contact-avatar img {
   width: 100%;
   height: 100%;
@@ -202,11 +165,9 @@
   object-fit: cover;
 }
 
-
 .sender-info {
   min-width: 0;
 }
-
 
 .sender-info h2 {
   margin: 0;
@@ -224,7 +185,6 @@
   text-overflow: ellipsis;
 }
 
-
 .sender-email {
   margin-top: .2rem;
 
@@ -239,11 +199,6 @@
   text-overflow: ellipsis;
 }
 
-
-/* ================================================= */
-/* CONTACT META */
-/* ================================================= */
-
 .contact-meta {
   display: flex;
 
@@ -256,7 +211,6 @@
   flex-shrink: 0;
 }
 
-
 .contact-type {
   color: var(--gold);
 
@@ -265,17 +219,11 @@
   font-weight: 700;
 }
 
-
 .contact-date {
   color: rgba(255, 255, 255, .32);
 
   font-size: .66rem;
 }
-
-
-/* ================================================= */
-/* MESSAGE */
-/* ================================================= */
 
 .message-box {
   margin-top: .75rem;
@@ -287,7 +235,6 @@
 
   border-radius: 9px;
 }
-
 
 .message-box p {
   margin: 0;
@@ -301,11 +248,6 @@
 
   white-space: pre-line;
 }
-
-
-/* ================================================= */
-/* ADMIN REPLY */
-/* ================================================= */
 
 .reply-box {
   margin-top: .75rem;
@@ -322,7 +264,6 @@
     0 9px 9px 0;
 }
 
-
 .reply-title {
   margin:
     0 0 .3rem;
@@ -338,7 +279,6 @@
   letter-spacing: .08em;
 }
 
-
 .reply-text {
   margin: 0;
 
@@ -352,15 +292,9 @@
   white-space: pre-line;
 }
 
-
-/* ================================================= */
-/* STATUS */
-/* ================================================= */
-
 .status-row {
   margin-top: .75rem;
 }
-
 
 .status-pill {
   display: inline-flex;
@@ -380,7 +314,6 @@
   letter-spacing: .03em;
 }
 
-
 .status-open {
   background:
     rgba(227, 199, 111, .12);
@@ -388,7 +321,6 @@
   color:
     var(--yellow);
 }
-
 
 .status-replied {
   background:
@@ -398,7 +330,6 @@
     var(--green);
 }
 
-
 .status-closed {
   background:
     rgba(255, 255, 255, .08);
@@ -406,11 +337,6 @@
   color:
     var(--gray);
 }
-
-
-/* ================================================= */
-/* ACTIONS */
-/* ================================================= */
 
 .contact-actions {
   display: flex;
@@ -421,7 +347,6 @@
 
   margin-top: .75rem;
 }
-
 
 .reply-input {
   flex: 1;
@@ -448,22 +373,15 @@
   font-size: .8rem;
 }
 
-
 .reply-input::placeholder {
   color:
     rgba(255, 255, 255, .28);
 }
 
-
 .reply-input:focus {
   border-color:
     rgba(201, 162, 75, .5);
 }
-
-
-/* ================================================= */
-/* BUTTONS */
-/* ================================================= */
 
 .action-buttons {
   display: flex;
@@ -474,7 +392,6 @@
 
   min-width: 105px;
 }
-
 
 .reply-button,
 .close-button {
@@ -496,7 +413,6 @@
     background .15s ease;
 }
 
-
 .reply-button {
   background:
     var(--gold);
@@ -505,12 +421,10 @@
     #17130E;
 }
 
-
 .reply-button:hover {
   filter:
     brightness(1.08);
 }
-
 
 .close-button {
   background:
@@ -520,16 +434,10 @@
     rgba(255, 255, 255, .75);
 }
 
-
 .close-button:hover {
   background:
     rgba(255, 255, 255, .14);
 }
-
-
-/* ================================================= */
-/* EMPTY */
-/* ================================================= */
 
 .empty-state {
   padding:
@@ -547,11 +455,6 @@
     12px;
 }
 
-
-/* ================================================= */
-/* PAGINATION */
-/* ================================================= */
-
 .pagination {
   display: flex;
 
@@ -565,7 +468,6 @@
 
   padding-bottom: 1rem;
 }
-
 
 .pagination button {
   padding:
@@ -588,7 +490,6 @@
   cursor: pointer;
 }
 
-
 .pagination button:hover:not(:disabled) {
   border-color:
     var(--gold);
@@ -597,14 +498,12 @@
     var(--gold);
 }
 
-
 .pagination button:disabled {
   opacity: .3;
 
   cursor:
     not-allowed;
 }
-
 
 .pagination span {
   color:
@@ -613,11 +512,6 @@
   font-size:
     .75rem;
 }
-
-
-/* ================================================= */
-/* RESPONSIVE */
-/* ================================================= */
 
 @media (max-width: 700px) {
 
@@ -629,7 +523,6 @@
       column;
   }
 
-
   .contact-header {
     align-items:
       flex-start;
@@ -638,18 +531,15 @@
       column;
   }
 
-
   .contact-meta {
     align-items:
       flex-start;
   }
 
-
   .contact-actions {
     flex-direction:
       column;
   }
-
 
   .action-buttons {
     flex-direction:
@@ -658,7 +548,6 @@
     min-width:
       0;
   }
-
 
   .action-buttons button {
     flex:

@@ -27,8 +27,6 @@
   color: var(--text-main);
 }
 
-/* Header */
-
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -56,14 +54,10 @@
   padding-top: .5rem;
 }
 
-/* Loading */
-
 .loading-state {
   padding: 2rem;
   color: var(--text-muted);
 }
-
-/* Card */
 
 .users-card {
   background: var(--card-bg);
@@ -71,8 +65,6 @@
   border-radius: 14px;
   overflow: hidden;
 }
-
-/* Table */
 
 .table-wrapper {
   overflow-x: auto;
@@ -118,8 +110,6 @@
 .users-table tbody tr:hover {
   background: rgba(255, 255, 255, .025);
 }
-
-/* User */
 
 .user-name {
   display: flex;
@@ -168,8 +158,6 @@
   color: var(--text-muted);
 }
 
-/* Role */
-
 .role-badge {
   display: inline-flex;
 
@@ -190,8 +178,6 @@
   background: rgba(201,162,75,.12);
   color: var(--gold);
 }
-
-/* Status */
 
 .status-badge,
 .protected-badge {
@@ -219,8 +205,6 @@
   background: var(--gold-soft);
   color: var(--gold);
 }
-
-/* Button */
 
 .status-button {
   border: none;
@@ -260,8 +244,6 @@
   color: rgba(201,162,75,.55);
   font-size: .72rem;
 }
-
-/* Pagination */
 
 .pagination {
   display: flex;

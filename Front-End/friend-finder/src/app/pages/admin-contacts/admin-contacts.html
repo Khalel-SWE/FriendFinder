@@ -1,8 +1,4 @@
 <div class="admin-contacts-page">
-  <!-- =========================
-       Header
-       ========================= -->
-
   <div class="page-header">
     <div>
       <h1>
@@ -17,28 +13,14 @@
     <div class="total-count">{{ lang.t('admin_total') }}: {{ totalElements }}</div>
   </div>
 
-  <!-- =========================
-       Loading
-       ========================= -->
-
   <div *ngIf="loading" class="loading-state">
     {{ lang.t('admin_loading_contacts') }}
   </div>
 
-  <!-- =========================
-       Contacts
-       ========================= -->
-
   <div *ngIf="!loading" class="contacts-list">
     <div *ngFor="let contact of contacts" class="contact-card">
-      <!-- =====================
-           Contact Header
-           ===================== -->
-
       <div class="contact-header">
-        <!-- Sender -->
         <div class="sender-section">
-          <!-- Avatar -->
           <div class="contact-avatar">
             <img
               *ngIf="contact.profilePicture"
@@ -51,7 +33,6 @@
             </span>
           </div>
 
-          <!-- Sender Info -->
           <div class="sender-info">
             <h2>
               {{ contact.senderName }}
@@ -62,8 +43,6 @@
             </p>
           </div>
         </div>
-
-        <!-- Metadata -->
 
         <div class="contact-meta">
           <span class="contact-type">
@@ -76,19 +55,11 @@
         </div>
       </div>
 
-      <!-- =====================
-           Message
-           ===================== -->
-
       <div class="message-box">
         <p>
           {{ contact.message }}
         </p>
       </div>
-
-      <!-- =====================
-           Admin Reply
-           ===================== -->
 
       <div *ngIf="contact.adminReply" class="reply-box">
         <p class="reply-title">
@@ -99,10 +70,6 @@
           {{ contact.adminReply }}
         </p>
       </div>
-
-      <!-- =====================
-           Status
-           ===================== -->
 
       <div class="status-row">
         <span
@@ -116,10 +83,6 @@
           {{ getStatusLabel(contact.status) }}
         </span>
       </div>
-
-      <!-- =====================
-           Actions
-           ===================== -->
 
       <div *ngIf="contact.status === 'OPEN'" class="contact-actions">
         <textarea
@@ -142,17 +105,9 @@
     </div>
   </div>
 
-  <!-- =========================
-       Empty
-       ========================= -->
-
   <div *ngIf="!loading && contacts.length === 0" class="empty-state">
     {{ lang.t('admin_no_contacts') }}
   </div>
-
-  <!-- =========================
-       Pagination
-       ========================= -->
 
   <div *ngIf="!loading && totalPages > 0" class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">

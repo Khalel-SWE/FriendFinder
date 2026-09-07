@@ -1,6 +1,4 @@
 <div class="admin-posts-page">
-  <!-- Page Header -->
-
   <div class="page-header mb-8">
     <div>
       <h1 class="text-3xl font-semibold text-white">
@@ -13,105 +11,67 @@
     </div>
   </div>
 
-  <!-- Loading -->
-
   <div *ngIf="loading" class="text-white/45 py-10 text-center">Loading posts...</div>
-
-  <!-- Posts -->
-
   <div *ngIf="!loading" class="posts-grid">
     <div *ngFor="let post of posts" class="post-card">
-      <!-- Post Header -->
-
       <div class="post-header">
         <div class="author-section">
-          <!-- Profile Picture -->
-
           <div class="profile-avatar">
             <img
               *ngIf="post.profilePicture"
               [src]="'http://localhost:9090' + post.profilePicture"
               [alt]="post.firstName + ' ' + post.lastName"
             />
-
             <span *ngIf="!post.profilePicture">
               {{ post.firstName.charAt(0) }}
               {{ post.lastName.charAt(0) }}
             </span>
           </div>
-
-          <!-- Author Info -->
-
           <div class="author-info">
             <h2>
               {{ post.firstName }}
               {{ post.lastName }}
             </h2>
-
             <p>
               {{ post.email }}
             </p>
           </div>
         </div>
-
-        <!-- Post ID -->
-
         <span class="post-id"> #{{ post.postId }} </span>
       </div>
-
-      <!-- Post Text -->
-
       <p *ngIf="post.content" class="post-content">
         {{ post.content }}
       </p>
-
-      <!-- Image -->
-
       <img
         *ngIf="post.mediaType === 'IMAGE' && post.mediaUrl"
         [src]="'http://localhost:9090' + post.mediaUrl"
         class="post-media"
         alt="Post image"
       />
-
-      <!-- Video -->
-
       <video
         *ngIf="post.mediaType === 'VIDEO' && post.mediaUrl"
         [src]="'http://localhost:9090' + post.mediaUrl"
         controls
         class="post-video"
       ></video>
-
-      <!-- Footer -->
-
       <div class="post-footer">
         <span class="post-date">
           {{ post.createdAt | date: 'medium' }}
         </span>
-
         <button type="button" class="delete-button" (click)="deletePost(post)">
           {{ lang.t('admin_delete_post') }}
         </button>
       </div>
     </div>
   </div>
-
-  <!-- Empty -->
-
   <div *ngIf="!loading && posts.length === 0" class="empty-state">
     {{ lang.t('admin_no_posts') }}
   </div>
-
-  <!-- Pagination -->
-
   <div class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">
       {{ lang.t('admin_previous') }}
     </button>
-
     <span> Page {{ currentPage + 1 }} / {{ totalPages }} </span>
-
     <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
       {{ lang.t('admin_next') }}
     </button>

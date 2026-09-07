@@ -1,11 +1,5 @@
 <div class="acct-wrap">
-  <!-- =====================================================
-       ACCOUNT BUTTON
-       ===================================================== -->
-
   <button type="button" class="account-trigger" (click)="toggle()">
-    <!-- Avatar -->
-
     <div class="acct-avatar">
       @if (getProfileImageUrl()) {
         <img [src]="getProfileImageUrl()!" [alt]="fullName()" />
@@ -16,16 +10,10 @@
       }
     </div>
 
-    <!-- Name -->
-
     <span class="acct-name">
       {{ fullName() }}
     </span>
   </button>
-
-  <!-- =====================================================
-       ACCOUNT MENU
-       ===================================================== -->
 
   @if (open()) {
     <div class="acct-menu">

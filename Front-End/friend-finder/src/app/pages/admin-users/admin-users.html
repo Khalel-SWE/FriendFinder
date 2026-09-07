@@ -1,6 +1,4 @@
 <div class="admin-page">
-  <!-- Header -->
-
   <div class="page-header">
     <div>
       <h1>
@@ -17,13 +15,7 @@
       {{ totalElements }}
     </div>
   </div>
-
-  <!-- Loading -->
-
   <div *ngIf="loading" class="loading-state">Loading users...</div>
-
-  <!-- Table -->
-
   <div *ngIf="!loading" class="users-card">
     <div class="table-wrapper">
       <table class="users-table">
@@ -57,8 +49,6 @@
 
         <tbody>
           <tr *ngFor="let user of users">
-            <!-- Name -->
-
             <td class="name-cell">
               <div class="user-name">
                 <div class="user-avatar">
@@ -81,23 +71,14 @@
                 </div>
               </div>
             </td>
-
-            <!-- Email -->
-
             <td class="email-cell">
               {{ user.email }}
             </td>
-
-            <!-- Role -->
-
             <td>
               <span class="role-badge" [class.admin-role]="user.role === 'ADMIN'">
                 {{ user.role === 'ADMIN' ? lang.t('admin_role_admin') : lang.t('admin_role_user') }}
               </span>
             </td>
-
-            <!-- Status -->
-
             <td>
               <span
                 *ngIf="user.role !== 'ADMIN'"
@@ -111,15 +92,9 @@
                 {{ lang.t('admin_protected') }}
               </span>
             </td>
-
-            <!-- Joined -->
-
             <td class="joined-cell">
               {{ user.joinedAt | date: 'medium' }}
             </td>
-
-            <!-- Action -->
-
             <td class="action-cell">
               <button
                 *ngIf="user.role !== 'ADMIN'"
@@ -140,9 +115,6 @@
       </table>
     </div>
   </div>
-
-  <!-- Pagination -->
-
   <div class="pagination">
     <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">
       {{ lang.t('admin_previous') }}

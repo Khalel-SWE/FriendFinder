@@ -1,17 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import {
-  AdminService,
-  AdminContact
-} from '../../core/services/admin';
-
+import { AdminService, AdminContact } from '../../core/services/admin';
 import { LanguageService } from '../../core/services/language';
 
 
