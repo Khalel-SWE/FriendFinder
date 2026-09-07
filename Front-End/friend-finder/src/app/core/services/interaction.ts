@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-
-import {
-  CommentResponse,
-  ReactionType
-} from '../models/post-model';
-
+import { CommentResponse, ReactionType } from '../models/post-model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +15,6 @@ export class InteractionService {
   constructor(
     private http: HttpClient
   ) {}
-
-
-  // =====================================================
-  // COMMENTS
-  // =====================================================
 
   addComment(
     postId: number,
@@ -48,7 +36,6 @@ export class InteractionService {
 
   }
 
-
   getComments(
     postId: number
   ): Observable<CommentResponse[]> {
@@ -58,7 +45,6 @@ export class InteractionService {
     );
 
   }
-
 
   updateComment(
     commentId: number,
@@ -80,7 +66,6 @@ export class InteractionService {
 
   }
 
-
   deleteComment(
     commentId: number
   ): Observable<string> {
@@ -93,11 +78,6 @@ export class InteractionService {
     );
 
   }
-
-
-  // =====================================================
-  // REACTIONS
-  // =====================================================
 
   reactToPost(
     postId: number,

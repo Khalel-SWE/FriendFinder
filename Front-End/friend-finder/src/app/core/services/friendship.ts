@@ -1,154 +1,6 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
-
-// export interface FriendRequestResponse {
-//   requestId: number;
-//   requesterEmail: string;
-//   requesterFirstName: string;
-//   requesterLastName: string;
-//   status: string;
-// }
-
-// export interface FriendResponse {
-//   id: number;
-//   name: string;
-//   initials: string;
-//   gradient: 'from-burgundy' | 'from-gold';
-//   mutualCount: number;
-// }
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class FriendshipService {
-
-//   private apiUrl =
-//     'http://localhost:9090/friend-finder/friends';
-
-//   constructor(
-//     private http: HttpClient
-//   ) {}
-
-
-//   // =====================================================
-//   // SEND FRIEND REQUEST BY USER ID
-//   // =====================================================
-
-//   sendFriendRequest(
-//     receiverId: number
-//   ): Observable<string> {
-
-//     return this.http.post(
-//       `${this.apiUrl}/request/${receiverId}`,
-//       {},
-//       {
-//         responseType: 'text'
-//       }
-//     );
-
-//   }
-
-
-//   // =====================================================
-//   // SEND FRIEND REQUEST BY EMAIL
-//   // =====================================================
-
-//   sendFriendRequestByEmail(
-//     email: string
-//   ): Observable<string> {
-
-//     return this.http.post(
-//       `${this.apiUrl}/request`,
-//       null,
-//       {
-//         params: {
-//           toEmail: email
-//         },
-//         responseType: 'text'
-//       }
-//     );
-
-//   }
-
-
-//   // =====================================================
-//   // GET PENDING REQUESTS
-//   // =====================================================
-
-//   getPendingRequests():
-//     Observable<FriendRequestResponse[]> {
-
-//     return this.http.get<FriendRequestResponse[]>(
-//       `${this.apiUrl}/requests/pending`
-//     );
-
-//   }
-
-
-//   // =====================================================
-//   // ACCEPT / REJECT REQUEST
-//   // =====================================================
-
-//   respondToRequest(
-//     requestId: number,
-//     status: 'ACCEPTED' | 'REJECTED'
-//   ): Observable<string> {
-
-//     return this.http.put(
-//       `${this.apiUrl}/requests/${requestId}`,
-//       null,
-//       {
-//         params: {
-//           status
-//         },
-//         responseType: 'text'
-//       }
-//     );
-
-//   }
-
-
-//   // =====================================================
-//   // GET MY FRIENDS
-//   // =====================================================
-
-//   getMyFriends():
-//     Observable<FriendResponse[]> {
-
-//     return this.http.get<FriendResponse[]>(
-//       `${this.apiUrl}/my-friends`
-//     );
-
-//   }
-
-
-//   // =====================================================
-//   // REMOVE FRIEND
-//   // =====================================================
-
-//   removeFriend(
-//     friendId: number
-//   ): Observable<void> {
-
-//     return this.http.delete<void>(
-//       `${this.apiUrl}/remove/${friendId}`
-//     );
-
-//   }
-
-// }
-
 import { Injectable } from '@angular/core';
-
-import {
-  HttpClient
-} from '@angular/common/http';
-
-import {
-  Observable
-} from 'rxjs';
-
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface FriendRequestResponse {
 
@@ -162,7 +14,6 @@ export interface FriendRequestResponse {
 
   status: string;
 }
-
 
 export interface FriendResponse {
 
@@ -183,7 +34,6 @@ export interface FriendResponse {
   coverPhoto: string | null;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -197,11 +47,6 @@ export class FriendshipService {
     private http: HttpClient
   ) {}
 
-
-  // =====================================================
-  // SEND FRIEND REQUEST BY USER ID
-  // =====================================================
-
   sendFriendRequest(
     receiverId: number
   ): Observable<string> {
@@ -214,11 +59,6 @@ export class FriendshipService {
       }
     );
   }
-
-
-  // =====================================================
-  // SEND FRIEND REQUEST BY EMAIL
-  // =====================================================
 
   sendFriendRequestByEmail(
     email: string
@@ -237,11 +77,6 @@ export class FriendshipService {
     );
   }
 
-
-  // =====================================================
-  // GET PENDING REQUESTS
-  // =====================================================
-
   getPendingRequests():
     Observable<FriendRequestResponse[]> {
 
@@ -251,11 +86,6 @@ export class FriendshipService {
       `${this.apiUrl}/requests/pending`
     );
   }
-
-
-  // =====================================================
-  // ACCEPT / REJECT
-  // =====================================================
 
   respondToRequest(
     requestId: number,
@@ -275,11 +105,6 @@ export class FriendshipService {
     );
   }
 
-
-  // =====================================================
-  // GET MY FRIENDS
-  // =====================================================
-
   getMyFriends():
     Observable<FriendResponse[]> {
 
@@ -289,11 +114,6 @@ export class FriendshipService {
       `${this.apiUrl}/my-friends`
     );
   }
-
-
-  // =====================================================
-  // GET FRIENDS OF PROFILE
-  // =====================================================
 
   getFriendsForProfile(
     userId: number
@@ -305,11 +125,6 @@ export class FriendshipService {
       `${this.apiUrl}/profile/${userId}`
     );
   }
-
-
-  // =====================================================
-  // REMOVE FRIEND
-  // =====================================================
 
   removeFriend(
     friendId: number

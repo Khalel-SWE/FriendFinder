@@ -11,17 +11,14 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  // بتجيب الفيد (البوستات)
   getFeed(): Observable<PostResponse[]> {
     return this.http.get<PostResponse[]>(`${this.apiUrl}/feed`);
   }
 
-  // دالة لجلب بوستات يوزر معين في البروفايل بتاعه
   getUserPosts(userId: number): Observable<PostResponse[]> {
     return this.http.get<PostResponse[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-  // بتعمل بوست جديد (بتبعت الداتا كـ FormData عشان تدعم الصور)
   createPost(content?: string, file?: File): Observable<PostResponse> {
     const formData = new FormData();
     
