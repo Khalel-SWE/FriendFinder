@@ -33,8 +33,6 @@
             [class.clickable-notification]="canOpenNotification(item)"
             (click)="openNotification(item)"
           >
-            <!-- ================= ACTOR AVATAR ================= -->
-
             @if (showActorAvatar(item)) {
               <div class="bell-avatar">
                 @if (getActorImage(item)) {
@@ -46,9 +44,6 @@
                 }
               </div>
             }
-
-            <!-- ================= TEXT ================= -->
-
             <div class="bell-text">
               <div>
                 {{ getNotificationText(item) }}

@@ -1,26 +1,13 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  inject
-} from '@angular/core';
-
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { ProfileCover } from '../profile-cover/profile-cover';
 import { ProfileTabsNav } from '../profile-tabs-nav/profile-tabs-nav';
 import { ProfileTimelineTab } from '../profile-timeline-tab/profile-timeline-tab';
 import { ProfileAboutTab } from '../profile-about-tab/profile-about-tab';
 import { ProfileFriendsTab } from '../profile-friends-tab/profile-friends-tab';
 import { ProfileMediaGrid } from '../profile-media-grid/profile-media-grid';
-
-import {
-  ProfileResponse,
-  ProfileTab
-} from '../../core/models/profile-model';
-
+import { ProfileResponse, ProfileTab } from '../../core/models/profile-model';
 import { ProfileService } from '../../core/services/profile';
-
 
 @Component({
   selector: 'app-profile-page',
@@ -58,11 +45,6 @@ export class ProfilePage
   private route =
     inject(ActivatedRoute);
 
-
-  // =====================================================
-  // INIT
-  // =====================================================
-
   ngOnInit(): void {
 
     this.route.paramMap.subscribe(
@@ -88,11 +70,6 @@ export class ProfilePage
       }
     );
   }
-
-
-  // =====================================================
-  // LOAD VISITOR PROFILE
-  // =====================================================
 
   loadUserProfile(
     userId: number
@@ -126,11 +103,6 @@ export class ProfilePage
       });
   }
 
-
-  // =====================================================
-  // LOAD MY PROFILE
-  // =====================================================
-
   loadMyProfile(): void {
 
     this.profileService
@@ -155,8 +127,6 @@ export class ProfilePage
             canViewPosts:
               true,
 
-            // IMPORTANT:
-            // DO NOT ERASE BACKEND ACTIVITIES
             recentActivities:
               res.recentActivities ?? []
 
@@ -184,11 +154,6 @@ export class ProfilePage
       });
   }
 
-
-  // =====================================================
-  // RELATIONSHIP CHANGED
-  // =====================================================
-
   onRelationshipChanged(): void {
 
     const currentProfile =
@@ -206,11 +171,6 @@ export class ProfilePage
       currentProfile.id
     );
   }
-
-
-  // =====================================================
-  // EXTRACT YEAR
-  // =====================================================
 
   private extractYear(
     dateString?: string
@@ -232,11 +192,6 @@ export class ProfilePage
       );
     }
   }
-
-
-  // =====================================================
-  // TAB
-  // =====================================================
 
   onTabChange(
     tab: ProfileTab

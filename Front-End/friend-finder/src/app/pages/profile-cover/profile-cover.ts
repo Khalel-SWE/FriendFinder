@@ -1,22 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  inject
-} from '@angular/core';
-
-import {
-  ProfileResponse,
-  RelationshipStatus
-} from '../../core/models/profile-model';
-
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { ProfileResponse, RelationshipStatus } from '../../core/models/profile-model';
 import { FriendshipService } from '../../core/services/friendship';
-
-import {
-  Router,
-  RouterModule
-} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile-cover',
@@ -46,11 +31,6 @@ export class ProfileCover {
 
   private friendshipService =
     inject(FriendshipService);
-
-
-  // =====================================================
-  // DISPLAY
-  // =====================================================
 
   get initials(): string {
 
@@ -83,11 +63,6 @@ export class ProfileCover {
     ).trim();
   }
 
-
-  // =====================================================
-  // IMAGE URL
-  // =====================================================
-
   getImageUrl(
     path: string | null
   ): string | null {
@@ -101,22 +76,12 @@ export class ProfileCover {
       : `http://localhost:9090${path}`;
   }
 
-
-  // =====================================================
-  // EDIT PROFILE
-  // =====================================================
-
   goToEdit(): void {
 
     this.router.navigate([
       '/edit-profile'
     ]);
   }
-
-
-  // =====================================================
-  // SEND FRIEND REQUEST
-  // =====================================================
 
   sendFriendRequest(): void {
 
@@ -153,11 +118,6 @@ export class ProfileCover {
 
       });
   }
-
-
-  // =====================================================
-  // ACCEPT FRIEND REQUEST
-  // =====================================================
 
   acceptFriendRequest(): void {
 
@@ -199,11 +159,6 @@ export class ProfileCover {
       });
   }
 
-
-  // =====================================================
-  // REJECT FRIEND REQUEST
-  // =====================================================
-
   rejectFriendRequest(): void {
 
     const requestId =
@@ -243,11 +198,6 @@ export class ProfileCover {
 
       });
   }
-
-
-  // =====================================================
-  // UNFRIEND
-  // =====================================================
 
   unfriend(): void {
 
@@ -293,11 +243,6 @@ export class ProfileCover {
 
       });
   }
-
-
-  // =====================================================
-  // RELATIONSHIP
-  // =====================================================
 
   get relationshipStatus():
     RelationshipStatus {

@@ -3,16 +3,13 @@
     <div class="media-grid">
       @for (item of items(); track item.id) {
         <div class="media-thumb" [class.video-thumb]="mediaType === 'video'">
-          <!-- عرض الصورة الحقيقية -->
           @if (mediaType === 'photo') {
             <img
               [src]="item.url"
               alt="Profile Photo"
               class="w-full h-full object-cover rounded-lg"
             />
-          }
-          <!-- عرض الفيديو الحقيقي -->
-          @else {
+          } @else {
             <video [src]="item.url" class="w-full h-full object-cover rounded-lg" controls></video>
           }
         </div>

@@ -1,16 +1,6 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  output,
-  signal,
-  OnInit
-} from '@angular/core';
-
+import { Component, ElementRef, ViewChild, output, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { LanguageService } from '../../core/services/language';
-
 import { ProfileService } from '../../core/services/profile';
 
 @Component({

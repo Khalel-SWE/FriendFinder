@@ -1,25 +1,9 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  inject,
-  Input
-} from '@angular/core';
-
+import { Component, OnInit, signal, inject, Input } from '@angular/core';
 import { PostComposer } from '../post-composer/post-composer';
 import { RecentActivityPanel } from '../recent-activity-panel/recent-activity-panel';
-
-import {
-  Post,
-  PostResponse,
-  ReactionType
-} from '../../core/models/post-model';
-
+import { Post, PostResponse, ReactionType } from '../../core/models/post-model';
 import { PostService } from '../../core/services/post';
-
-import {
-  ProfileActivity
-} from '../../core/models/profile-model';
+import { ProfileActivity } from '../../core/models/profile-model';
 
 @Component({
   selector: 'app-profile-timeline-tab',
@@ -53,17 +37,7 @@ export class ProfileTimelineTab implements OnInit {
     this.loadPosts();
   }
 
-  // =====================================================
-  // LOAD POSTS
-  // =====================================================
-
   loadPosts(): void {
-
-    /*
-     * Visitor profile:
-     * If the visitor is not a friend,
-     * do not load private posts.
-     */
 
     if (
       !this.isMyProfile &&
@@ -169,10 +143,6 @@ export class ProfileTimelineTab implements OnInit {
     });
   }
 
-  // =====================================================
-  // MAP REACTION
-  // =====================================================
-
   private mapReaction(
     reaction: string | null | undefined
   ): ReactionType | null {
@@ -183,10 +153,6 @@ export class ProfileTimelineTab implements OnInit {
 
     return reaction.toLowerCase() as ReactionType;
   }
-
-  // =====================================================
-  // TIME AGO
-  // =====================================================
 
   calculateTimeAgo(
     dateString: string
@@ -240,10 +206,6 @@ export class ProfileTimelineTab implements OnInit {
 
     return postDate.toLocaleDateString();
   }
-
-  // =====================================================
-  // CREATE POST
-  // =====================================================
 
   onPosted(
     payload: {

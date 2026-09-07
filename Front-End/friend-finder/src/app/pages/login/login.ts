@@ -35,8 +35,6 @@ export class Login {
     ph_password: { en: '••••••••', ar: '••••••••', de: '••••••••' },
     signin_btn: { en: 'Sign In', ar: 'تسجيل الدخول', de: 'Anmelden' },
     loading_btn: { en: 'Signing in...', ar: 'جاري الدخول...', de: 'Anmelden...' },
-    
-    // ================= رسائل الإيرور الاحترافية =================
     err_req_email: { en: 'Email is required.', ar: 'البريد الإلكتروني مطلوب.', de: 'E-Mail ist erforderlich.' },
     err_inv_email: { en: 'Invalid email format.', ar: 'صيغة البريد غير صحيحة.', de: 'Ungültiges E-Mail-Format.' },
     err_req_pass: { en: 'Password is required.', ar: 'كلمة المرور مطلوبة.', de: 'Passwort ist erforderlich.' },
@@ -49,8 +47,6 @@ export class Login {
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      
-      // بنصطاد الحقل اللي فيه المشكلة ونعرض رسالته
       if (this.loginForm.get('email')?.hasError('required')) {
         this.errorMessage = this.dict.err_req_email[this.currentLang];
       } else if (this.loginForm.get('email')?.hasError('email')) {
@@ -70,16 +66,14 @@ export class Login {
     this.auth.login(this.loginForm.value as any).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
-        // ====== اللقطة السحرية: حفظ التوكن في المتصفح ======
         localStorage.setItem('auth_token', response.token);
-localStorage.setItem('role', response.role);
+        localStorage.setItem('role', response.role);
 
-if (response.role === 'ADMIN') {
-    this.router.navigate(['/admin']);
-} else {
-    this.router.navigate(['/feed']);
-}
+        if (response.role === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/feed']);
+        }
       },
       error: (err) => {
         this.isLoading = false;

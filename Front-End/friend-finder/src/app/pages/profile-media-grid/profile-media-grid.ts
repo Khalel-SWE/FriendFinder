@@ -15,14 +15,13 @@ interface MediaPost {
 })
 export class ProfileMediaGrid implements OnInit {
   @Input({ required: true }) mediaType!: 'photo' | 'video';
-  @Input() userId?: number; // 👈 ضفنا استقبال الـ ID هنا
+  @Input() userId?: number;
 
   items = signal<MediaPost[]>([]);
   
   private postService = inject(PostService);
 
   ngOnInit() {
-    // 👇 ذكاء الجلب: لو فيه ID يجيب بوستات اليوزر، لو مفيش يجيب الفيد العام
     const request$ = this.userId 
       ? this.postService.getUserPosts(this.userId)
       : this.postService.getFeed();

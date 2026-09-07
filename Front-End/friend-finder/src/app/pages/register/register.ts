@@ -45,15 +45,12 @@ export class Register {
     ph_password_new: { en: 'At least 8 characters', ar: '8 حروف على الأقل', de: 'Mindestens 8 Zeichen' },
     create_btn: { en: 'Create my account', ar: 'إنشاء حسابي', de: 'Konto erstellen' },
     loading_btn: { en: 'Creating account...', ar: 'جاري الإنشاء...', de: 'Konto wird erstellt...' },
-    
-    // ================= رسائل الإيرور الاحترافية =================
     err_email_exists: { en: 'Email is already registered.', ar: 'البريد الإلكتروني مسجل مسبقاً.', de: 'E-Mail ist bereits registriert.' },
     err_server: { en: 'Cannot connect to server.', ar: 'لا يمكن الاتصال بالخادم.', de: 'Keine Verbindung zum Server.' },
     err_req_fname: { en: 'First name is required.', ar: 'الاسم الأول مطلوب.', de: 'Vorname ist erforderlich.' },
     err_req_lname: { en: 'Last name is required.', ar: 'اسم العائلة مطلوب.', de: 'Nachname ist erforderlich.' },
     err_req_email: { en: 'A valid email is required.', ar: 'بريد إلكتروني صحيح مطلوب.', de: 'Eine gültige E-Mail ist erforderlich.' },
     err_bad_pass: { en: 'Password must be 7-12 chars with letters, numbers, and symbols.', ar: 'كلمة المرور يجب أن تكون 7-12 حرفاً وتحتوي على حروف وأرقام ورموز.', de: 'Das Passwort muss 7-12 Zeichen lang sein und Buchstaben, Zahlen und Symbole enthalten.' }
-    // ==========================================================
   };
 
   constructor(private auth: Auth, private router: Router, private cdr: ChangeDetectorRef) {}
@@ -62,7 +59,6 @@ export class Register {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       
-      // هنا بنحدد الحقل اللي فيه المشكلة بالظبط ونطلع رسالته
       if (this.registerForm.get('firstName')?.invalid) {
         this.errorMessage = this.dict.err_req_fname[this.currentLang];
       } else if (this.registerForm.get('lastName')?.invalid) {
@@ -92,7 +88,6 @@ export class Register {
         if (err.status === 409) {
           this.errorMessage = this.dict.err_email_exists[this.currentLang];
         } else if (err.status === 400) {
-          // لو الباك إند هو اللي قفش الـ Validation ورجع 400 Bad Request
           this.errorMessage = err.error?.message || 'Invalid input data.';
         } else if (err.status === 0) {
           this.errorMessage = this.dict.err_server[this.currentLang];

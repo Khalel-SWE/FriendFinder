@@ -1,6 +1,4 @@
 <article class="post-card">
-  <!-- ================= POST HEADER ================= -->
-
   <div class="post-head">
     <div class="post-avatar">
       @if (getProfileImageUrl(post().profilePicture)) {
@@ -22,17 +20,11 @@
       </p>
     </div>
   </div>
-
-  <!-- ================= TEXT ================= -->
-
   @if (post().text) {
     <p class="post-text">
       {{ post().text }}
     </p>
   }
-
-  <!-- ================= MEDIA ================= -->
-
   @if (post().mediaType) {
     <div class="post-media">
       @if (post().mediaUrl) {
@@ -74,9 +66,6 @@
       }
     </div>
   }
-
-  <!-- ================= SUMMARY ================= -->
-
   <div class="post-summary">
     <span class="reactions-summary">
       @for (k of reactionKeys; track k) {
@@ -98,12 +87,7 @@
       {{ lang.t('comments_label') }}
     </span>
   </div>
-
-  <!-- ================= ACTIONS ================= -->
-
   <div class="post-actions">
-    <!-- Reaction Picker -->
-
     <div class="reaction-picker-wrap">
       <button
         type="button"
@@ -139,8 +123,6 @@
       }
     </div>
 
-    <!-- Comments -->
-
     <button type="button" class="comment-btn" (click)="toggleComments()">
       <svg
         width="16"
@@ -157,12 +139,8 @@
     </button>
   </div>
 
-  <!-- ================= COMMENTS ================= -->
-
   @if (showComments()) {
     <div class="comments-section">
-      <!-- Add comment -->
-
       <div class="comment-composer">
         <input
           type="text"
@@ -180,13 +158,9 @@
         </button>
       </div>
 
-      <!-- Comment list -->
-
       <div class="comments-list">
         @for (c of comments(); track c.id) {
           <div class="comment-item">
-            <!-- Comment Avatar -->
-
             <div class="comment-avatar">
               @if (getProfileImageUrl(c.profilePictureUrl)) {
                 <img
@@ -199,9 +173,6 @@
                 </span>
               }
             </div>
-
-            <!-- Comment Content -->
-
             <div class="comment-content-box">
               <div class="comment-top">
                 <p class="comment-user">

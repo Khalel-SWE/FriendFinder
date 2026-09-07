@@ -1,9 +1,6 @@
-/* استدعاء الخطوط الفخمة اللي إنت طلبتها */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-
-/* تعريف ألوانك في Tailwind v4 */
 @theme {
   --color-ink: #141014;
   --color-ink2: #1D171B;
@@ -57,7 +54,6 @@ body.font-ar .font-body { font-family: var(--font-arBody) !important; }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #D9CFB8; border-radius: 8px; }
 
-/* ================== Shared Primitives ================== */
 .gold-btn {
   background: linear-gradient(135deg, #d9b769, #b4893a);
   color: #17130e; border: none; cursor: pointer;
@@ -75,7 +71,6 @@ body.font-ar .font-body { font-family: var(--font-arBody) !important; }
   border-radius: 10px;
 }
 
-/* السطور دي بتجبر الأنجولار إنه ياخد الحجم الكامل */
 app-login, app-register, app-home, app-feed-layout {
   display: flex;
   flex-direction: column;
@@ -83,7 +78,6 @@ app-login, app-register, app-home, app-feed-layout {
   width: 100%;
 }
 
-/* ================= Auth Theme Classes ================= */
 .hero-bg {
   background:
     radial-gradient(circle at 18% 30%, rgba(233, 196, 106, 0.3) 0%, rgba(233, 196, 106, 0) 9%),
@@ -131,19 +125,17 @@ app-login, app-register, app-home, app-feed-layout {
 .tab-pill { transition: all 0.2s ease; color: rgba(248, 244, 234, 0.5); }
 .tab-pill.active-tab { background: rgba(201, 162, 75, 0.15); color: #e4d4a6; }
 
-/* تكبير أحجام خطوط وأيقونات الناف بار */
 .navbar-brand svg { width: 32px; height: 32px; }
 .navbar-name { font-size: 1.25rem !important; }
 .navbar-search { font-size: 1rem !important; padding: 0.6rem 1.25rem !important; }
 
-/* تظبيط تموضع القوائم المنسدلة عشان تثبت تحت الأيقونات بالظبط */
 .lang-wrap, .bell-wrap, .acct-wrap {
   position: relative;
 }
 
 .lang-menu, .bell-menu, .acct-menu {
   position: absolute;
-  top: calc(100% + 12px) !important; /* بتنزل مسافة شياكة تحت الناف بار بالظبط */
+  top: calc(100% + 12px) !important;
   inset-inline-end: 0;
   background: #12100f !important;
   border: 1px solid rgba(201, 162, 75, 0.2) !important;
@@ -152,7 +144,6 @@ app-login, app-register, app-home, app-feed-layout {
   z-index: 100;
 }
 
-/* تكبير كرت اقتراحات الأصدقاء عشان يملى المساحة */
 .suggestions-card {
   padding: 1.5rem !important;
 }

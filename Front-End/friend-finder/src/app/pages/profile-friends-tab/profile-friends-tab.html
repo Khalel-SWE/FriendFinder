@@ -1,16 +1,11 @@
 <div class="friends-grid">
   @for (friend of friends(); track friend.id) {
     <div class="friend-card">
-      <!-- ================= COVER ================= -->
-
       <div class="friend-cover">
         @if (getImageUrl(friend.coverPhoto)) {
           <img [src]="getImageUrl(friend.coverPhoto)!" [alt]="friend.name" />
         }
       </div>
-
-      <!-- ================= AVATAR ================= -->
-
       <div class="friend-avatar-wrap">
         @if (getImageUrl(friend.profilePicture)) {
           <img
@@ -28,26 +23,18 @@
           </div>
         }
       </div>
-
-      <!-- ================= INFO ================= -->
-
       <div class="friend-info">
         <button type="button" class="friend-name" (click)="goToProfile(friend.id)">
           {{ friend.name }}
         </button>
-
         <p class="friend-mutual">
           {{ friend.mutualCount }}
           mutual friends
         </p>
-
-        <!-- ================= ACTIONS ================= -->
-
         <div class="friend-actions">
           <button type="button" class="profile-btn" (click)="goToProfile(friend.id)">
             View Profile
           </button>
-
           @if (isMyProfile) {
             <button type="button" class="unfriend-btn" (click)="unfriend(friend)">Unfriend</button>
           }

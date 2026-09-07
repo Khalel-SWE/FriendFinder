@@ -1,6 +1,4 @@
 <div class="relative">
-  <!-- ================= COVER ================= -->
-
   <div
     class="cover-photo h-52 sm:h-64"
     [style.backgroundImage]="
@@ -8,13 +6,8 @@
     "
     style="background-size: cover; background-position: center; background-repeat: no-repeat"
   ></div>
-
-  <!-- ================= PROFILE CONTENT ================= -->
-
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
     <div class="relative -mt-16 flex items-end gap-4 pb-3">
-      <!-- ================= AVATAR ================= -->
-
       @if (profile.profilePicture) {
         <img
           [src]="getImageUrl(profile.profilePicture)!"
@@ -28,9 +21,6 @@
           {{ initials }}
         </div>
       }
-
-      <!-- ================= NAME ================= -->
-
       <div class="pb-2 hidden sm:block">
         <p class="font-display text-2xl text-text leading-none">
           {{ fullName }}
@@ -44,9 +34,6 @@
           Member since {{ memberSince }}
         </p>
       </div>
-
-      <!-- ================= ACTIONS ================= -->
-
       @if (isMyProfile) {
         <button
           type="button"
@@ -118,9 +105,6 @@
           }
         }
       }
-
-      <!-- ================= MOBILE NAME ================= -->
-
       <p class="sm:hidden font-display text-xl text-text -mt-1">
         {{ fullName }}
       </p>

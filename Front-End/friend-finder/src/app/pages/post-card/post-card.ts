@@ -1,26 +1,9 @@
-import {
-  Component,
-  input,
-  output,
-  signal,
-  inject,
-  OnInit
-} from '@angular/core';
-
+import { Component, input, output, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { LanguageService } from '../../core/services/language';
-
-import {
-  Post,
-  ReactionType,
-  CommentResponse
-} from '../../core/models/post-model';
-
+import { Post, ReactionType, CommentResponse } from '../../core/models/post-model';
 import { InteractionService } from '../../core/services/interaction';
-
 import { ProfileService } from '../../core/services/profile';
-
 
 @Component({
   selector: 'app-post-card',
@@ -50,11 +33,6 @@ export class PostCard implements OnInit {
   newCommentText =
     signal('');
 
-
-  // =====================================================
-  // CURRENT USER
-  // =====================================================
-
   currentUserEmail =
     signal<string>('');
 
@@ -68,11 +46,6 @@ export class PostCard implements OnInit {
 
   editingCommentText =
     signal<string>('');
-
-
-  // =====================================================
-  // REACTION PICKER
-  // =====================================================
 
   reactionPickerOpen =
     signal(false);
@@ -103,7 +76,6 @@ export class PostCard implements OnInit {
 
     ];
 
-
   private interactionService =
     inject(InteractionService);
 
@@ -115,11 +87,6 @@ export class PostCard implements OnInit {
   constructor(
     public lang: LanguageService
   ) {}
-
-
-  // =====================================================
-  // INIT
-  // =====================================================
 
   ngOnInit(): void {
 
@@ -153,11 +120,6 @@ export class PostCard implements OnInit {
       });
 
   }
-
-
-  // =====================================================
-  // REACTIONS
-  // =====================================================
 
   totalReactions(): number {
 
@@ -232,11 +194,6 @@ export class PostCard implements OnInit {
 
   }
 
-
-  // =====================================================
-  // PROFILE IMAGE
-  // =====================================================
-
   getProfileImageUrl(
     picture?: string
   ): string | null {
@@ -250,11 +207,6 @@ export class PostCard implements OnInit {
       : `http://localhost:9090${picture}`;
 
   }
-
-
-  // =====================================================
-  // INITIALS
-  // =====================================================
 
   getInitials(
     firstName?: string,
@@ -277,11 +229,6 @@ export class PostCard implements OnInit {
 
   }
 
-
-  // =====================================================
-  // COMMENTS
-  // =====================================================
-
   toggleComments(): void {
 
     this.showComments.update(
@@ -295,7 +242,6 @@ export class PostCard implements OnInit {
     }
 
   }
-
 
   loadComments(): void {
 
@@ -325,7 +271,6 @@ export class PostCard implements OnInit {
       });
 
   }
-
 
   submitComment(): void {
 
@@ -381,11 +326,6 @@ export class PostCard implements OnInit {
 
   }
 
-
-  // =====================================================
-  // COMMENT EDIT
-  // =====================================================
-
   canEditComment(
     comment: CommentResponse
   ): boolean {
@@ -423,7 +363,6 @@ export class PostCard implements OnInit {
 
   }
 
-
   startEditing(
     comment: CommentResponse
   ): void {
@@ -448,7 +387,6 @@ export class PostCard implements OnInit {
 
   }
 
-
   cancelEditing(): void {
 
     this.editingCommentId.set(
@@ -461,7 +399,6 @@ export class PostCard implements OnInit {
     );
 
   }
-
 
   saveEditedComment(
     comment: CommentResponse
@@ -517,27 +454,13 @@ export class PostCard implements OnInit {
 
   }
 
-
-  // =====================================================
-  // COMMENT DELETE
-  // =====================================================
-
   canDeleteComment(
     comment: CommentResponse
   ): boolean {
 
-    // ---------------------------------------------
-    // 1. Comment owner
-    // ---------------------------------------------
-
     const isCommentOwner =
       comment.userEmail ===
       this.currentUserEmail();
-
-
-    // ---------------------------------------------
-    // 2. Post owner
-    // ---------------------------------------------
 
     const isPostOwner =
       this.currentUserName()
@@ -548,11 +471,6 @@ export class PostCard implements OnInit {
         .authorName
         .trim()
         .toLowerCase();
-
-
-    // ---------------------------------------------
-    // Final permission
-    // ---------------------------------------------
 
     return (
       isCommentOwner ||
@@ -565,10 +483,6 @@ export class PostCard implements OnInit {
   deleteComment(
     comment: CommentResponse
   ): void {
-
-    // ---------------------------------------------
-    // Frontend protection
-    // ---------------------------------------------
 
     if (
       !this.canDeleteComment(comment)

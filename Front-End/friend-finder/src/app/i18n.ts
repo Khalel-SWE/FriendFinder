@@ -87,90 +87,19 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   admin_status_open: { en: 'OPEN', ar: 'مفتوحة', de: 'OFFEN'},
   admin_status_replied: { en: 'REPLIED', ar: 'تم الرد', de: 'BEANTWORTET'},
   admin_status_closed: { en: 'CLOSED', ar: 'مغلقة', de: 'GESCHLOSSEN'},
-  suggestions_title: {
-  en: 'People You May Know',
-  ar: 'أشخاص قد تعرفهم',
-  de: 'Personen, die du vielleicht kennst'
-},
-admin_no_suggestions: {
-  en: 'No new suggestions at the moment.',
-  ar: 'لا توجد اقتراحات جديدة حاليًا.',
-  de: 'Derzeit keine neuen Vorschläge.'
-},
-  edit: {
-    en: 'Edit',
-    ar: 'تعديل',
-    de: 'Bearbeiten'
-  },
-
-  delete: {
-    en: 'Delete',
-    ar: 'حذف',
-    de: 'Löschen'
-  },
-
-  save: {
-    en: 'Save',
-    ar: 'حفظ',
-    de: 'Speichern'
-  },
-
-  cancel: {
-    en: 'Cancel',
-    ar: 'إلغاء',
-    de: 'Abbrechen'
-  },
-
-  send: {
-    en: 'Send',
-    ar: 'إرسال',
-    de: 'Senden'
-  },
-
-  no_comments: {
-    en: 'No comments yet. Be the first!',
-    ar: 'لا توجد تعليقات بعد. كن أول من يعلق!',
-    de: 'Noch keine Kommentare. Sei der Erste!'
-  },
-
-  confirm_delete_comment: {
-    en: 'Are you sure you want to delete this comment?',
-    ar: 'هل أنت متأكد أنك تريد حذف هذا التعليق؟',
-    de: 'Möchtest du diesen Kommentar wirklich löschen?'
-  },
-  reaction_like: {
-  en: 'Like',
-  ar: 'إعجاب',
-  de: 'Gefällt mir'
-},
-
-reaction_love: {
-  en: 'Love',
-  ar: 'أحببته',
-  de: 'Liebe'
-},
-
-reaction_haha: {
-  en: 'Haha',
-  ar: 'هاها',
-  de: 'Haha'
-},
-
-reaction_wow: {
-  en: 'Wow',
-  ar: 'واو',
-  de: 'Wow'
-},
-
-reaction_sad: {
-  en: 'Sad',
-  ar: 'حزين',
-  de: 'Traurig'
-},
-
-reaction_angry: {
-  en: 'Angry',
-  ar: 'غاضب',
-  de: 'Wütend'
-}
+  suggestions_title: { en: 'People You May Know', ar: 'أشخاص قد تعرفهم', de: 'Personen, die du vielleicht kennst'},
+  admin_no_suggestions: { en: 'No new suggestions at the moment.', ar: 'لا توجد اقتراحات جديدة حاليًا.', de: 'Derzeit keine neuen Vorschläge.'},
+  edit: { en: 'Edit', ar: 'تعديل', de: 'Bearbeiten'},
+  delete: { en: 'Delete', ar: 'حذف', de: 'Löschen'},
+  save: { en: 'Save', ar: 'حفظ', de: 'Speichern'},
+  cancel: { en: 'Cancel', ar: 'إلغاء', de: 'Abbrechen'},
+  send: { en: 'Send', ar: 'إرسال', de: 'Senden'},
+  no_comments: { en: 'No comments yet. Be the first!', ar: 'لا توجد تعليقات بعد. كن أول من يعلق!', de: 'Noch keine Kommentare. Sei der Erste!'},
+  confirm_delete_comment: { en: 'Are you sure you want to delete this comment?', ar: 'هل أنت متأكد أنك تريد حذف هذا التعليق؟', de: 'Möchtest du diesen Kommentar wirklich löschen?'},
+  reaction_like: { en: 'Like', ar: 'إعجاب', de: 'Gefällt mir'},
+  reaction_love: { en: 'Love', ar: 'أحببته', de: 'Liebe'},
+  reaction_haha: { en: 'Haha', ar: 'هاها', de: 'Haha'},
+  reaction_wow: { en: 'Wow', ar: 'واو', de: 'Wow'},
+  reaction_sad: { en: 'Sad', ar: 'حزين', de: 'Traurig'},
+  reaction_angry: { en: 'Angry', ar: 'غاضب', de: 'Wütend'}
 };

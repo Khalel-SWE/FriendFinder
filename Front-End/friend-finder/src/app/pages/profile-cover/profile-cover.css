@@ -43,10 +43,6 @@
     var(--color-gold, #C9A24B);
 }
 
-/* =====================================================
-   ACTIONS
-   ===================================================== */
-
 .profile-action {
   margin-inline-start: auto;
 
@@ -78,10 +74,6 @@
   opacity: .65;
 }
 
-/* =====================================================
-   PRIMARY
-   ===================================================== */
-
 .primary-action {
   background: #C9A24B;
   color: #17130E;
@@ -93,19 +85,11 @@
   border-color: #D9B769;
 }
 
-/* =====================================================
-   SECONDARY
-   ===================================================== */
-
 .secondary-action {
   background: transparent;
   color: var(--muted);
   border: 1px solid var(--ivory-2);
 }
-
-/* =====================================================
-   DANGER
-   ===================================================== */
 
 .danger-action {
   background: transparent;
@@ -116,10 +100,6 @@
 .danger-action:hover:not(:disabled) {
   background: rgba(220,53,69,.08);
 }
-
-/* =====================================================
-   MULTIPLE BUTTONS
-   ===================================================== */
 
 .profile-actions-group {
   margin-inline-start: auto;

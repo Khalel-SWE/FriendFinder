@@ -1,22 +1,9 @@
-import {
-  Component,
-  signal,
-  HostListener,
-  ElementRef,
-  inject,
-  OnInit
-} from '@angular/core';
-
+import { Component, signal, HostListener, ElementRef, inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-
 import { LanguageService } from '../../core/services/language';
 import { Notification } from '../../core/services/notification';
-
-import {
-  NotificationResponse
-} from '../../core/models/notification.model';
-
+import { NotificationResponse } from '../../core/models/notification.model';
 
 @Component({
   selector: 'app-notification-bell',
@@ -50,11 +37,6 @@ export class NotificationBell
     private eRef: ElementRef
   ) {}
 
-
-  // =====================================================
-  // INIT
-  // =====================================================
-
   ngOnInit(): void {
 
     this.notification
@@ -87,11 +69,6 @@ export class NotificationBell
 
       });
   }
-
-
-  // =====================================================
-  // TOGGLE
-  // =====================================================
 
   toggle(): void {
 
@@ -137,20 +114,10 @@ export class NotificationBell
     }
   }
 
-
-  // =====================================================
-  // CLOSE
-  // =====================================================
-
   close(): void {
 
     this.open.set(false);
   }
-
-
-  // =====================================================
-  // NOTIFICATION TEXT
-  // =====================================================
 
   getNotificationText(
     notification: NotificationResponse
@@ -200,22 +167,12 @@ export class NotificationBell
     }
   }
 
-
-  // =====================================================
-  // SHOULD SHOW ACTOR AVATAR?
-  // =====================================================
-
   showActorAvatar(
     notification: NotificationResponse
   ): boolean {
 
     return notification.type !== 'ADMIN_REPLY';
   }
-
-
-  // =====================================================
-  // ACTOR INITIALS
-  // =====================================================
 
   getActorInitial(
     notification: NotificationResponse
@@ -250,11 +207,6 @@ export class NotificationBell
     return '?';
   }
 
-
-  // =====================================================
-  // ACTOR IMAGE
-  // =====================================================
-
   getActorImage(
     notification: NotificationResponse
   ): string | null {
@@ -275,11 +227,6 @@ export class NotificationBell
 
       : `http://localhost:9090${notification.actorProfilePicture}`;
   }
-
-
-  // =====================================================
-  // CAN NAVIGATE
-  // =====================================================
 
   canOpenNotification(
     notification: NotificationResponse
@@ -320,11 +267,6 @@ export class NotificationBell
     }
   }
 
-
-  // =====================================================
-  // OPEN NOTIFICATION
-  // =====================================================
-
   openNotification(
     notification: NotificationResponse
   ): void {
@@ -340,11 +282,6 @@ export class NotificationBell
 
 
     this.close();
-
-
-    // ===================================================
-    // FRIEND REQUEST
-    // ===================================================
 
     if (
       notification.type === 'FRIEND_REQUEST'
@@ -368,11 +305,6 @@ export class NotificationBell
       return;
     }
 
-
-    // ===================================================
-    // ADMIN / CONTACT
-    // ===================================================
-
     if (
       notification.type === 'NEW_CONTACT_MESSAGE'
       ||
@@ -385,11 +317,6 @@ export class NotificationBell
 
       return;
     }
-
-
-    // ===================================================
-    // LIKE / COMMENT
-    // ===================================================
 
     if (
       notification.type === 'LIKE'
@@ -416,11 +343,6 @@ export class NotificationBell
       );
     }
   }
-
-
-  // =====================================================
-  // OUTSIDE CLICK
-  // =====================================================
 
   @HostListener(
     'document:click',
