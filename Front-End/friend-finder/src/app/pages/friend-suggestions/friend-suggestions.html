@@ -6,8 +6,6 @@
   <div class="flex flex-col gap-4">
     @for (user of filteredSuggestions(); track user.id) {
       <div class="suggestion-row">
-        <!-- Avatar -->
-
         <div
           class="suggestion-avatar cursor-pointer"
           (click)="openProfile(user.id)"
@@ -29,18 +27,12 @@
             </span>
           }
         </div>
-
-        <!-- User info -->
-
         <div class="suggestion-info">
           <p class="suggestion-name cursor-pointer" (click)="openProfile(user.id)">
             {{ user.firstName }}
             {{ user.lastName }}
           </p>
         </div>
-
-        <!-- Add friend -->
-
         <button type="button" class="add-btn" (click)="addFriend(user.id)" [title]="lang.t('add')">
           <svg
             width="16"

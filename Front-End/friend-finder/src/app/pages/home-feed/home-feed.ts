@@ -1,26 +1,9 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  computed,
-  AfterViewInit,
-  ElementRef,
-  ViewChildren,
-  QueryList
-} from '@angular/core';
-
+import { Component, OnInit, signal, computed, AfterViewInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { PostComposer } from '../post-composer/post-composer';
 import { PostCard } from '../post-card/post-card';
 import { FriendSuggestions } from '../friend-suggestions/friend-suggestions';
-
-import {
-  Post,
-  ReactionType,
-  PostResponse
-} from '../../core/models/post-model';
-
+import { Post, ReactionType, PostResponse } from '../../core/models/post-model';
 import { PostService } from '../../core/services/post';
 import { InteractionService } from '../../core/services/interaction';
 import { SearchService } from '../../core/services/search';
@@ -102,11 +85,6 @@ export class HomeFeed implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-
-  // =====================================================
-  // INIT
-  // =====================================================
-
   ngOnInit(): void {
 
     this.route.queryParamMap
@@ -124,11 +102,6 @@ export class HomeFeed implements OnInit {
 
       });
   }
-
-
-  // =====================================================
-  // LOAD FEED
-  // =====================================================
 
   loadFeed(): void {
 
@@ -231,11 +204,6 @@ export class HomeFeed implements OnInit {
             mappedPosts
           );
 
-
-          // =================================================
-          // OPEN POST FROM NOTIFICATION
-          // =================================================
-
           if (
             this.notificationPostId !== null
           ) {
@@ -293,11 +261,6 @@ export class HomeFeed implements OnInit {
 
   }
 
-
-  // =====================================================
-  // SCROLL TO POST
-  // =====================================================
-
   private scrollToPost(
     postId: number
   ): void {
@@ -330,11 +293,6 @@ export class HomeFeed implements OnInit {
 
   }
 
-
-  // =====================================================
-  // MEDIA TYPE
-  // =====================================================
-
   getMediaType(
     mimeType?: string
   ): 'image' | 'video' | undefined {
@@ -350,11 +308,6 @@ export class HomeFeed implements OnInit {
       : 'image';
 
   }
-
-
-  // =====================================================
-  // TIME AGO
-  // =====================================================
 
   calculateTimeAgo(
     dateString: string
@@ -422,11 +375,6 @@ export class HomeFeed implements OnInit {
 
   }
 
-
-  // =====================================================
-  // CREATE POST
-  // =====================================================
-
   onPostCreated(
     newPostData: {
       text?: string;
@@ -459,11 +407,6 @@ export class HomeFeed implements OnInit {
       });
 
   }
-
-
-  // =====================================================
-  // REACTION
-  // =====================================================
 
   onReaction(
     post: Post,

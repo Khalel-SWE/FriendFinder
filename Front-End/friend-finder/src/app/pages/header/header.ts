@@ -16,7 +16,6 @@ import { LanguageService } from '../../core/services/language';
   styleUrl: './header.css'
 })
 export class Header implements OnInit {
-  // المتغيرات اللي الـ HTML محتاجها
   isLoggedIn = false;
   isDropdownOpen = false;
   isAdmin = false;
@@ -71,7 +70,7 @@ export class Header implements OnInit {
 
   onSearchChange(event: Event) {
   const text = (event.target as HTMLInputElement).value;
-  this.searchService.setQuery(text); // بنبعت النص للـ Service
+  this.searchService.setQuery(text);
 }
 
 goHome(): void {

@@ -1,34 +1,10 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  inject,
-  computed
-} from '@angular/core';
-
-import {
-  ProfileService
-} from '../../core/services/profile';
-
-import {
-  FriendshipService
-} from '../../core/services/friendship';
-
-import {
-  FriendSuggestionResponse
-} from '../../core/models/post-model';
-
-import {
-  LanguageService
-} from '../../core/services/language';
-
-import {
-  SearchService
-} from '../../core/services/search';
-
-import {
-  Router
-} from '@angular/router';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { ProfileService } from '../../core/services/profile';
+import { FriendshipService } from '../../core/services/friendship';
+import { FriendSuggestionResponse } from '../../core/models/post-model';
+import { LanguageService } from '../../core/services/language';
+import { SearchService } from '../../core/services/search';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-friend-suggestions',
@@ -122,11 +98,6 @@ export class FriendSuggestions
       });
   }
 
-
-  // =====================================================
-  // OPEN PROFILE
-  // =====================================================
-
   openProfile(
     userId: number
   ): void {
@@ -136,11 +107,6 @@ export class FriendSuggestions
       userId
     ]);
   }
-
-
-  // =====================================================
-  // SEND FRIEND REQUEST
-  // =====================================================
 
   addFriend(
     id: number
